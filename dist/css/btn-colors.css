@@ -1,0 +1,29 @@
+@import url(root-colors.css);
+
+/* for primary cta */
+.btn-dark-green { 
+    background-color: var(--green-60) !important;
+    color: #F5F5F5 !important;
+    font-weight: bold !important;
+}
+
+    .btn-dark-green:hover {
+        background-color: var(--green-70) !important;
+        color: #F5F5F5 !important;
+        font-weight: bold !important;
+    }
+
+/* for secondary cta */
+.btn-light-green {
+    background-color: var(--green-10) !important;
+    color: var(--green-100) !important;
+    font-weight: bold !important;
+}
+
+    .btn-light-green:hover {
+        background-color: var(--green-20) !important;
+        color: var(--green-100) !important;
+        font-weight: bold !important;
+    }
+
+

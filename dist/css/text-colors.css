@@ -1,0 +1,41 @@
+@import url(root-colors.css);
+
+.text-green-10 {
+    color: var(--green-10) !important;
+}
+
+.text-green-20 {
+    color: var(--green-20) !important;
+}
+
+.text-green-30 {
+    color: var(--green-30) !important;
+}
+
+.text-green-40 {
+    color: var(--green-40) !important;
+}
+
+.text-green-50 {
+    color: var(--green-50) !important;
+}
+
+.text-green-60 {
+    color: var(--green-60) !important;
+}
+
+.text-green-70 {
+    color: var(--green-70) !important;
+}
+
+.text-green-80 {
+    color: var(--green-80) !important;
+}
+
+.text-green-90 {
+    color: var(--green-90) !important;
+}
+
+.text-green-100 {
+    color: var(--green-100) !important;
+}

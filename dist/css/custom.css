@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url(root-colors.css);
+@import url(bg-colors.css);
+@import url(text-colors.css);
+@import url(btn-colors.css);
+
+.poppins {
+    font-family: 'Poppins' !important;
+}
+
+.form-check-input.custom-checkbox:checked {
+    background-color: var(--green-30) !important; 
+    border-color: var(--green-30) !important;
+}
+
+.modal-header .btn-close {
+    filter: invert(1) !important; 
+}
+
+.no-deco {
+    text-decoration: none;
+}
