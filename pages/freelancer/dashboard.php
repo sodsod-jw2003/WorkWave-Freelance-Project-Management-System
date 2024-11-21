@@ -25,6 +25,6 @@ require ('../../connection.php');
 
 </head>
 <body>
- dashboard ng freelancer :-----D
+ dashboard ng freelancer :-----
 </body>
 </html>
