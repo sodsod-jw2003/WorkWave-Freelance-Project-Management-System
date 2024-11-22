@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2024 at 08:18 AM
+-- Generation Time: Nov 22, 2024 at 09:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,6 +30,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `activate_account` (IN `p_activation
 	users 
 	WHERE
 	activation_token_hash = p_activation_token_hash;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_email` (IN `p_email` VARCHAR(255))   BEGIN
+	SELECT * FROM users
+    WHERE users.email = p_email;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_reset_token_hash` (IN `p_reset_token_hash` VARCHAR(255))   BEGIN
@@ -93,6 +98,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `role`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`) VALUES
+(17, 'Ronald', 'Jensen', '2024-11-01', 'Female', 'Angeles, Pampanga, Philippines', 'ronaldsullano1234@gmail.com', 'Freelancer', '$2y$10$k.Ln2rzSu/cUFSvbW22BY.v31YIjp0Y82o4QYUWyGpFZHRiJHw6zm', NULL, NULL, '$2y$10$uTiBG1atKHpO8tNuUA..buPuYln8xd5au144ZOnOcUKMsrqv3d0j.', NULL, NULL),
+(18, 'Kate', 'Jensen', '2024-10-30', 'Male', 'Antipolo, Rizal, Philippines', 'ronaldsullano14@gmail.com', 'Client', '$2y$10$fCUE6zU7pEq127Fv/23u9.7FlL8cLlL6WW9DEkBSSITw1UX3D2SL2', NULL, NULL, '$2y$10$voZ3cKKVKShkrGEmfJc8DeVN6cJm7B/QMOskvksjzJyvISD7YyhHG', NULL, NULL);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -112,7 +125,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
