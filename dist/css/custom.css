@@ -18,5 +18,45 @@
 }
 
 .no-deco {
-    text-decoration: none;
+    text-decoration: none !important;
+}
+
+header a {
+    text-decoration: none !important;
+}
+
+.nav-logo {
+    height: 40px !important; 
+    width: auto !important;
+}
+
+.no-outline:focus {
+    outline: none;
+    box-shadow: none; 
+}
+
+.no-outline-green-focus:focus {
+    outline: none; /* Remove the browser's default outline */
+    border-color: var(--green-50); /* Set your desired border color */
+    box-shadow: 0 0 3px var(--green-50); /* Add a green glow effect */
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out; /* Smooth transition */
+}
+
+.border-top-accent {
+    border-top: 5px solid var(--green-30) !important; 
+}
+
+.border-start-accent {
+    border-left: 5px solid var(--green-30) !important;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0.5rem;
+    color: var(--green-30);
+    padding: auto 2rem !important;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--green-30);
+    color: #ffffff;
 }

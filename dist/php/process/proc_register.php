@@ -2,127 +2,107 @@
     //PHPMailer library
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
-
+    
     require '../../../vendor/autoload.php';
-
     $mysqli = require "../../../connection.php";
-
-    //email validation
+    
+    // Email validation
     $email = $_POST["email"];
-
+    
+    // Check if email is already registered
     $stmt = $mysqli->prepare("CALL get_user_by_email(?)");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-
+    
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
-
-    if ($user >0){
-        die("This Email is already registered. Please use a different email.");
+    $result->free(); // Free the result set
+    $stmt->close();  // Close the statement
+    
+    // Clear any remaining results from the connection
+    while ($mysqli->next_result()) {
+        $mysqli->store_result();
+    }
+    
+    if ($user) {
+        die("This email is already registered. Please use a different email.");
     }
     
     // Backend validation for the age
     if (empty($_POST["birthdate"])) {
-    die("Birthdate is required");
+        die("Birthdate is required.");
     }
-
-    $birthdate = $_POST["birthdate"];
-    $birthdate = new DateTime($birthdate);
+    
+    $birthdate = new DateTime($_POST["birthdate"]);
     $currentDate = new DateTime();
-
-    // Calculate the age by finding the difference between the current date and the birthdate
     $age = $currentDate->diff($birthdate)->y;
-
-    // If the user is under 18, show an error
+    
     if ($age < 18 || ($age == 18 && $currentDate->format('m-d') < $birthdate->format('m-d'))) {
         die("You must be at least 18 years old to register.");
     }
-
-    //validations backend
-
-    $stmt = $mysqli->prepare("CALL get_user_by_email(?)");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
     
-    if ($user > 0) {
-        die("This email is already registered. Please use a different email.");
+    // Backend validation for other fields
+    if (empty($_POST["role"])) die("Role is required.");
+    if (empty($_POST["first_name"])) die("Firstname is required.");
+    if (empty($_POST["last_name"])) die("Lastname is required.");
+    if (empty($_POST["gender"])) die("Gender is required.");
+    if (empty($_POST["city"])) die("City is required.");
+    
+    if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+        die("Valid email is required.");
     }
     
-    //validations backend
-    if (empty($_POST["role"])) {
-        die("role is required");
-    }
-
-    if (empty($_POST["first_name"])) {
-        die("Firstname is required");
-    }
-    if (empty($_POST["last_name"])) {
-        die("Lastname is required");
-    }
-
-    if (empty($_POST["birthdate"])) {
-        die("Birthdate is required");
-    }
-
-    if (empty($_POST["gender"])) {
-        die("gender is required");
-    }
-
-    if (empty($_POST["city"])) {
-        die("city is required");
-    }
-    
-
-    if ( ! filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-        die("Valid email is required");
-    }
-
     if (strlen($_POST["password"]) < 8) {
-        die("Password must be at least 8 characters");
+        die("Password must be at least 8 characters.");
     }
-
-    if ( ! preg_match("/[a-z]/i", $_POST["password"])) {
-        die("Password must contain at least one letter");
+    
+    if (!preg_match("/[a-z]/i", $_POST["password"])) {
+        die("Password must contain at least one letter.");
     }
-
-    if ( ! preg_match("/[0-9]/", $_POST["password"])) {
-        die("Password must contain at least one number");
+    
+    if (!preg_match("/[0-9]/", $_POST["password"])) {
+        die("Password must contain at least one number.");
     }
-
+    
     if ($_POST["password"] !== $_POST["confirm_password"]) {
-        die("Passwords must match");
+        die("Passwords must match.");
     }
-
-    //password hashing
+    
+    // Password hashing
     $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
-
-    //activation token
+    
+    // Activation token
     $activation_token = bin2hex(random_bytes(16));
     $activation_token_hash = password_hash($activation_token, PASSWORD_DEFAULT);
-
-    //inserting users to database
+    
+    // Insert user into the database
     $sql = "CALL signup_users(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $mysqli->stmt_init();
-
-    if ( ! $stmt->prepare($sql)) {
+    
+    if (!$stmt->prepare($sql)) {
         die("SQL error: " . $mysqli->error);
     }
-
-    $stmt->bind_param("sssssssss",
-                    $_POST["first_name"],
-                    $_POST["last_name"],
-                    $_POST["birthdate"],
-                    $_POST["gender"],
-                    $_POST["city"],
-                    $_POST["email"],
-                    $password_hash,
-                    $activation_token_hash,
-                    $_POST["role"]);
-                    
+    
+    $stmt->bind_param(
+        "sssssssss",
+        $_POST["first_name"],
+        $_POST["last_name"],
+        $_POST["birthdate"],
+        $_POST["gender"],
+        $_POST["city"],
+        $_POST["email"],
+        $password_hash,
+        $activation_token_hash,
+        $_POST["role"]
+    );
+    
     $stmt->execute();
+    $stmt->close();
+    
+    // Clear any remaining results from the connection
+    while ($mysqli->next_result()) {
+        $mysqli->store_result();
+    }
 
     //sending email
     $mail = new PHPMailer(true);
