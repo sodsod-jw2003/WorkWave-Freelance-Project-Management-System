@@ -40,6 +40,18 @@
 
     //validations backend
 
+    $stmt = $mysqli->prepare("CALL get_user_by_email(?)");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    
+    if ($user > 0) {
+        die("This email is already registered. Please use a different email.");
+    }
+    
+    //validations backend
     if (empty($_POST["role"])) {
         die("role is required");
     }
