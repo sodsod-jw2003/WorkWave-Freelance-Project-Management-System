@@ -7,6 +7,37 @@
 
     $mysqli = require "../../../connection.php";
 
+    //email validation
+    $email = $_POST["email"];
+
+    $stmt = $mysqli->prepare("CALL get_user_by_email(?)");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if ($user >0){
+        die("This Email is already registered. Please use a different email.");
+    }
+    
+    // Backend validation for the age
+    if (empty($_POST["birthdate"])) {
+    die("Birthdate is required");
+    }
+
+    $birthdate = $_POST["birthdate"];
+    $birthdate = new DateTime($birthdate);
+    $currentDate = new DateTime();
+
+    // Calculate the age by finding the difference between the current date and the birthdate
+    $age = $currentDate->diff($birthdate)->y;
+
+    // If the user is under 18, show an error
+    if ($age < 18 || ($age == 18 && $currentDate->format('m-d') < $birthdate->format('m-d'))) {
+        die("You must be at least 18 years old to register.");
+    }
+
     //validations backend
 
     if (empty($_POST["role"])) {
