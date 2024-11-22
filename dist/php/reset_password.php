@@ -1,7 +1,25 @@
-<?php 
+<?php
+date_default_timezone_set('Asia/Manila');
+$token = $_GET["token"];
 
-require '../../connection.php';
+$mysqli = require "../../connection.php";
 
+//checking of token
+$stmt = $mysqli->prepare("CALL get_user_by_reset_token_hash(?)");
+$stmt->bind_param("s", $token);
+
+$stmt->execute();
+
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+if ($user === null) {
+    die("token not found.");
+}
+
+if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
+    die("token has expired");
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,6 +53,10 @@ require '../../connection.php';
                 <h1 class="fs-1 text-center text-green-70 fw-bold">Reset Password</h1>
                 <h6 class="fs-6 text-center">Enter your new Password</h6>
             </div>
+
+            <!-- form -->
+            <form action="process/proc_reset_password.php" method="post" id="reset">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
             <!-- password -->
             <div class="container mt-4 mb-3">
@@ -77,6 +99,9 @@ require '../../connection.php';
                     </div>
                 </div>
             </div>
+            
+            <!-- form ends here -->
+            </form>
 
         </div>
     </section>

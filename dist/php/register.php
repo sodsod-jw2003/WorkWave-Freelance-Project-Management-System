@@ -1,9 +1,3 @@
-<?php 
-
-require '../../connection.php';
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +17,9 @@ require '../../connection.php';
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/custom.css">
 
+    <!-- City Autocomplete js API-->
+    <script src="../js/city_autocomplete.js"></script>
+
     <!-- register.js -->
     <script src="../js/register.js" defer></script>
 </head>
@@ -35,10 +32,28 @@ require '../../connection.php';
             <h6 class="fs-6 text-center">Register to Continue with <span class="fw-bold text-green-60">WorkWave</span></h6>
         </div>
 
+        <!-- form -->
+        <form action="process/proc_register.php" method="POST" id="registrationForm">
+        
         <!-- phase 1-->
         <div id="phase1" class="mb-4">
+            <!-- role -->
+            <div class="container mb-3">
+                <div class="input-group my-1">
+                    <div class="input-group-prepend d-flex align-items-stretch">
+                        <div class="input-group-text bg-white rounded-start-5 d-flex justify-content-center align-items-center">
+                            <span class="fas fa-briefcase text-green-50 ps-1"></span>
+                        </div>
+                    </div>
+                    <select name="role" id="role" class="form-control rounded-end-5 border px-3 py-2" required>
+                        <option value="" disabled selected>Are you a client or Freelancer</option>
+                        <option value="Client">Client</option>
+                        <option value="Freelancer">Freelancer</option>
+                    </select>
+                </div>
+            </div>
             <!-- first name -->
-            <div class="container mt-4 mb-3 ">
+            <div class="container mb-3 ">
                 <div class="input-group my-1">
                     <div class="input-group-prepend d-flex align-items-stretch">
                         <div class="input-group-text bg-white rounded-start-5 d-flex justify-content-center align-items-center">
@@ -178,6 +193,7 @@ require '../../connection.php';
                 </div>
                 <div class="col-6 d-flex justify-content-center">
                     <button type="button" id="nextButton" class="btn btn-dark-green flex-grow-1 flex-sm-grow-0 col-12 col-sm-5 rounded-5 w-100">Next</button>
+                    <button type="submit" id="submitButton" class="btn btn-dark-green flex-grow-1 flex-sm-grow-0 col-12 col-sm-5 rounded-5 w-100" style="display:none">Submit</button>
                 </div>
             </div>
         </div>
@@ -187,8 +203,18 @@ require '../../connection.php';
             <div id="progress-bar" class="progress-bar bg-green-30" role="progressbar" style="width: 33%;" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
+
+    <!-- end of form -->
+    </form>
+
 </section>
 
+    <!-- google autocomplete api -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8ps9u4llkxJ9vymRLuIFHt0t-Z8eF76U&libraries=places&callback=initAutocomplete"
+        async
+        defer>
+    </script>
 
 </body>
 </html>

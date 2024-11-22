@@ -1,9 +1,3 @@
-<?php 
-
-require '../../connection.php';
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +30,9 @@ require '../../connection.php';
                 <h6 class="fs-6 text-center">Provide your Email to Reset your Password</h6>
             </div>
 
+            <!-- form -->
+            <form action="process/proc_forgot_password.php" method="post">
+
             <!-- email -->
             <div class="container mt-4 mb-4">
                 <div class="input-group my-1">
@@ -59,6 +56,9 @@ require '../../connection.php';
                     </div>
                 </div>
             </div>
+
+            <!-- form ends here -->
+            </form> 
 
         </div>
     </section>
