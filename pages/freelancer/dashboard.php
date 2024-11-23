@@ -1,6 +1,10 @@
 <?php 
 
 require ('../../connection.php');
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
+    exit;
+}
 include ('../../misc/modals.php');
 
 ?>

@@ -118,14 +118,15 @@ include ('../../dist/php/process/proc_profile.php');
                 <!-- Sidebar/Profile Card -->
                 <div class="col-12 col-md-4 col-lg-3 p-3">
                     <div class="card card-primary card-outline border-top-accent shadow mb-4 position-relative">
-                        <!-- User Icon with Image Upload Trigger -->
                         <div class="container d-flex justify-content-center mt-5 position-relative">
-                           <div class="profile-pic-wrapper" style="cursor: pointer; display: flex; justify-content: center; align-items: center; width: 100px; height: 100px; border-radius: 50%; background: #f1f1f1;">
-                                <?php if (!empty($user['profile_picture_url'])): ?>
-                                    <img src="<?php echo htmlspecialchars($user['profile_picture_url']); ?>" class="profile-pic rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
-                                <?php else: ?>
-                                    <i class="fas fa-circle-user fa-7x text-muted justify-content-center text-green-30" id="userIcon" style="font-size: 100px;"></i>
-                                <?php endif; ?>
+                            <!-- User Icon with Image Upload Trigger -->
+                            <!-- temporary profile picture if none is uploaded -->
+                            <div class="profile-pic-wrapper">
+                                <img src="<?php echo $user['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">
+                                <form id="profile-pic-form" style="display: none;">
+                                    <!-- Hidden File Input -->
+                                    <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*">
+                                </form>
                             </div>
                         </div>
                         <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($full_name); ?></div>

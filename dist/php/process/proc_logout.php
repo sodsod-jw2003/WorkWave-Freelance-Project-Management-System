@@ -1,4 +1,6 @@
 <?php
+session_start();
+session_unset();
 session_destroy();
-header("Location: ../login.php");//landing page if meron na
-exit();
+header("Location: ../../php/login.php");
+exit;
