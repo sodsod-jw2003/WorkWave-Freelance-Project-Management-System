@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2024 at 11:45 AM
+-- Generation Time: Nov 23, 2024 at 01:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_id` (IN `p_user_id` INT(11))   BEGIN
 	SELECT * FROM
-	users
+	user_profile
 	WHERE
 	user_id = p_user_id;
 END$$
@@ -92,6 +92,26 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `job_titles`
+--
+
+CREATE TABLE `job_titles` (
+  `job_title_id` int(11) NOT NULL,
+  `job_title` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `job_titles`
+--
+
+INSERT INTO `job_titles` (`job_title_id`, `job_title`) VALUES
+(1, 'Software Developer'),
+(2, '3D Artist'),
+(3, 'Database Administrator');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `skills`
 --
 
@@ -117,7 +137,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   `profile_picture_url` varchar(255) NOT NULL,
-  `job_title` varchar(255) NOT NULL,
+  `job_title_id` int(11) NOT NULL,
   `bio` varchar(500) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `reset_token_hash` varchar(255) DEFAULT NULL,
@@ -131,10 +151,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `role`, `profile_picture_url`, `job_title`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`) VALUES
-(17, 'Ronald', 'Jensen', '2024-11-01', 'Female', 'Angeles, Pampanga, Philippines', 'ronaldsullano1234@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741aeba86914_IMG_20230104_162006.png', 'Professional Tambay', '', '$2y$10$qLMlJaMQ0vTG1JmjVizsQO0r.lPZisR7chw8WJKPPNaFpct/Utc8K', NULL, '2024-11-22 18:19:39', NULL, NULL, NULL),
-(18, 'Kate', 'Jensen', '2024-10-30', 'Male', 'Antipolo, Rizal, Philippines', 'ronaldsullano14@gmail.com', 'Client', '', '', '', '$2y$10$fCUE6zU7pEq127Fv/23u9.7FlL8cLlL6WW9DEkBSSITw1UX3D2SL2', NULL, NULL, NULL, NULL, NULL),
-(19, 'Kate', 'Jensen', '2003-09-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', 'Freelancer', '', '', '', '$2y$10$VzA1NGX.l9gXOijcrrVqC.9zEdJLQa3Fkz0.tzaQWaJaa1kAMdupK', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`) VALUES
+(17, 'Ronald', 'Jensen', '2024-11-01', 'Female', 'Angeles, Pampanga, Philippines', 'ronaldsullano1234@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741c9e2df041_IMG_20230104_162006.png', 1, '', '$2y$10$qLMlJaMQ0vTG1JmjVizsQO0r.lPZisR7chw8WJKPPNaFpct/Utc8K', 'cc0b3e07c5ccf3ec3c493ca7701dbb0151cd241694ea8b59764b4487cae24a4d', '2024-11-23 19:22:46', NULL, NULL, NULL),
+(19, 'Kate', 'Jensen', '2003-09-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741c9f93aa18_wallpaperflare.com_wallpaper.jpg', 3, '', '$2y$10$VzA1NGX.l9gXOijcrrVqC.9zEdJLQa3Fkz0.tzaQWaJaa1kAMdupK', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -177,6 +196,7 @@ CREATE TABLE `user_profile` (
 ,`gender` varchar(21)
 ,`city` varchar(255)
 ,`email` varchar(255)
+,`role` varchar(255)
 ,`profile_picture_url` varchar(255)
 ,`job_title` varchar(255)
 ,`bio` varchar(500)
@@ -189,11 +209,17 @@ CREATE TABLE `user_profile` (
 --
 DROP TABLE IF EXISTS `user_profile`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_profile`  AS SELECT `users`.`user_id` AS `user_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`profile_picture_url` AS `profile_picture_url`, `users`.`job_title` AS `job_title`, `users`.`bio` AS `bio` FROM `users` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_profile`  AS SELECT `users`.`user_id` AS `user_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`role` AS `role`, `users`.`profile_picture_url` AS `profile_picture_url`, `job_titles`.`job_title` AS `job_title`, `users`.`bio` AS `bio` FROM (`users` join `job_titles` on(`users`.`job_title_id` = `job_titles`.`job_title_id`)) ;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `job_titles`
+--
+ALTER TABLE `job_titles`
+  ADD PRIMARY KEY (`job_title_id`);
 
 --
 -- Indexes for table `skills`
@@ -207,7 +233,8 @@ ALTER TABLE `skills`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `ResetToken` (`reset_token_hash`),
-  ADD UNIQUE KEY `activation_token_hash` (`activation_token_hash`);
+  ADD UNIQUE KEY `activation_token_hash` (`activation_token_hash`),
+  ADD KEY `job_title_id` (`job_title_id`);
 
 --
 -- Indexes for table `users_experiences`
@@ -227,6 +254,12 @@ ALTER TABLE `users_skills`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `job_titles`
+--
+ALTER TABLE `job_titles`
+  MODIFY `job_title_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `skills`
@@ -255,6 +288,12 @@ ALTER TABLE `users_skills`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `job_titles` (`job_title_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `users_experiences`
