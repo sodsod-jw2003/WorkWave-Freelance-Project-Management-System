@@ -17,6 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (password_verify($_POST["password"], $user["password_hash"])) {
             // If password is correct, then check if the account is activated
             if ($user["activation_token_hash"] === null) {
+                //Last login
+                
                 // Start session and redirect based on role
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
@@ -106,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 <!--login status-->
                 <?php if ($is_invalid_status): ?>
-                   <div class=text-end text-danger">
+                   <div class=text-end text-danger>
                         <em> <?= $error_message; ?> </em>
                    </div>
                    <?php elseif ($is_invalid): ?>
@@ -135,5 +137,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <!--end form-->
         </form>
     </section>
+
+    <!-- eye toggle -->
+    <script src="../js/login.js"></script>
 </body>
 </html>

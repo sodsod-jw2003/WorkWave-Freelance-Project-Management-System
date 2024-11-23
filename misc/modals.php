@@ -34,7 +34,7 @@ require ('../../connection.php');
                 <div class="modal-body m-3">Are you sure you want to logout?</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a href="#" class="btn btn-danger">Logout</a>
+                    <a href="../../dist/php/process/proc_logout.php" class="btn btn-danger">Logout</a>
                 </div>
             </div>
         </div>
