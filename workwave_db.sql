@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2024 at 01:31 PM
+-- Generation Time: Nov 23, 2024 at 03:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -137,7 +137,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   `profile_picture_url` varchar(255) NOT NULL,
-  `job_title_id` int(11) NOT NULL,
+  `job_title_id` int(10) DEFAULT NULL,
   `bio` varchar(500) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `reset_token_hash` varchar(255) DEFAULT NULL,
@@ -152,8 +152,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`) VALUES
-(17, 'Ronald', 'Jensen', '2024-11-01', 'Female', 'Angeles, Pampanga, Philippines', 'ronaldsullano1234@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741c9e2df041_IMG_20230104_162006.png', 1, '', '$2y$10$qLMlJaMQ0vTG1JmjVizsQO0r.lPZisR7chw8WJKPPNaFpct/Utc8K', 'cc0b3e07c5ccf3ec3c493ca7701dbb0151cd241694ea8b59764b4487cae24a4d', '2024-11-23 19:22:46', NULL, NULL, NULL),
-(19, 'Kate', 'Jensen', '2003-09-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741c9f93aa18_wallpaperflare.com_wallpaper.jpg', 3, '', '$2y$10$VzA1NGX.l9gXOijcrrVqC.9zEdJLQa3Fkz0.tzaQWaJaa1kAMdupK', NULL, NULL, NULL, NULL, NULL);
+(19, 'Kate', 'Jensen', '2003-09-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741c9f93aa18_wallpaperflare.com_wallpaper.jpg', 3, '', '$2y$10$VzA1NGX.l9gXOijcrrVqC.9zEdJLQa3Fkz0.tzaQWaJaa1kAMdupK', NULL, NULL, NULL, NULL, NULL),
+(22, 'Ronald', 'Sullano', '2003-07-13', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741e2df82542_images.jpg', NULL, '', '$2y$10$6de7uj7dIUKeq2NjkH2VL.QIDOaIDeXjbQdEh3ohlg.b/ZdT1W4He', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -209,7 +209,7 @@ CREATE TABLE `user_profile` (
 --
 DROP TABLE IF EXISTS `user_profile`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_profile`  AS SELECT `users`.`user_id` AS `user_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`role` AS `role`, `users`.`profile_picture_url` AS `profile_picture_url`, `job_titles`.`job_title` AS `job_title`, `users`.`bio` AS `bio` FROM (`users` join `job_titles` on(`users`.`job_title_id` = `job_titles`.`job_title_id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_profile`  AS SELECT `users`.`user_id` AS `user_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`role` AS `role`, `users`.`profile_picture_url` AS `profile_picture_url`, `job_titles`.`job_title` AS `job_title`, `users`.`bio` AS `bio` FROM (`users` left join `job_titles` on(`users`.`job_title_id` = `job_titles`.`job_title_id`)) ;
 
 --
 -- Indexes for dumped tables
@@ -271,7 +271,7 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users_experiences`
@@ -293,7 +293,7 @@ ALTER TABLE `users_skills`
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `job_titles` (`job_title_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `job_titles` (`job_title_id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --
 -- Constraints for table `users_experiences`
