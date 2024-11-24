@@ -33,7 +33,23 @@ include ('header.php');
 </head>
 <body>
     <section class="container-fluid poppins">
-        <h1 class="text-center">dashboard ni freelancer :D</h1>
+        <div class="container">
+            <!-- Profile Header -->
+            <div class="row mt-4 align-items-center">
+                <!-- Profile Title -->
+                <div class="col-12 col-md-6">
+                    <h2 class="text-start">Dashboard</h2>
+                </div>
+                <!-- Breadcrumb Navigation -->
+                <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
     </section>
 </body>
 </html>
