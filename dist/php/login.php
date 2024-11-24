@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <span class="fas fa-envelope text-green-50 ps-1"></span>
                             </div>
                         </div>
-                        <input type="email" name="email" id="email" class="form-control rounded-end-5 border px-3 py-2" placeholder="Email" required>
+                        <input type="email" name="email" id="email" class="form-control rounded-end-5 border px-3 py-2 no-outline" placeholder="Email" required>
                     </div>
                 </div>
 
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <span class="fas fa-lock text-green-50 ps-1"></span>
                             </div>
                         </div>
-                        <input type="password" name="password" id="password" class="form-control rounded-end-0 border px-3 py-2" placeholder="Password" required>
+                        <input type="password" name="password" id="password" class="form-control rounded-end-0 border px-3 py-2 no-outline" placeholder="Password" required>
                         <button type="button" id="togglePassword1" class="btn btn rounded-end-5 btn-outline-light border">
                             <span class="fas fa-eye text-green-50"></span>
                         </button>
@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-6 d-flex justify-content-center">
-                            <a href="register.php" class="btn btn-light-green fw-bold text-green-100 rounded-5 w-100">Register</a>
+                            <a href="register.php" class="btn btn-light-green fw-medium text-green-100 rounded-5 w-100">Register</a>
                         </div>
                         <div class="col-6 d-flex justify-content-center">
                             <input type="submit" name="login" value="Login" class="btn btn-dark-green flex-grow-1 flex-sm-grow-0 col-12 col-sm-5 rounded-5 w-100">

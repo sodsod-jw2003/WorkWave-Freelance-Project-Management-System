@@ -4,8 +4,18 @@
 @import url(text-colors.css);
 @import url(btn-colors.css);
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 .poppins {
     font-family: 'Poppins' !important;
+}
+
+.form-check-input.custom-checkbox:focus {
+    outline: 2px solid var(--green-30); 
+    outline-offset: 2px;
+    box-shadow: 0 0 5px var(--green-30); 
 }
 
 .form-check-input.custom-checkbox:checked {
@@ -36,10 +46,10 @@ header a {
 }
 
 .no-outline-green-focus:focus {
-    outline: none; /* Remove the browser's default outline */
-    border-color: var(--green-50); /* Set your desired border color */
-    box-shadow: 0 0 3px var(--green-50); /* Add a green glow effect */
-    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out; /* Smooth transition */
+    outline: none; 
+    border-color: var(--green-50); 
+    box-shadow: 0 0 3px var(--green-50); 
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out; 
 }
 
 .border-top-accent {
@@ -59,4 +69,14 @@ header a {
 .nav-pills .nav-link.active {
     background-color: var(--green-30);
     color: #ffffff;
+}
+
+.breadcrumb-item a {
+    color: var(--green-50) !important; 
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--green-50) !important; 
+    text-decoration: underline;
 }

@@ -16,3 +16,6 @@ $user = $result->fetch_assoc();
 $profile_pic = $user['profile_picture_url'] ? "../../dist/php/uploads/profile_pictures/" . $user['profile_picture_url'] : "../../img/default-profile.png";
 $full_name = $user['first_name'] . " " . $user['last_name'];
 $job_title = $user['job_title'] ?? "No job title provided";
+$gender = $user['gender'] ?? "No gender found"; 
+$city = $user['city'] ?? "No city found"; 
+$email = $user['email'] ?? "No email found";

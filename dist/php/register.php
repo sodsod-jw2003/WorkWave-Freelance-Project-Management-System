@@ -35,32 +35,37 @@
         <!-- form -->
         <form action="process/proc_register.php" method="POST" id="registrationForm">
         
-        <!-- phase 1-->
+        <!-- phase 1 -->
         <div id="phase1" class="mb-4">
             <!-- role -->
-            <div class="container mb-3">
-                <div class="input-group my-1">
-                    <div class="input-group-prepend d-flex align-items-stretch">
-                        <div class="input-group-text bg-white rounded-start-5 d-flex justify-content-center align-items-center">
-                            <span class="fas fa-briefcase text-green-50 ps-1"></span>
-                        </div>
-                    </div>
-                    <select name="role" id="role" class="form-control rounded-end-5 border px-3 py-2" required>
-                        <option value="" disabled selected>Are you a client or Freelancer</option>
-                        <option value="Client">Client</option>
-                        <option value="Freelancer">Freelancer</option>
-                    </select>
+            <div class="container mt-4 mb-3">
+                <div class="container text-center mb-3">Continue as...</div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <label class="btn flex-grow-1 w-100 h-100 mx-1" id="clientBtn">
+                        <input type="radio" name="role" value="Client" id="client" required hidden>
+                        <div class="fas fa-user-tie fa-2x me-2 mt-3 text-green-50"></div>
+                        <div class="container mt-2 mb-3">Client</div>
+                    </label>
+                    <label class="btn flex-grow-1 w-100 h-100 mx-1" id="freelancerBtn">
+                        <input type="radio" name="role" value="Freelancer" id="freelancer" required hidden>
+                        <div class="fas fa-briefcase fa-2x me-2 mt-3 text-green-50"></div>
+                        <div class="container mt-2 mb-3">Freelancer</div>
+                    </label>
                 </div>
             </div>
+        </div>
+
+        <!-- phase 2-->
+        <div id="phase2" class="mb-4" style="display: none;">
             <!-- first name -->
-            <div class="container mb-3 ">
+            <div class="container mt-4 mb-3 ">
                 <div class="input-group my-1">
                     <div class="input-group-prepend d-flex align-items-stretch">
                         <div class="input-group-text bg-white rounded-start-5 d-flex justify-content-center align-items-center">
                             <span class="fas fa-user text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="text" name="first_name" id="first_name" class="form-control rounded-end-5 border px-3 py-2" placeholder="First Name" required>
+                    <input type="text" name="first_name" id="first_name" class="form-control rounded-end-5 border px-3 py-2 no-outline" placeholder="First Name" required>
                 </div>
             </div>
             <!-- last name -->
@@ -71,13 +76,13 @@
                             <span class="fas fa-user text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="text" name="last_name" id="last_name" class="form-control rounded-end-5 border px-3 py-2" placeholder="Last Name" required>
+                    <input type="text" name="last_name" id="last_name" class="form-control rounded-end-5 border px-3 py-2 no-outline" placeholder="Last Name" required>
                 </div>
             </div>
         </div>
 
-        <!-- phase 2 -->
-        <div id="phase2" class="mb-4" style="display: none;">
+        <!-- phase 3 -->
+        <div id="phase3" class="mb-4" style="display: none;">
             <!-- birthdate -->
             <div class="container mt-4 mb-3">
                 <div class="input-group my-1">
@@ -86,7 +91,7 @@
                             <span class="fas fa-calendar-alt text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="date" name="birthdate" id="birthdate" class="form-control rounded-end-5 border px-3 py-2" required>
+                    <input type="date" name="birthdate" id="birthdate" class="form-control rounded-end-5 border px-3 py-2 no-outline" required>
                 </div>
             </div>
             <!-- gender -->
@@ -97,7 +102,7 @@
                             <span class="fas fa-mars-and-venus text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <select name="gender" id="gender" class="form-control rounded-end-5 border px-3 py-2" required>
+                    <select name="gender" id="gender" class="form-control rounded-end-5 border px-3 py-2 no-outline" required>
                         <option value="" disabled selected>Select Gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -113,13 +118,13 @@
                             <span class="fas fa-location-dot text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="text" name="city" id="city" class="form-control rounded-end-5 border px-3 py-2" placeholder="City" required>
+                    <input type="text" name="city" id="city" class="form-control rounded-end-5 border px-3 py-2 no-outline" placeholder="City" required>
                 </div>
             </div>
         </div>
 
-        <!-- phase 3 -->
-        <div id="phase3" class="mb-4" style="display: none;">
+        <!-- phase 4 -->
+        <div id="phase4" class="mb-4" style="display: none;">
             <!-- email -->
             <div class="container mt-4 mb-3">
                 <div class="input-group my-1">
@@ -128,7 +133,7 @@
                             <span class="fas fa-envelope text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="email" name="email" id="email" class="form-control rounded-end-5 border px-3 py-2" placeholder="Email" required>
+                    <input type="email" name="email" id="email" class="form-control rounded-end-5 border px-3 py-2 no-outline" placeholder="Email" required>
                 </div>
             </div>
             <!-- password -->
@@ -139,7 +144,7 @@
                             <span class="fas fa-lock text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="password" name="password" id="password" class="form-control rounded-end-0 border px-3 py-2" placeholder="Password" required>
+                    <input type="password" name="password" id="password" class="form-control rounded-end-0 border px-3 py-2 no-outline" placeholder="Password" required>
                     <button type="button" id="togglePassword1" class="btn btn rounded-end-5 btn-outline-light border">
                         <span class="fas fa-eye text-green-50"></span>
                     </button>
@@ -153,7 +158,7 @@
                             <span class="fas fa-lock text-green-50 ps-1"></span>
                         </div>
                     </div>
-                    <input type="password" name="confirm_password" id="confirm_password" class="form-control rounded-end-0 border px-3 py-2" placeholder="Confirm Password" required>
+                    <input type="password" name="confirm_password" id="confirm_password" class="form-control rounded-end-0 border px-3 py-2 no-outline" placeholder="Confirm Password" required>
                     <button type="button" id="togglePassword2" class="btn btn rounded-end-5 btn-outline-light border">
                         <span class="fas fa-eye text-green-50"></span>
                     </button>
@@ -189,10 +194,10 @@
         <div class="container mb-4">
             <div class="row justify-content-center">
                 <div class="col-6 d-flex justify-content-center">
-                    <button type="button" id="backButton" class="btn btn-light-green fw-bold text-green-100 rounded-5 w-100">Back</button>
+                    <button type="button" id="backButton" class="btn btn-light-green fw-medium text-green-100 rounded-5 w-100">Back</button>
                 </div>
                 <div class="col-6 d-flex justify-content-center">
-                    <button type="button" id="nextButton" class="btn btn-dark-green flex-grow-1 flex-sm-grow-0 col-12 col-sm-5 rounded-5 w-100">Next</button>
+                    <button type="button" id="nextButton" class="btn btn-dark-green fw-medium flex-grow-1 flex-sm-grow-0 col-12 col-sm-5 rounded-5 w-100">Next</button>
                     <button type="submit" id="submitButton" class="btn btn-dark-green flex-grow-1 flex-sm-grow-0 col-12 col-sm-5 rounded-5 w-100" style="display:none">Submit</button>
                 </div>
             </div>
@@ -200,7 +205,7 @@
 
         <!-- progress bar -->
         <div class="progress mx-3">
-            <div id="progress-bar" class="progress-bar bg-green-30" role="progressbar" style="width: 33%;" aria-valuemin="0" aria-valuemax="100"></div>
+            <div id="progress-bar" class="progress-bar bg-green-30" role="progressbar" style="width: 25%;" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
 

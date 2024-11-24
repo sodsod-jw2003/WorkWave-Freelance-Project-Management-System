@@ -1,0 +1,41 @@
+@import url(root-colors.css);
+
+.border-green-10 {
+    border: 1rem solid var(--green-10) !important;
+}
+
+.border-green-20 {
+    border: 1rem solid  var(--green-20) !important;
+}
+
+.border-green-30 {
+    border: 1rem solid  var(--green-30) !important;
+}
+
+.border-green-40 {
+    border: 1rem solid  var(--green-40) !important;
+}
+
+.border-green-50 {
+    border: 1rem solid  var(--green-50) !important;
+}
+
+.border-green-60 {
+    border: 1rem solid  var(--green-60) !important;
+}
+
+.border-green-70 {
+    border: 1rem solid  var(--green-70) !important;
+}
+
+.border-green-80 {
+    border: 1rem solid  var(--green-80) !important;
+}
+
+.border-green-90 {
+    border: 1rem solid  var(--green-90) !important;
+}
+
+.border-green-100 {
+    border: 1rem solid  var(--green-100) !important;
+}
