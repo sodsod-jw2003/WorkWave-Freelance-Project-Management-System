@@ -48,7 +48,8 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
+    <!-- maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8ps9u4llkxJ9vymRLuIFHt0t-Z8eF76U&libraries=places"></script>
 </head>
 <body>
     
@@ -425,14 +426,29 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="nationality" class="text-muted small mb-2 ms-1">Nationality</label>
-                                                        <input type="text" name="nationality" id="nationality" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['nationality']); ?>">
+                                                        <input 
+                                                            id="nationality" 
+                                                            type="text"
+                                                            name="nationality"
+                                                            class="form-control bg-white-100 no-outline-green-focus border-1 w-100"
+                                                            placeholder="Enter your Nationality"
+                                                            value="<?php echo $user['nationality'] ?>"
+                                                            list="nationalities">
+                                                        <datalist id="nationalities"></datalist>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="language" class="text-muted small mb-2 ms-1">Language</label>
-                                                        <input type="text" name="language" id="language" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['language']); ?>">
+                                                        <input 
+                                                            id="language" 
+                                                            type="text" 
+                                                            name="language" 
+                                                            class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
+                                                            placeholder="Enter your Primary Language"
+                                                            value="<?php echo $user['language'] ?>"
+                                                            list="languages">
+                                                        <datalist id="languages"></datalist>
                                                     </div>
                                                 </div>
-
                                                 <div class="mt-3 mb-3">
                                                     <button type="submit" class="btn btn-dark-green">
                                                         <i class="fas fa-floppy-disk text-white me-2"></i>Save Changes

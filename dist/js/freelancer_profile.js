@@ -348,3 +348,96 @@ $(document).on('submit', '#passwordChangeForm', function(e) {
       loadUserSkills();
       updateSidebarSkills();
   });
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const nationalityInput = document.getElementById('nationality');
+    const nationalityList = document.getElementById('nationalities');
+    const languageInput = document.getElementById('language');
+    const languageList = document.getElementById('languages');
+
+    let nationalities = [];
+    let languages = [];
+
+    try {
+        // Using GitHub Gist raw URL - Replace with your own Gist URL
+        const response = await fetch('https://gist.githubusercontent.com/DongDANN/c41bba3f66514fcfb7e63ae3ea2e4281/raw/a49b5fdedc2e6fbff2a971b94496a20dad7f0f6c/gistfile1.txt');
+        const data = await response.json();
+
+        // Save fetched data for filtering
+        nationalities = data.nationalities;
+        languages = data.languages;
+
+    } catch (error) {
+        console.log('Loading fallback data');
+        const fallbackData = {
+            nationalities: [
+                'American', 'British', 'Canadian', 'Chinese', 'Filipino',
+                'French', 'German', 'Indian', 'Japanese', 'Korean'
+            ],
+            languages: [
+                'Arabic', 'Chinese', 'English', 'Filipino', 'French',
+                'German', 'Hindi', 'Japanese', 'Korean', 'Spanish'
+            ]
+        };
+
+        // Save fallback data for filtering
+        nationalities = fallbackData.nationalities;
+        languages = fallbackData.languages;
+    }
+
+    // Helper function to update datalist options
+    const updateDatalist = (input, list, options) => {
+        list.innerHTML = ''; // Clear previous options
+        const value = input.value.toLowerCase();
+        if (value) {
+            const filteredOptions = options.filter(option =>
+                option.toLowerCase().startsWith(value)
+            );
+            filteredOptions.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                list.appendChild(optionElement);
+            });
+        }
+    };
+
+    // Add event listener for nationality input
+    nationalityInput.addEventListener('keyup', () => {
+        updateDatalist(nationalityInput, nationalityList, nationalities);
+    });
+
+    // Add event listener for language input
+    languageInput.addEventListener('keyup', () => {
+        updateDatalist(languageInput, languageList, languages);
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const cityInput = document.getElementById('city');
+    
+    const autocomplete = new google.maps.places.Autocomplete(cityInput, {
+        types: ['(cities)'],
+        fields: ['address_components', 'formatted_address'],
+        componentRestrictions: { country: 'PH' }
+    });
+
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        let city = '';
+        let country = '';
+
+        // Extract city and country from address components
+        place.address_components.forEach(component => {
+            if (component.types.includes('locality')) {
+                city = component.long_name;
+            }
+            if (component.types.includes('country')) {
+                country = component.long_name;
+            }
+        });
+
+        // Set the input value to "City, Country" format
+        cityInput.value = city + ', ' + country;
+    });
+});
