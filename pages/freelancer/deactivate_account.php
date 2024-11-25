@@ -1,6 +1,5 @@
 <?php 
 session_start();
-$mysqli = require ('../../connection.php');
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
@@ -61,8 +60,9 @@ include ('header.php');
                         <div class="container d-flex flex-column align-items-center text-center">
                             <h4 class="text-green-40 mt-2 fw-bold">We're sad to see you go</h4>
                             <p class="text-muted mb-4">Let us know how long you will be gone</p>
-
+                            <!-- Deactivation Duration Selection -->
                             <div class="mb-3 w-50">
+                            <form action="../../dist/php/process/proc_deactivate_account.php" method="POST">
                                 <select 
                                     name="deactivationDuration" 
                                     id="deactivationDuration" 
@@ -82,6 +82,7 @@ include ('header.php');
                                 class="btn btn-dark-green px-4 py-2">
                                 Confirm Deactivation
                             </button>
+                            </form>
                         </div>
                     </div>
                 </div>

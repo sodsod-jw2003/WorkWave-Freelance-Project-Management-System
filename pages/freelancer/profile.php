@@ -1,9 +1,24 @@
-<?php 
+<?php
 session_start();
-$mysqli = require ('../../connection.php');
+$mysqli1 = require ('../../connection.php');
+$mysqli2 = require ('../../connection.php');
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
+
+//jobs query
+$query = "CALL sp_get_job";
+$result = mysqli_query($mysqli1, $query);
+
+//skills query
+$skills_query = "CALL sp_get_skills";
+$skills_result = mysqli_query($mysqli2, $skills_query);
+
+$skills_by_category = [];
+while ($row = mysqli_fetch_assoc($skills_result)) {
+    $skills_by_category[$row['skill_category']][] = $row;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +44,10 @@ include ('header.php');
 
     <!-- freelancer_profile.js -->
     <script src="../../dist/js/freelancer_profile.js" defer></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 </head>
 <body>
@@ -201,13 +220,13 @@ include ('header.php');
                                 <div class="mb-3">
                                     <span class="fas fa-flag me-1 text-green-60"></span>
                                     <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                    <div class="text-muted small"><?php echo $user['first_name'] ?></div>
+                                    <div class="text-muted small"><?php echo $user['nationality'] ?></div>
                                 </div>
                                 <hr class="divider">
                                 <div class="">
                                     <span class="fas fa-language me-1 text-green-60"></span>
                                     <span class="text-muted fw-semibold text-green-60">Language</span>
-                                    <div class="text-muted small"><?php echo $user['first_name'] ?></div>
+                                    <div class="text-muted small"><?php echo $user['language'] ?></div>
                                 </div>
                             </div>
                         </div>
@@ -252,51 +271,23 @@ include ('header.php');
                                         <h5 class="">Job Experience</h5>
                                         <h6 class="text-muted">List all of your <span class="fw-semibold text-green-50">Job Experience</span> including Job Title, Company, and Duration.</h6>
                                     </div>
-                                    <div class="card p-3 mx-2 bg-light border-start-accent card-outline">
+                                    <!-- Job Experience Section -->
+                                    <div class="card border-0 mb-4">
                                         <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-4 mb-1">
-                                                    <label for="job_title" class="text-muted small mb-2 ms-1">Job Title</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="job_title" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="Content Writer">
-                                                </div>
-                                                <div class="col-md-4 mb-1">
-                                                    <label for="company" class="text-muted small mb-2 ms-1">Company</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="company" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="SMDC Inc.">
-                                                </div>
-                                                <div class="col-md-4 mb-1">
-                                                    <label for="duration" class="text-muted small mb-2 ms-1">Duration</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="duration" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="2009-2011">
-                                                </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="card-title mb-0"></h5>
+                                                <button id="addJobExperience" class="btn btn-dark-green">
+                                                    <i class="fas fa-plus me-2"></i>Add Experience
+                                                </button>
+                                            </div>
+
+                                            <!-- Container for job experiences -->
+                                            <div id="jobExperienceContainer">
+                                                <!-- Job experiences will be loaded here dynamically -->
                                             </div>
                                         </div>
-                                        <div class="card-footer border-0 bg-transparent mb-2">
-                                            <button class="btn btn-primary">
-                                                <i class="fas fa-pen text-white me-2"></i><span>Edit</span>
-                                            </button>
-                                            <button class="btn btn-danger">
-                                                <i class="fas fa-trash text-white me-2"></i><span>Remove</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 ms-2 mb-3">
-                                        <button class="btn btn-dark-green">
-                                            <i class="fas fa-floppy-disk text-white me-2"></i><span>Save</span>
-                                        </button>
                                     </div>
                                 </div>
-
                                 <!-- skills: tab pane -->
                                 <div class="tab-pane slide" id="pills-skills" role="tabpanel" aria-labelledby="pills-skills-tab">
                                     <div class="container pt-4 pb-2 mb-3">
@@ -304,64 +295,70 @@ include ('header.php');
                                         <h6 class="text-muted">Choose from and tick all the <span class="fw-semibold text-green-50">Skills</span> that you possess.</h6>
                                     </div>
                                     <div class="card p-3 mx-2 bg-light border-start-accent card-outline">
-                                        <div class="card-header bg-transparent border-0">Category_1</div>
-                                        <div class="container">
-                                            <hr class="divider">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <div id="skills" class="d-flex flex-wrap">
-                                                    <!-- sample skill 1 -->
-                                                    <div class="form-check d-flex align-items-center me-5">
-                                                        <input 
-                                                            class="form-check-input custom-checkbox fs-5" 
-                                                            type="checkbox" 
-                                                            id="skill1" 
-                                                            name="skills[]" 
-                                                            value="Sample_Skill_1">
-                                                        <label class="form-check-label ms-2 pt-1" for="skill1">Sample_Skill_1</label>
-                                                    </div>
-                                                    <!-- sample skill 2 -->
-                                                    <div class="form-check d-flex align-items-center me-5">
-                                                        <input 
-                                                            class="form-check-input custom-checkbox fs-5" 
-                                                            type="checkbox" 
-                                                            id="skill2" 
-                                                            name="skills[]" 
-                                                            value="Sample_Skill_2">
-                                                        <label class="form-check-label ms-2 pt-1" for="skill1">Sample_Skill_2</label>
-                                                    </div>
-                                                    <!-- sample skill 3 -->
-                                                    <div class="form-check d-flex align-items-center me-5">
-                                                        <input 
-                                                            class="form-check-input custom-checkbox fs-5" 
-                                                            type="checkbox" 
-                                                            id="skill3" 
-                                                            name="skills[]" 
-                                                            value="Sample_Skill_3">
-                                                        <label class="form-check-label ms-2 pt-1" for="skill1">Sample_Skill_3</label>
-                                                    </div>
-                                                    <!-- sample skill 4 -->
-                                                    <div class="form-check d-flex align-items-center me-5">
-                                                        <input 
-                                                            class="form-check-input custom-checkbox fs-5" 
-                                                            type="checkbox" 
-                                                            id="skill4" 
-                                                            name="skills[]" 
-                                                            value="Sample_Skill_4">
-                                                        <label class="form-check-label ms-2 pt-1" for="skill1">Sample_Skill_4</label>
+                                        <form id="skillsForm">
+                                        <!-- Category Navigation -->
+                                        <ul class="nav nav-pills mb-3" role="tablist">
+                                            <?php 
+                                            $first = true;
+                                            foreach ($skills_by_category as $category => $skills): 
+                                                $categoryId = str_replace(' ', '_', $category);
+                                            ?>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link <?php echo $first ? 'active' : ''; ?>" 
+                                                            data-bs-toggle="tab" 
+                                                            data-bs-target="#skill_tab_<?php echo $categoryId; ?>" 
+                                                            type="button" 
+                                                            role="tab">
+                                                        <?php echo htmlspecialchars($category); ?>
+                                                    </button>
+                                                </li>
+                                            <?php 
+                                                $first = false;
+                                            endforeach; 
+                                            ?>
+                                        </ul>
+
+                                        <!-- Skills Content -->
+                                        <div class="tab-content">
+                                            <?php 
+                                            $first = true;
+                                            foreach ($skills_by_category as $category => $skills): 
+                                                $categoryId = str_replace(' ', '_', $category);
+                                            ?>
+                                                <div class="tab-pane fade <?php echo $first ? 'show active' : ''; ?>" 
+                                                    id="skill_tab_<?php echo $categoryId; ?>" 
+                                                    role="tabpanel">
+                                                    <div class="form-group">
+                                                        <div id="skills" class="d-flex flex-wrap">
+                                                            <?php foreach ($skills as $skill): ?>
+                                                                <div class="form-check d-flex align-items-center me-5">
+                                                                    <input class="form-check-input custom-checkbox fs-5" 
+                                                                        type="checkbox" 
+                                                                        id="skill_<?php echo $skill['skill_id']; ?>" 
+                                                                        name="skills[]" 
+                                                                        value="<?php echo $skill['skill_id']; ?>">
+                                                                    <label class="form-check-label ms-2 pt-1" 
+                                                                        for="skill_<?php echo $skill['skill_id']; ?>">
+                                                                        <?php echo htmlspecialchars($skill['skill_name']); ?>
+                                                                    </label>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            <?php 
+                                                $first = false;
+                                            endforeach; 
+                                            ?>
                                         </div>
                                     </div>
                                     <div class="mt-3 ms-2 mb-3">
-                                        <button class="btn btn-dark-green">
-                                            <i class="fas fa-floppy-disk text-white me-2"></i><span>Save</span>
+                                        <button type="submit" class="btn btn-dark-green">
+                                            <i class="fas fa-floppy-disk text-white me-2"></i>Save
                                         </button>
                                     </div>
+                                    </form>
                                 </div>
-
                                 <!-- personal information: tab pane -->
                                 <div class="tab-pane slide" id="pills-personal" role="tabpanel" aria-labelledby="pills-personal-tab">
                                     <div class="container pt-4 pb-2 mb-3">
@@ -370,117 +367,79 @@ include ('header.php');
                                     </div>
                                     <div class="card p-3 mx-2 bg-light border-start-accent card-outline">
                                         <div class="card-body">
-
+                                        <form id="personalInfoForm">
                                             <!-- fname, lname, and job title -->
-                                            <div class="row">
-                                                <div class="col-md-4 mb-1"> <!-- fetch lang -->
-                                                    <label for="first_name" class="text-muted small mb-2 ms-1">First Name</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="first_name" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="<?php echo $user['first_name'] ?>">
-                                                </div>
-                                                <div class="col-md-4 mb-1"> <!-- fetch lang -->
-                                                    <label for="last_name" class="text-muted small mb-2 ms-1">Last Name</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="last_name" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="<?php echo $user['last_name'] ?>">
-                                                </div>
-                                                <div class="col-md-4 mb-1"> <!-- fetch lang -->
-                                                    <label for="job_title" class="text-muted small mb-2 ms-1">Job Title</label>
-                                                    <select 
+                                            <form id="personalInfoForm">
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="first_name" class="text-muted small mb-2 ms-1">First Name</label>
+                                                        <input type="text" name="first_name" id="first_name" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['first_name']); ?>">
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="last_name" class="text-muted small mb-2 ms-1">Last Name</label>
+                                                        <input type="text" name="last_name" id="last_name" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['last_name']); ?>">
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="job_title" class="text-muted small mb-2 ms-1">Job Title</label>
+                                                        <select 
                                                         name="job_title" 
                                                         id="job_title" 
                                                         class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
-                                                        <option value="" selected><?php echo $user['job_title'] ?></option>
-                                                        <option value="Sample_Job_Title_1">Sample Job Title 1</option>
-                                                        <option value="Sample_Job_Title_2">Sample Job Title 2</option>
-                                                        <option value="Sample_Job_Title_3">Sample Job Title 3</option>
-                                                        <option value="Sample_Job_Title_4">Sample Job Title 4</option>
-                                                        <option value="Sample_Job_Title_5">Sample Job Title 5</option>
+                                                        <!-- Show the current selected job title as selected -->
+                                                        <?php
+                                                        echo '<option value="' . $user['job_title_id'] . '" selected>' . $user['job_title'] . '</option>'; // Default selected
+                                                        // Populate dropdown with other job titles from the database
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            if ($row['job_title_id'] !== $user['job_title_id']) { // Skip the already selected job title
+                                                                echo '<option value="' . $row['job_title_id'] . '">' . $row['job_title'] . '</option>';
+                                                            }
+                                                        }
+                                                        ?>
                                                     </select>
-                                                </div>
-                                            </div>
-
-                                            <!-- gender, mobile num, and email -->
-                                            <div class="row mt-3">
-                                                <div class="col-md-4 mb-1"> <!-- fetch lang -->
-                                                    <label for="gender" class="text-muted small mb-2 ms-1">Gender</label>
-                                                    <select 
-                                                        name="gender" 
-                                                        id="gender" class="form-select bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        required>
-                                                        <option value="" disabled selected><?php echo $user['gender'] ?></option>
-                                                        <option value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                        <option value="Prefer not to say">Prefer not to say</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-md-4 mb-1">
-                                                    <label for="mobile_number" class="text-muted small mb-2 ms-1">Mobile Number</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
-                                                        <input 
-                                                            type="text" 
-                                                            id="mobile_number" 
-                                                            name="mobile_number" 
-                                                            class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                                            placeholder="Enter mobile number" 
-                                                            maxlength="10"
-                                                            pattern="[0-9]{10}" 
-                                                            title="Enter your 10-digit Mobile Number" 
-                                                            required
-                                                            oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-4 mb-1"> <!-- fetch lang -->
-                                                    <label for="email" class="text-muted small mb-2 ms-1">Email</label>
-                                                    <input 
-                                                        type="email" 
-                                                        name="email" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="<?php echo $user['email'] ?>">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="gender" class="text-muted small mb-2 ms-1">Gender</label>
+                                                        <select name="gender" id="gender" class="form-select bg-white-100 no-outline-green-focus border-1">
+                                                            <option value="Male" <?php echo $user['gender'] == 'Male' ? 'selected' : ''; ?>>Male</option>
+                                                            <option value="Female" <?php echo $user['gender'] == 'Female' ? 'selected' : ''; ?>>Female</option>
+                                                            <option value="Prefer not to say" <?php echo $user['gender'] == 'Prefer not to say' ? 'selected' : ''; ?>>Prefer not to say</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="mobile_number" class="text-muted small mb-2 ms-1">Mobile Number</label>
+                                                        <input type="text" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="email" class="text-muted small mb-2 ms-1">Email</label>
+                                                        <input type="email" name="email" id="email" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['email']); ?>">
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <!-- location, nationality, and language -->
-                                            <div class="row mt-3">
-                                                <div class="col-md-4 mb-1"> <!-- fetch lang -->
-                                                    <label for="city" class="text-muted small mb-2 ms-1">Location</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="city" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="<?php echo $user['city'] ?>">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="city" class="text-muted small mb-2 ms-1">Location</label>
+                                                        <input type="text" name="city" id="city" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['city']); ?>">
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="nationality" class="text-muted small mb-2 ms-1">Nationality</label>
+                                                        <input type="text" name="nationality" id="nationality" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['nationality']); ?>">
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="language" class="text-muted small mb-2 ms-1">Language</label>
+                                                        <input type="text" name="language" id="language" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['language']); ?>">
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-4 mb-1"> <!-- what if gamit API? -->
-                                                    <label for="nationaility" class="text-muted small mb-2 ms-1">Nationality</label>
-                                                    <input 
-                                                        type="text" 
-                                                        name="nationaility" 
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
-                                                        placeholder="Enter your Nationality">
+
+                                                <div class="mt-3 mb-3">
+                                                    <button type="submit" class="btn btn-dark-green">
+                                                        <i class="fas fa-floppy-disk text-white me-2"></i>Save Changes
+                                                    </button>
                                                 </div>
-                                                <div class="col-md-4 mb-1"> <!-- what if gamit API? -->
-                                                    <label for="language" class="text-muted small mb-2 ms-1">Language</label>
-                                                    <input 
-                                                        type="text"
-                                                        name="language"
-                                                        class="form-control bg-white-100 no-outline-green-focus border-1 w-100"
-                                                        placeholder="Enter your Primary Language">
-                                                </div>
-                                            </div>
+                                            </form>
                                         </div>
-                                    </div>
-                                    <div class="mt-3 ms-2 mb-3">
-                                        <button class="btn btn-dark-green">
-                                            <i class="fas fa-floppy-disk text-white me-2"></i><span>Save</span>
-                                        </button>
                                     </div>
                                 </div>
 
@@ -492,6 +451,7 @@ include ('header.php');
                                     </div>
                                     <div class="card p-3 mx-2 mb-3 bg-light border-start-accent card-outline">
                                         <div class="card-body">
+                                        <form id="passwordChangeForm">
                                             <div class="row">
                                                 <div class="col-md-6 mb-1"> 
                                                     <label for="change_password" class="text-muted small mb-2 ms-1">Change Password</label>
@@ -531,6 +491,7 @@ include ('header.php');
                                                     <i class="fas fa-floppy-disk text-white me-2"></i><span>Submit</span>
                                                 </button>
                                             </div>
+                                            </form>
                                             <hr class="divider mt-4">
                                             <div class="mt-4">Thinking of leaving WorkWave? 
                                                 <a href="deactivate_account.php" class="no-deco text-green-50 fw-bold">Take a Break</a> instead.

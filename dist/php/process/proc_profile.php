@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 //query for user data
 $user_id = $_SESSION['user_id'];
-$stmt = $mysqli->prepare("CALL get_user_by_id(?)");
+$stmt = $mysqli->prepare("CALL sp_get_user_by_id(?)");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();

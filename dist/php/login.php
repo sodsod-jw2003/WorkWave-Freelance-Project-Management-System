@@ -6,7 +6,7 @@ $is_invalid = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mysqli = require "../../connection.php";
 
-    $stmt = $mysqli->prepare("CALL get_user_by_email(?)");
+    $stmt = $mysqli->prepare("CALL sp_get_user_by_email(?)");
     $stmt->bind_param("s", $_POST["email"]);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -59,8 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkWave | Login</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="../../img/WorkWaveLogo.png">
-
     <!-- Bootstrap CSS from CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap JS from CDN -->

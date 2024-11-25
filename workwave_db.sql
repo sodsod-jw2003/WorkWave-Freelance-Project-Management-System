@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2024 at 11:06 AM
+-- Generation Time: Nov 25, 2024 at 05:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -25,26 +25,66 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `activate_account` (IN `p_activation_token_hash` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activate_account` (IN `p_activation_token_hash` VARCHAR(255))   BEGIN
 	SELECT * FROM
 	users 
 	WHERE
 	activation_token_hash = p_activation_token_hash;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_email` (IN `p_email` VARCHAR(255))   BEGIN
-	SELECT * FROM users
-    WHERE users.email = p_email;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_user_experience` (IN `p_user_id` INT(11), IN `p_job_title` VARCHAR(255), IN `p_company_name` VARCHAR(255), IN `p_duration` VARCHAR(255))   BEGIN
+	INSERT INTO users_experiences (user_id, job_title, company_name, duration) VALUES (p_user_id, p_job_title, p_company_name, p_duration);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_id` (IN `p_user_id` INT(11))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_users_skills` (IN `p_user_id` INT(11))   BEGIN
+DELETE FROM users_skills WHERE user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_user_experience` (IN `p_user_experience_id` INT(11), IN `p_user_id` INT(11))   BEGIN
+	DELETE FROM users_experiences WHERE user_experience_id = p_user_experience_id AND user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_all_user_info` (IN `p_user_id` INT(11))   BEGIN
 	SELECT * FROM
-	user_profile
+	users
 	WHERE
 	user_id = p_user_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_reset_token_hash` (IN `p_reset_token_hash` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_distint_user_skills` (IN `p_user_id` INT(11))   BEGIN
+SELECT DISTINCT s.skill_category, s.skill_name 
+          FROM users_skills us 
+          JOIN skills s ON us.skill_id = s.skill_id 
+          WHERE us.user_id = p_user_id 
+          ORDER BY s.skill_category;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_job` ()   BEGIN
+SELECT job_title_id, job_title FROM job_titles;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_skills` ()   BEGIN
+SELECT 
+s.skill_id, 
+s.skill_name,
+s.skill_category 
+FROM skills s 
+ORDER BY s.skill_category, s.skill_name;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_by_email` (IN `p_email` VARCHAR(255))   BEGIN
+	SELECT * FROM users
+    WHERE users.email = p_email;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_by_id` (IN `p_user_id` INT(11))   BEGIN
+	SELECT * FROM
+	v_user_profile
+	WHERE
+	user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_by_reset_token_hash` (IN `p_reset_token_hash` VARCHAR(255))   BEGIN
 	IF p_reset_token_hash = ''
 	THEN
 		SELECT 'please fillup all fields' as error_message;
@@ -54,7 +94,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_by_reset_token_hash` (IN `
 	END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `signup_users` (IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_birthdate` DATE, IN `p_gender` VARCHAR(21), IN `p_city` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password_hash` VARCHAR(255), IN `p_activation_token_hash` VARCHAR(255), IN `p_role` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_experience_order_by_duration` (IN `p_user_id` INT(11))   BEGIN
+	SELECT * FROM users_experiences WHERE user_id = p_user_id ORDER BY duration DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_from_v_user_profile` (IN `p_user_id` INT(11))   BEGIN
+
+SELECT * FROM v_user_profile WHERE user_id = p_user_id;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_skills` (IN `p_user_id` INT(11))   BEGIN
+	SELECT skill_id FROM users_skills WHERE user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_user_skills` (IN `p_user_id` INT(11), IN `P_skill_id` INT(11))   BEGIN
+	INSERT INTO users_skills (user_id, skill_id) VALUES (p_user_id, P_skill_id);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_signup_users` (IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_birthdate` DATE, IN `p_gender` VARCHAR(21), IN `p_city` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password_hash` VARCHAR(255), IN `p_activation_token_hash` VARCHAR(255), IN `p_role` VARCHAR(255))   BEGIN
 	IF p_first_name = '' OR p_last_name = '' OR p_birthdate = '' OR p_gender = '' OR p_city = '' OR p_email = '' OR p_password_hash = ''
     THEN
     SELECT 'please fillup all fields' as error_message;
@@ -64,7 +122,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `signup_users` (IN `p_first_name` VA
 	END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_activation_token` (IN `p_user_id` INT(11))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_activation_token` (IN `p_user_id` INT(11))   BEGIN
 	UPDATE users
 	SET
 	activation_token_hash = NULL
@@ -72,14 +130,51 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `update_activation_token` (IN `p_use
 	user_id = p_user_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_reset_token` (IN `p_reset_token_hash` VARCHAR(255), IN `p_email` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_deactivation` (IN `p_deactivation_duration` VARCHAR(255), IN `p_user_id` INT(11))   BEGIN
+	UPDATE users SET
+	deactivation_duration = p_deactivation_duration,
+	status = "inactive"
+	WHERE 
+	user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_reset_token` (IN `p_reset_token_hash` VARCHAR(255), IN `p_email` VARCHAR(255))   BEGIN
 	UPDATE users 
     SET reset_token_hash = p_reset_token_hash,
 		reset_token_expiry = DATE_ADD(NOW(), INTERVAL 30 MINUTE)
     WHERE email = p_email;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_user_profile_picture` (IN `p_profile_picture_url` VARCHAR(255), IN `p_user_id` INT(11))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_experience` (IN `p_job_title` VARCHAR(255), IN `p_company_name` VARCHAR(255), IN `p_duration` VARCHAR(255), IN `p_user_experience_id` INT(11), IN `p_user_id` INT(11))   BEGIN
+	UPDATE users_experiences 
+              SET job_title = p_job_title, company_name = p_company_name, duration = p_duration 
+              WHERE user_experience_id = p_user_experience_id AND user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_password` (IN `p_password_hash` VARCHAR(255), IN `p_user_id` INT(11))   BEGIN
+UPDATE users 
+SET password_hash = p_password_hash, 
+reset_token_hash = NULL 
+WHERE user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_profile` (IN `p_user_id` INT(11), IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_job_title_id` INT(11), IN `p_gender` VARCHAR(255), IN `p_mobile_number` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_nationality` VARCHAR(255), IN `p_language` VARCHAR(255))   BEGIN
+    UPDATE users
+    SET 
+        first_name = p_first_name,
+        last_name = p_last_name,
+        job_title_id = p_job_title_id,
+        gender = p_gender,
+        mobile_number = p_mobile_number,
+        email = p_email,
+        city = p_city,
+        nationality = p_nationality,
+        language = p_language
+    WHERE 
+        user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_profile_picture` (IN `p_profile_picture_url` VARCHAR(255), IN `p_user_id` INT(11))   BEGIN
 	UPDATE users 
 	SET
 		users.profile_picture_url = p_profile_picture_url
@@ -278,6 +373,9 @@ CREATE TABLE `users` (
   `gender` varchar(21) NOT NULL,
   `city` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `mobile_number` varchar(13) NOT NULL,
+  `nationality` varchar(255) NOT NULL,
+  `language` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   `profile_picture_url` varchar(255) NOT NULL,
   `job_title_id` int(10) DEFAULT NULL,
@@ -287,16 +385,19 @@ CREATE TABLE `users` (
   `reset_token_expiry` datetime DEFAULT NULL,
   `activation_token_hash` varchar(255) DEFAULT NULL,
   `last_login_date` datetime DEFAULT NULL,
-  `attempts` int(1) DEFAULT NULL
+  `attempts` int(1) DEFAULT NULL,
+  `deactivation_duration` datetime DEFAULT NULL,
+  `status` varchar(255) DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`) VALUES
-(19, 'Kate', 'Jensen', '2003-09-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741c9f93aa18_wallpaperflare.com_wallpaper.jpg', 3, '', '$2y$10$VzA1NGX.l9gXOijcrrVqC.9zEdJLQa3Fkz0.tzaQWaJaa1kAMdupK', NULL, NULL, NULL, NULL, NULL),
-(22, 'Ronald', 'Sullano', '2003-07-13', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', 'Freelancer', '../../dist/php/uploads/profile_pictures/6741e2df82542_images.jpg', NULL, '', '$2y$10$6de7uj7dIUKeq2NjkH2VL.QIDOaIDeXjbQdEh3ohlg.b/ZdT1W4He', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`, `deactivation_duration`, `status`) VALUES
+(19, 'Kate', 'Jensen', '2003-09-13', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipinoaaaaa', 'Filipino', 'Freelancer', '../../dist/php/uploads/profile_pictures/67435dd66d0f0_received_364139713153077.jpeg', 2, '', '$2y$10$mkzVEZNEgFlgva8H0qvdG.SfI7/vjsDZgxV/Q0fTWZxgxscG00742', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(22, 'Ronald', 'Sullano', '2003-07-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano124@gmail.com', '9515910708', 'Filipino', 'Bisaya', 'Freelancer', '../../dist/php/uploads/profile_pictures/67449aa9d1770_received_364139713153077.jpeg', 2, '', '$2y$10$I2NIOBmIp249g6dwaNZU9.2Q40KzuK2JBkUue2wdDbxNmS30A0AVK', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(23, 'Ronald', 'Sullano', '2003-02-20', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '2515910708', '', '', 'Freelancer', '../../dist/php/uploads/profile_pictures/6744a451b6aec_IMG_20230104_162006.png', 1, '', '$2y$10$YIQ.as2eteXAXAqt6eQtfOfaFseFWn/ZlKTbaPprPyXzxovYB6tIG', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -309,9 +410,21 @@ CREATE TABLE `users_experiences` (
   `user_id` int(11) NOT NULL,
   `job_title` varchar(255) NOT NULL,
   `company_name` varchar(255) NOT NULL,
-  `duration` varchar(9) NOT NULL,
-  `description` varchar(1000) NOT NULL
+  `duration` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users_experiences`
+--
+
+INSERT INTO `users_experiences` (`user_experience_id`, `user_id`, `job_title`, `company_name`, `duration`) VALUES
+(16, 19, 'Bamama', 'ASDaaa', '2003-2321'),
+(17, 19, 'asadasdaa', 'asd', '2003-1212'),
+(25, 19, 'sad', 'asd', '2003-1212'),
+(26, 22, 'Software Developer', 'Internet Org', '2021-2024'),
+(33, 22, 'Taga hugas ng pinggan sa bahay', 'ICOR Inc.', '2012-2024'),
+(35, 22, 'Software Engineer', 'ICOR Inc.aa', '2001-2002'),
+(47, 23, 'Software Engineer', 'ICOR Inc.', '2005-2012');
 
 -- --------------------------------------------------------
 
@@ -325,13 +438,31 @@ CREATE TABLE `users_skills` (
   `skill_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `users_skills`
+--
+
+INSERT INTO `users_skills` (`user_skills_id`, `user_id`, `skill_id`) VALUES
+(142, 22, 132),
+(143, 22, 131),
+(144, 22, 130),
+(145, 22, 133),
+(146, 22, 38),
+(147, 22, 40),
+(148, 22, 29),
+(171, 23, 132),
+(172, 23, 131),
+(173, 23, 130),
+(174, 23, 86),
+(175, 23, 95);
+
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `user_profile`
+-- Stand-in structure for view `v_user_profile`
 -- (See below for the actual view)
 --
-CREATE TABLE `user_profile` (
+CREATE TABLE `v_user_profile` (
 `user_id` int(11)
 ,`first_name` varchar(50)
 ,`last_name` varchar(50)
@@ -339,20 +470,24 @@ CREATE TABLE `user_profile` (
 ,`gender` varchar(21)
 ,`city` varchar(255)
 ,`email` varchar(255)
+,`mobile_number` varchar(13)
+,`nationality` varchar(255)
+,`language` varchar(255)
 ,`role` varchar(255)
 ,`profile_picture_url` varchar(255)
+,`job_title_id` int(10)
 ,`job_title` varchar(255)
-,`bio` varchar(500)
+,`status` varchar(255)
 );
 
 -- --------------------------------------------------------
 
 --
--- Structure for view `user_profile`
+-- Structure for view `v_user_profile`
 --
-DROP TABLE IF EXISTS `user_profile`;
+DROP TABLE IF EXISTS `v_user_profile`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_profile`  AS SELECT `users`.`user_id` AS `user_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`role` AS `role`, `users`.`profile_picture_url` AS `profile_picture_url`, `job_titles`.`job_title` AS `job_title`, `users`.`bio` AS `bio` FROM (`users` left join `job_titles` on(`users`.`job_title_id` = `job_titles`.`job_title_id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_profile`  AS SELECT `users`.`user_id` AS `user_id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`nationality` AS `nationality`, `users`.`language` AS `language`, `users`.`role` AS `role`, `users`.`profile_picture_url` AS `profile_picture_url`, `users`.`job_title_id` AS `job_title_id`, `job_titles`.`job_title` AS `job_title`, `users`.`status` AS `status` FROM (`users` left join `job_titles` on(`users`.`job_title_id` = `job_titles`.`job_title_id`)) ;
 
 --
 -- Indexes for dumped tables
@@ -414,19 +549,19 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `users_experiences`
 --
 ALTER TABLE `users_experiences`
-  MODIFY `user_experience_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_experience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `users_skills`
 --
 ALTER TABLE `users_skills`
-  MODIFY `user_skills_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_skills_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- Constraints for dumped tables
@@ -439,17 +574,23 @@ ALTER TABLE `users`
   ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `job_titles` (`job_title_id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --
--- Constraints for table `users_experiences`
---
-ALTER TABLE `users_experiences`
-  ADD CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Constraints for table `users_skills`
 --
 ALTER TABLE `users_skills`
   ADD CONSTRAINT `skill_id` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`skill_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `e_update_status` ON SCHEDULE EVERY 1 DAY STARTS '2024-10-24 14:14:08' ENDS '2025-11-11 14:14:08' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE users
+SET deactivation_duration = NULL,
+    status = 'active'
+WHERE deactivation_duration IS NOT NULL
+  AND deactivation_duration <= NOW()$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

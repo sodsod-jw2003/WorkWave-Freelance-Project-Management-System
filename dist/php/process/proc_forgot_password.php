@@ -11,7 +11,7 @@
     $reset_token = bin2hex(random_bytes(16));
     $reset_token_hash = hash("sha256", $reset_token);
 
-    $stmt = $mysqli->prepare("CALL update_reset_token(?, ?)");
+    $stmt = $mysqli->prepare("CALL sp_update_reset_token(?, ?)");
     $stmt->bind_param("ss", $reset_token_hash, $_POST["email"]);
     $stmt->execute();
 

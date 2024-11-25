@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (this.files && this.files[0]) {
             const formData = new FormData(profilePicForm);
             
-            fetch('../../dist/php/process/update_profile_picture.php', {
+            fetch('../../dist/php/process/proc_update_profile_picture.php', {
                 method: 'POST',
                 body: formData
             })
@@ -76,3 +76,275 @@ document.addEventListener("DOMContentLoaded", function () {
         new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
+$(document).ready(function() {
+    // Load existing job experiences
+    loadJobExperiences();
+
+    function loadJobExperiences() {
+        $.ajax({
+            url: '../../dist/php/process/proc_get_job_experiences.php',
+            type: 'GET',
+            success: function(response) {
+                $('#jobExperienceContainer').html(response);
+                updateSidebarJobs();
+            }
+        });
+    }
+
+    // Add new job experience button click
+    $('#addJobExperience').click(function() {
+        const newJobForm = `
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form id="newJobForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="job_title" placeholder="Job Title" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" name="start_year" placeholder="Start Year" required>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="end_year" placeholder="End Year" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-dark-green">Save Experience</button>
+                        <button type="button" class="btn btn-secondary" id="cancelAdd">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        `;
+        $('#jobExperienceContainer').prepend(newJobForm);
+    });
+
+    // Handle new job form submission
+    $(document).on('submit', '#newJobForm', function(e) {
+        e.preventDefault();
+        const formData = $(this).serializeArray();
+        const duration = formData.find(f => f.name === 'start_year').value + '-' + formData.find(f => f.name === 'end_year').value;
+        
+        $.ajax({
+            url: '../../dist/php/process/proc_add_job_experience.php',
+            type: 'POST',
+            data: {
+                job_title: formData.find(f => f.name === 'job_title').value,
+                company_name: formData.find(f => f.name === 'company_name').value,
+                duration: duration
+            },
+            success: function(response) {
+                loadJobExperiences();
+                updateSidebarJobs();
+            }
+        });
+    });
+
+    // Handle delete job experience
+    $(document).on('click', '.delete-job', function() {
+        if(confirm('Are you sure you want to delete this experience?')) {
+            const jobId = $(this).data('id');
+            
+            $.ajax({
+                url: '../../dist/php/process/proc_delete_job_experience.php',
+                type: 'POST',
+                data: { user_experience_id: jobId },
+                success: function(response) {
+                    $(`[data-job-id="${jobId}"]`).remove();
+                    updateSidebarJobs();
+                }
+            });
+        }
+    });
+
+    // Cancel add form
+    $(document).on('click', '#cancelAdd', function() {
+        $(this).closest('.card').remove();
+    });
+
+    // Add edit button click handler
+    $(document).on('click', '.edit-job', function() {
+        const jobCard = $(this).closest('.job-card');
+        const jobId = jobCard.data('job-id');
+        const jobTitle = jobCard.find('.card-title').text();
+        const companyName = jobCard.find('.card-subtitle').text();
+        const duration = jobCard.find('.text-muted.small').text();
+        const [startYear, endYear] = duration.split('-');
+    
+        const editForm = `
+            <div class="card-body">
+                <form class="edit-job-form" data-id="${jobId}">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="job_title" value="${jobTitle.trim()}" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="company_name" value="${companyName.trim()}" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="number" class="form-control" name="start_year" value="${startYear.trim()}" min="1900" max="2099" required>
+                        </div>
+                        <div class="col">
+                            <input type="number" class="form-control" name="end_year" value="${endYear.trim()}" min="1900" max="2099" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Update</button>
+                    <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+                </form>
+            </div>
+        `;
+    
+        jobCard.html(editForm);
+    });
+    
+    // Handle edit form submission
+    $(document).on('submit', '.edit-job-form', function(e) {
+        e.preventDefault();
+        const formData = $(this).serializeArray();
+        const jobId = $(this).data('id');
+        const duration = formData.find(f => f.name === 'start_year').value + '-' + formData.find(f => f.name === 'end_year').value;
+    
+        $.ajax({
+            url: '../../dist/php/process/proc_update_job_experience.php',
+            type: 'POST',
+            data: {
+                user_experience_id: jobId,
+                job_title: formData.find(f => f.name === 'job_title').value,
+                company_name: formData.find(f => f.name === 'company_name').value,
+                duration: duration
+            },
+            success: function(response) {
+                loadJobExperiences();
+                updateSidebarJobs();
+            }
+        });
+    });
+    
+    // Cancel edit
+    $(document).on('click', '.cancel-edit', function() {
+        loadJobExperiences();
+    });
+});
+
+function updateSidebarJobs() {
+    $.ajax({
+        url: '../../dist/php/process/proc_get_sidebar_jobs.php',
+        type: 'GET',
+        success: function(response) {
+            $('#jobExperienceCollapse .card-body').html(response);
+        }
+    });
+}
+  // Handle personal information form submission
+  $(document).on('submit', '#personalInfoForm', function(e) {
+      e.preventDefault();
+    
+      $.ajax({
+          url: '../../dist/php/process/proc_update_personal_info.php',
+          type: 'POST',
+          data: $(this).serialize(),
+          dataType: 'json',
+          success: function(response) {
+              if(response.success) {
+                  updateSidebarInfo();
+                  // Update full name
+                  const fullName = $('#first_name').val() + ' ' + $('#last_name').val();
+                  $('.container.fs-5.text-center.mt-3').text(fullName);
+                  // Update job title using selected option text
+                  const jobTitle = $('#job_title option:selected').text();
+                  $('.container.fs-6.text-center.text-muted.mb-5').text(jobTitle);
+              }
+          }
+      });
+  });
+function updateSidebarInfo() {
+    $.ajax({        url: '../../dist/php/process/proc_get_sidebar_info.php',
+        type: 'GET',
+        success: function(response) {
+            $('#personalInformationCollapse .card-body').html(response);
+        }
+    });
+}
+
+// Handle password change form submission
+$(document).on('submit', '#passwordChangeForm', function(e) {
+    e.preventDefault();
+    
+    // Verify passwords match
+    const password = $('#change_password').val();
+    const confirmPassword = $('#confirm_password').val();
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    $.ajax({
+        url: '../../dist/php/process/proc_profile_update_password.php',
+        type: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(response) {
+            if(response.success) {
+                // Clear form
+                $('#passwordChangeForm')[0].reset();
+                // Show success message
+                alert('Password updated successfully');
+            } else {
+                alert(response.message || 'Failed to update password');
+            }
+        }
+    });
+});
+  function updateSidebarSkills() {
+      $.ajax({
+          url: '../../dist/php/process/proc_get_sidebar_skills.php',
+          type: 'GET',
+          success: function(response) {
+              const data = JSON.parse(response);
+              $('#skillsCollapse .card-body .container').first().html(data.icons);
+              $('#skillsCollapse .card-body').children().not(':first').remove();
+              $('#skillsCollapse .card-body').append(data.skills);
+              // Reinitialize tooltips
+              $('[data-bs-toggle="tooltip"]').tooltip();
+          }
+      });
+  }
+
+  // Load user skills on page load
+  function loadUserSkills() {
+      $.ajax({
+          url: '../../dist/php/process/proc_get_user_skills.php',
+          type: 'GET',
+          success: function(response) {
+              const userSkills = JSON.parse(response);
+              // Check corresponding checkboxes
+              userSkills.forEach(skill => {
+                  $(`#skill_${skill.skill_id}`).prop('checked', true);
+              });
+          }
+      });
+  }
+
+  // Update skills form submission
+  $(document).on('submit', '#skillsForm', function(e) {
+      e.preventDefault();
+    
+      $.ajax({
+          url: '../../dist/php/process/proc_update_user_skills.php',
+          type: 'POST',
+          data: $(this).serialize(),
+          dataType: 'json',
+          success: function(response) {
+              if(response.success) {
+                  updateSidebarSkills();
+              }
+          }
+      });
+  });
+  // Call on page load
+  $(document).ready(function() {
+      loadUserSkills();
+      updateSidebarSkills();
+  });

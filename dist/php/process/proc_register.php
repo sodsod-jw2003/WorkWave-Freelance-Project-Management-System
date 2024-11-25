@@ -10,7 +10,7 @@
     $email = $_POST["email"];
     
     // Check if email is already registered
-    $stmt = $mysqli->prepare("CALL get_user_by_email(?)");
+    $stmt = $mysqli->prepare("CALL sp_get_user_by_email(?)");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     
@@ -76,7 +76,7 @@
     $activation_token_hash = password_hash($activation_token, PASSWORD_DEFAULT);
     
     // Insert user into the database
-    $sql = "CALL signup_users(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "CALL sp_signup_users(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $mysqli->stmt_init();
     
     if (!$stmt->prepare($sql)) {

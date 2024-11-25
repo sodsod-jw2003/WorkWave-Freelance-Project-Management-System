@@ -4,7 +4,7 @@ $token = $_POST["token"];
 $mysqli = require "../../../connection.php";
 
 //checking of token
-$stmt = $mysqli->prepare("CALL get_user_by_reset_token_hash(?)");
+$stmt = $mysqli->prepare("CALL sp_get_user_by_reset_token_hash(?)");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 
@@ -22,7 +22,7 @@ if ($user === null) {
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
 //updating password
-$stmt = $mysqli->prepare("UPDATE users SET password_hash = ?, reset_token_hash = NULL WHERE user_id = ?");
+$stmt = $mysqli->prepare("CALL sp_update_user_password(?, ?)");
 $stmt->bind_param("ss", $password_hash, $user["user_id"]);
 $stmt->execute();
 

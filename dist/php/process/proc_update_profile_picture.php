@@ -27,7 +27,7 @@ try {
 
     $profile_picture_url = '../../dist/php/uploads/profile_pictures/' . $filename;
     
-    $stmt = $mysqli->prepare("CALL update_user_profile_picture(?, ?)");
+    $stmt = $mysqli->prepare("CALL sp_update_user_profile_picture(?, ?)");
     $stmt->bind_param("si", $profile_picture_url, $user_id);
     
     if (!$stmt->execute()) {

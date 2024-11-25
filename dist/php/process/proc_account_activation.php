@@ -3,7 +3,7 @@
 
     $mysqli = require "../../../connection.php";
 
-    $stmt = $mysqli->prepare("CALL activate_account(?)");
+    $stmt = $mysqli->prepare("CALL sp_activate_account(?)");
     $stmt->bind_param("s", $token);
     $stmt->execute();
 
@@ -17,7 +17,7 @@
     $stmt->free_result();
     $mysqli->next_result();
 
-    $stmt = $mysqli->prepare("CALL update_activation_token(?)");
+    $stmt = $mysqli->prepare("CALL sp_update_activation_token(?)");
     $stmt->bind_param("i", $user["user_id"]);
     $stmt->execute();
     ?>
