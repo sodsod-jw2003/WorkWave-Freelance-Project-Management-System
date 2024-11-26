@@ -35,14 +35,14 @@ include ('header.php');
     
     <section class="container-fluid poppins">
         <div class="container">
-            <!-- Profile Header -->
+            <!-- profile header -->
             <div class="row mt-4 align-items-center">
-                <!-- Profile Title -->
+                <!-- profile title -->
                 <div class="col-12 col-md-6">
                     <h2 class="text-start">Client Profile</h2>
                 </div>
 
-                <!-- Breadcrumb Navigation -->
+                <!-- breadcrumb navigation -->
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
@@ -51,7 +51,9 @@ include ('header.php');
                         </ol>
                     </nav>
                 </div>
+                <!-- /breadcrumb navigation -->
             </div>
+            <!-- /profile header -->
 
             <!-- Profile Content -->
             <div class="row">
@@ -73,82 +75,55 @@ include ('header.php');
                         <div class="container fs-6 text-center text-muted mb-5"><?php echo htmlspecialchars($job_title); ?></div>
                     </div>
 
-                    <!-- sidebar: job experience -->
+                    <!-- sidebar: project history -->
                     <div class="card card-primary card-outline shadow border-0 mb-4">
-                        <!-- job experience: collapsible header -->
+                        <!-- project history: collapsible header -->
                         <div class="card-header bg-green-30 p-3">
                             <a class="d-flex align-items-center text-decoration-none toggle-icon"
                             data-bs-toggle="collapse" 
-                            href="#jobExperienceCollapse" 
+                            href="#projectHistoryCollapse" 
                             role="button" 
                             aria-expanded="true" 
-                            aria-controls="jobExperienceCollapse">
+                            aria-controls="projectHistoryCollapse">
 
                                 <i class="fa-solid fa-briefcase text-white mx-1"></i>
-                                <div class="text-white p-1 d-inline">Job Experience</div>
+                                <div class="text-white p-1 d-inline">Project History</div>
                                 <i class="fa-solid fa-chevron-down text-white ms-auto pe-1 icon-toggle"></i>
                             </a>
                         </div>
-                        <!-- job experience: collapsible content -->
-                        <div id="jobExperienceCollapse" class="collapse-section collapse show">
+                        <!-- project history: collapsible content -->
+                        <div id="projectHistoryCollapse" class="collapse-section collapse show">
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <div class="text-muted fw-semibold text-green-60">Job Title 1</div>
-                                    <div class="text-muted small">Company 1</div>
-                                    <div class="text-muted small d-inline fst-italic">Duraton 1</div>
+                                    <div class="text-muted fw-semibold text-green-60">Project Title</div>
+                                    <div class="text-muted small">Project Category</div>
+                                    <div class="text-muted small d-inline ">Project Status</div>
                                 </div>
                                 <hr class="divider">
-                                <div class="mb-3">
-                                    <div class="text-muted fw-semibold text-green-60">Job Title 2</div>
-                                    <div class="text-muted small">Company 2</div>
-                                    <div class="text-muted small d-inline fst-italic">Duraton 2</div>
-                                </div>
-                                <hr class="divider">
-                                <div class="">
-                                    <div class="text-muted fw-semibold text-green-60">Job Title 3</div>
-                                    <div class="text-muted small">Company 3</div>
-                                    <div class="text-muted small d-inline fst-italic">Duraton 3</div>
-                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- sidebar: skills -->
+                    <!-- sidebar: freelancers -->
                     <div class="card card-primary card-outline shadow border-0 mb-4">
-                        <!-- skills: collapsible header -->
+                        <!-- freelancers: collapsible header -->
                         <div class="card-header bg-green-30 p-3">
                             <a  class="d-flex align-items-center text-decoration-none"
                                 data-bs-toggle="collapse" 
-                                href="#skillsCollapse" 
+                                href="#freelancersCollapse" 
                                 role="button" 
                                 aria-expanded="true" 
-                                aria-controls="skillsCollapse">
+                                aria-controls="freelancersCollapse">
 
-                                <i class="fa-solid fa-lightbulb text-white mx-1"></i>
-                                <div class="text-white p-1 d-inline">Skills</div>
+                                <i class="fa-solid fa-user text-white mx-1"></i>
+                                <div class="text-white p-1 d-inline">Freelancers</div>
                                 <i class="fa-solid fa-chevron-down text-white ms-auto pe-1"></i>
                             </a>
                         </div>
                         <!-- skills: collapsible content -->
-                        <div id="skillsCollapse" class="collapse-section collapse show">
+                        <div id="freelancersCollapse" class="collapse-section collapse show">
                             <div class="card-body">
-                                <div class="container d-flex justify-content-center">
-                                    <div class="mb-1 text-secondary fa-2x d-inline">
-                                        <span class="fas fa-camera" data-bs-toggle="tooltip" title="Photo Editing"></span>
-                                        <span class="fas fa-pencil-alt" data-bs-toggle="tooltip" title="Graphic Design"></span>
-                                        <span class="fas fa-code" data-bs-toggle="tooltip" title="Web Development"></span>
-                                        <span class="fas fa-microphone" data-bs-toggle="tooltip" title="Voice Over"></span>
-                                        <span class="fas fa-chart-line" data-bs-toggle="tooltip" title="Digital Marketing"></span>
-                                        <span class="fas fa-keyboard" data-bs-toggle="tooltip" title="Content Writing"></span>
-                                        <span class="fas fa-video" data-bs-toggle="tooltip" title="Video Editing"></span>
-                                        <span class="fas fa-database" data-bs-toggle="tooltip" title="Data Analysis"></span>
-                                    </div>
-                                </div>
-                                <div class="mb-1">
-                                <hr class="divider">
-                                    <div class="text-muted fw-semibold text-green-60">Category</div>
-                                    <div class="text-muted small">Skill</div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -280,19 +255,95 @@ include ('header.php');
                                         <h5 class="">Projects</h5>
                                         <h6 class="text-muted">Listed below are your <span class="fw-semibold text-green-50">Projects</span>. Click the project title to view <span class="fw-semibold text-green-50">Project Details</span></h6>
                                     </div>
-                                    <!-- project card -->
+                                    <div class="container d-flex justify-content-end align-items-end mb-3 pe-2">
+                                        <button id="addProject" class="btn btn-dark-green">
+                                            <i class="fas fa-plus me-2"></i>Add Project
+                                        </button>
+                                    </div>
+
+                                    <div id="projectContainer" class="mb-0 bg-light">
+                                        <!-- projects will be loaded here dynamically -->
+                                    </div>
+                                    
+                                    <!-- contents of projectContainer -->
                                     <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
-                                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                                            <h5 class="">
-                                                <a href="#" class="text-dark">Project Title</a>
-                                            </h5>
-                                            <span class="badge bg-success mb-2">Project Status</span>
+                                        <div class="row">
+                                            <!-- project title -->
+                                            <div class="col-md-5 mb-1">
+                                                <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
+                                                <input type="text" 
+                                                    name="project_title" 
+                                                    id="project_title" 
+                                                    class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                                    value="">
+                                            </div>
+                                            <!-- /project title -->
+                                            <!-- category -->
+                                            <div class="col-md-4 mb-1">
+                                                <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
+                                                <select 
+                                                    name="project_category" 
+                                                    id="project_category" 
+                                                    class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
+                                                </select>
+                                            </div>
+                                            <!-- /category -->
+                                            <!-- task status -->
+                                            <div class="col-md-3 mb-1">
+                                                <label for="status" class="text-muted small mb-2 ms-1">Status</label>
+                                                <select 
+                                                    name="status" 
+                                                    id="status" 
+                                                    class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
+                                                </select>
+                                            </div>
+                                            <!-- /task status -->
                                         </div>
-                                        <div class="card-body bg-">
-                                            <h6 class="fw-bold">Project Category</h6>
-                                            <h6 class="text-muted small">Project Description Bla Bla Bla</h6>
+                                        <div class="row mt-1">
+                                            <!-- project description -->
+                                            <div class="col-md-12 mb-1">
+                                                <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
+                                                <textarea 
+                                                    name="project_description" 
+                                                    id="project_description" 
+                                                    class="form-control bg-white-100 no-outline-green-focus border-1"></textarea>
+                                            </div>
+                                            <!-- /project description -->
+                                        </div>
+                                        <div class="row">
+                                            <!-- project controls -->
+                                            <div class="container pt-3 mb-3">
+                                                <button type="submit" class="btn btn-dark-green">Save Project</button>
+                                                <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
+                                            </div>
+                                            <!-- /project controls -->
                                         </div>
                                     </div>
+                                    <!--  -->
+
+                                    <!-- project card -->
+                                    <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
+                                        <!-- this should lead to expanded project details named project_details.php -->
+                                        <!-- varies on project id -->
+                                        <!-- template muna -->
+                                        <div class="container d-flex justify-content-between align-items-center my-2">
+                                            <h5><a href="project_details.php" class="text-dark fw-semibold">Project Title</a></h5>
+                                            <span class="badge bg-success mb-2">Project Status</span>
+                                        </div>
+                                        <div class="container mb-2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="">
+                                                    <h6 class="">Project Category</h6>
+                                                    <h6 class="text-muted small">Project Description</h6>     
+                                                </div>
+                                                <div class="">
+                                                    <button class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </div>                                  
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- end project card -->
                                 </div>
                                 <!-- end projects: tab pane -->

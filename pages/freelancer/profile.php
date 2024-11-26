@@ -55,14 +55,14 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
     
     <section class="container-fluid poppins">
         <div class="container">
-            <!-- Profile Header -->
+            <!-- profile header -->
             <div class="row mt-4 align-items-center">
-                <!-- Profile Title -->
+                <!-- profile title -->
                 <div class="col-12 col-md-6">
                     <h2 class="text-start">Profile</h2>
                 </div>
 
-                <!-- Breadcrumb Navigation -->
+                <!-- breadcrumb navigation -->
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
@@ -71,7 +71,9 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                         </ol>
                     </nav>
                 </div>
+                <!-- end breadcrumb navigation -->
             </div>
+            <!-- end profile header -->
 
             <!-- Profile Content -->
             <div class="row">
@@ -113,21 +115,9 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                         <div id="jobExperienceCollapse" class="collapse-section collapse show">
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <div class="text-muted fw-semibold text-green-60">Job Title 1</div>
-                                    <div class="text-muted small">Company 1</div>
-                                    <div class="text-muted small d-inline fst-italic">Duraton 1</div>
-                                </div>
-                                <hr class="divider">
-                                <div class="mb-3">
-                                    <div class="text-muted fw-semibold text-green-60">Job Title 2</div>
-                                    <div class="text-muted small">Company 2</div>
-                                    <div class="text-muted small d-inline fst-italic">Duraton 2</div>
-                                </div>
-                                <hr class="divider">
-                                <div class="">
-                                    <div class="text-muted fw-semibold text-green-60">Job Title 3</div>
-                                    <div class="text-muted small">Company 3</div>
-                                    <div class="text-muted small d-inline fst-italic">Duraton 3</div>
+                                    <div class="text-muted fw-semibold text-green-60"></div>
+                                    <div class="text-muted small"></div>
+                                    <div class="text-muted small d-inline fst-italic"></div>
                                 </div>
                             </div>
                         </div>
@@ -273,9 +263,9 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                         <h6 class="text-muted">List all of your <span class="fw-semibold text-green-50">Job Experience</span> including Job Title, Company, and Duration.</h6>
                                     </div>
                                     <!-- Job Experience Section -->
-                                    <div class="card border-0 mb-4">
+                                    <div class="card border-0 mb-0">
                                         <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="d-flex justify-content-between align-items-end mb-3">
                                                 <h5 class="card-title mb-0"></h5>
                                                 <button id="addJobExperience" class="btn btn-dark-green">
                                                     <i class="fas fa-plus me-2"></i>Add Experience
@@ -283,7 +273,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                             </div>
 
                                             <!-- Container for job experiences -->
-                                            <div id="jobExperienceContainer">
+                                            <div id="jobExperienceContainer" class="mb-0 bg-light">
                                                 <!-- Job experiences will be loaded here dynamically -->
                                             </div>
                                         </div>
@@ -326,9 +316,10 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                             foreach ($skills_by_category as $category => $skills): 
                                                 $categoryId = str_replace(' ', '_', $category);
                                             ?>
-                                                <div class="tab-pane fade <?php echo $first ? 'show active' : ''; ?>" 
+                                                <div class="tab-pane fade px-4 <?php echo $first ? 'show active' : ''; ?>" 
                                                     id="skill_tab_<?php echo $categoryId; ?>" 
                                                     role="tabpanel">
+                                                    <hr class="divider">
                                                     <div class="form-group">
                                                         <div id="skills" class="d-flex flex-wrap">
                                                             <?php foreach ($skills as $skill): ?>
@@ -396,7 +387,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                             }
                                                         }
                                                         ?>
-                                                    </select>
+                                                        </select>
                                                     </div>
                                                 </div>
 

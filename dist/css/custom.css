@@ -80,3 +80,7 @@ header a {
     color: var(--green-50) !important; 
     text-decoration: underline;
 }
+
+.border-red {
+    border: red 3px solid !important;
+}

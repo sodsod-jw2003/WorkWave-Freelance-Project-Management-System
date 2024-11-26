@@ -94,21 +94,21 @@ $(document).ready(function() {
     // Add new job experience button click
     $('#addJobExperience').click(function() {
         const newJobForm = `
-            <div class="card mb-3">
-                <div class="card-body">
+            <div class="card mb-4">
+                <div class="card-body bg-light border-start-accent rounded shadow-sm">
                     <form id="newJobForm">
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="job_title" placeholder="Job Title" required>
+                            <input type="text" class="form-control no-outline-green-focus" name="job_title" placeholder="Job Title" required>
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
+                            <input type="text" class="form-control no-outline-green-focus" name="company_name" placeholder="Company Name" required>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control" name="start_year" placeholder="Start Year" required>
+                                <input type="text" class="form-control no-outline-green-focus" name="start_year" placeholder="Start Year" required>
                             </div>
                             <div class="col">
-                                <input type="text" class="form-control" name="end_year" placeholder="End Year" required>
+                                <input type="text" class="form-control no-outline-green-focus" name="end_year" placeholder="End Year" required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-dark-green">Save Experience</button>

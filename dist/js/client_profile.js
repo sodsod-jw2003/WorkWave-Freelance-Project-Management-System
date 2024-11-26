@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (this.files && this.files[0]) {
             const formData = new FormData(profilePicForm);
             
-            fetch('../../dist/php/process/update_profile_picture.php', {
+            fetch('../../dist/php/process/proc_update_profile_picture.php', {
                 method: 'POST',
                 body: formData
             })
@@ -76,3 +76,63 @@ document.addEventListener("DOMContentLoaded", function () {
         new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
+
+    // Add new project button click
+    $('#addProject').click(function() {
+        const newProjectForm = `
+            <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
+                <div class="row">
+                    <!-- project title -->
+                    <div class="col-md-5 mb-1">
+                        <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
+                        <input type="text" 
+                            name="project_title" 
+                            id="project_title" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1" 
+                            value="">
+                    </div>
+                    <!-- /project title -->
+                    <!-- category -->
+                    <div class="col-md-4 mb-1">
+                        <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
+                        <select 
+                            name="project_category" 
+                            id="project_category" 
+                            class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
+                        </select>
+                    </div>
+                    <!-- /category -->
+                    <!-- task status -->
+                    <div class="col-md-3 mb-1">
+                        <label for="status" class="text-muted small mb-2 ms-1">Status</label>
+                        <select 
+                            name="status" 
+                            id="status" 
+                            class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
+                        </select>
+                    </div>
+                    <!-- /task status -->
+                </div>
+                <div class="row mt-1">
+                    <!-- project description -->
+                    <div class="col-md-12 mb-1">
+                        <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
+                        <textarea 
+                            name="project_description" 
+                            id="project_description" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1"></textarea>
+                    </div>
+                    <!-- /project description -->
+                </div>
+                <div class="row">
+                    <!-- project controls -->
+                    <div class="container pt-3 mb-3">
+                        <button type="submit" class="btn btn-dark-green">Save Project</button>
+                        <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
+                    </div>
+                    <!-- /project controls -->
+                </div>
+            </div>
+        `;
+        $('#projectContainer').prepend(newProjectForm);
+    });
