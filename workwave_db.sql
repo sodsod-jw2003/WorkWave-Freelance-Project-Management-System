@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2024 at 05:29 PM
+-- Generation Time: Nov 27, 2024 at 01:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -207,6 +207,23 @@ INSERT INTO `job_titles` (`job_title_id`, `job_title`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `projects`
+--
+
+CREATE TABLE `projects` (
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `project_title` varchar(255) NOT NULL,
+  `project_category` varchar(255) NOT NULL,
+  `project_description` text DEFAULT NULL,
+  `project_status` enum('pending','in progress','completed','approved') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `skills`
 --
 
@@ -362,6 +379,23 @@ INSERT INTO `skills` (`skill_id`, `skill_name`, `skill_category`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tasks`
+--
+
+CREATE TABLE `tasks` (
+  `task_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `task_title` varchar(255) NOT NULL,
+  `task_description` text DEFAULT NULL,
+  `status` enum('pending','in progress','completed','approved') NOT NULL,
+  `assigned_to` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -397,7 +431,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`, `deactivation_duration`, `status`) VALUES
 (19, 'Kate', 'Jensen', '2003-09-13', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipinoaaaaa', 'Filipino', 'Freelancer', '../../dist/php/uploads/profile_pictures/67435dd66d0f0_received_364139713153077.jpeg', 2, '', '$2y$10$mkzVEZNEgFlgva8H0qvdG.SfI7/vjsDZgxV/Q0fTWZxgxscG00742', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
 (22, 'Ronald', 'Sullano', '2003-07-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano124@gmail.com', '9515910708', 'Filipino', 'Bisaya', 'Freelancer', '../../dist/php/uploads/profile_pictures/67449aa9d1770_received_364139713153077.jpeg', 2, '', '$2y$10$I2NIOBmIp249g6dwaNZU9.2Q40KzuK2JBkUue2wdDbxNmS30A0AVK', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
-(23, 'Ronald', 'Sullano', '2003-02-20', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '2515910708', '', '', 'Freelancer', '../../dist/php/uploads/profile_pictures/6744a451b6aec_IMG_20230104_162006.png', 1, '', '$2y$10$YIQ.as2eteXAXAqt6eQtfOfaFseFWn/ZlKTbaPprPyXzxovYB6tIG', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
+(23, 'Ronald', 'Sullano', '2003-02-20', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '2515910708', '', '', 'Freelancer', '../../dist/php/uploads/profile_pictures/6744a451b6aec_IMG_20230104_162006.png', 1, '', '$2y$10$YIQ.as2eteXAXAqt6eQtfOfaFseFWn/ZlKTbaPprPyXzxovYB6tIG', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(25, 'pixie', 'boo', '2003-09-13', 'Female', 'San Jose del Monte City, Bulacan, Philippines', 'jensenkajie@gmail.com', '', '', '', 'Client', '', NULL, '', '$2y$10$OjBhsejzPUoLyY40NdBczun/0SEVjz/kw/2VQVV.vwMyAVhzRLeqK', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -500,10 +535,25 @@ ALTER TABLE `job_titles`
   ADD PRIMARY KEY (`job_title_id`);
 
 --
+-- Indexes for table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`project_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `skills`
 --
 ALTER TABLE `skills`
   ADD PRIMARY KEY (`skill_id`);
+
+--
+-- Indexes for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`task_id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `assigned_to` (`assigned_to`);
 
 --
 -- Indexes for table `users`
@@ -540,16 +590,28 @@ ALTER TABLE `job_titles`
   MODIFY `job_title_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `skills`
 --
 ALTER TABLE `skills`
   MODIFY `skill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
+-- AUTO_INCREMENT for table `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `users_experiences`
@@ -566,6 +628,19 @@ ALTER TABLE `users_skills`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `projects`
+--
+ALTER TABLE `projects`
+  ADD CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`user_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `users`
