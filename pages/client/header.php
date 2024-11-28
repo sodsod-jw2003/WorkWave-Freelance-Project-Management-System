@@ -77,8 +77,12 @@ include ('../../misc/modals.php');
 
                 <!-- Profile -->
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="<?php echo $user['profile_picture_url'] ?>" alt="" class="img-fluid" style="max-width: 25px; border-radius: 50%;">
+                <a href="#" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php if (!empty($user['profile_picture_url'])): ?>
+                            <img src="<?php echo $user['profile_picture_url']; ?>" alt="Profile Picture" class="img-fluid" style="max-width: 25px; border-radius: 50%; max-height: 25px;">
+                        <?php else: ?>
+                            <i class="fa-solid fa-circle-user text-green-60 fa-lg"></i>
+                        <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end p-2" style="width: 200px;">
                         <li class="dropdown-header">Account</li>

@@ -402,7 +402,10 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="mobile_number" class="text-muted small mb-2 ms-1">Mobile Number</label>
+                                                        <div class="input-group">
+                                                        <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
                                                         <input type="text" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="email" class="text-muted small mb-2 ms-1">Email</label>

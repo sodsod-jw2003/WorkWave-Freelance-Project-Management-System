@@ -27,7 +27,7 @@ include ('header.php');
     <link rel="stylesheet" href="../../dist/css/custom.css">
 
     <!-- freelancer_profile.js -->
-    <script src="../../dist/js/client_profile.js" defer></script>
+    <script src="../../dist/js/freelancer_profile.js" defer></script>
 
 </head>
 <body>

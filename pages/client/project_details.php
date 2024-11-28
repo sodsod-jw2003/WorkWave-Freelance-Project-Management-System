@@ -4,6 +4,16 @@ $mysqli = require ('../../connection.php');
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
+
+$project_id = $_GET['id'] ?? null;
+
+// Fetch project details
+$project_query = "SELECT * FROM projects WHERE project_id = ?";
+$stmt = $mysqli->prepare($project_query);
+$stmt->bind_param("i", $project_id);
+$stmt->execute();
+$project_result = $stmt->get_result();
+$project = $project_result->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +37,11 @@ include ('header.php');
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <!-- freelancer_profile.js -->
-    <script src="../../dist/js/client_profile.js" defer></script>
+    <script src="../../dist/js/project_details.js" defer></script>
 
 </head>
 <body>
@@ -38,7 +51,7 @@ include ('header.php');
             <div class="row mt-4 align-items-center">
                 <!-- project title -->
                 <div class="col-12 col-md-6">
-                    <h2 class="text-start fw-semibold">Dynamic Project Title</h2>
+                    <h2 class="text-start fw-semibold"><?php echo htmlspecialchars($project['project_title']); ?></h2>
                 </div>
                 <!-- /end project title -->
 
@@ -48,7 +61,7 @@ include ('header.php');
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="dashboard.php"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="profile.php" >Projects</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Dynamic Project Title</li>
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($project['project_title']); ?></li>
                         </ol>
                     </nav>
                 </div>
@@ -61,8 +74,8 @@ include ('header.php');
                 <!-- sidebar task card and freelancer card -->
                 <div class="col-12 col-md-4 col-lg-3 p-3">
                     <div class="card card-primary card-outline border-top-accent shadow border-0 mb-4 position-relative">
-                        <div class="container fs-5 text-center mt-3 fw-semibold">Project Title</div>
-                        <div class="container fs-6 text-center text-muted mb-4">Project Category</div>
+                        <div class="container fs-5 text-center mt-3 fw-semibold"><?php echo htmlspecialchars($project['project_title']); ?></div>
+                        <div class="container fs-6 text-center text-muted mb-4"><?php echo htmlspecialchars($project['project_category']); ?></div>
                     </div>
                     <div class="card card-primary card-outline shadow border-0 mb-4">
                         <!-- task header -->
@@ -96,14 +109,14 @@ include ('header.php');
                         <div class="card-body">
                             <!-- project title & status -->
                             <div class="container d-flex justify-content-between align-items-center px-4 pt-4 pb-0 mb-0 me-2">
-                                <h4 class="text-green-50">Dynamic Project Title</h4>
-                                <span class="badge bg-success mb-2">Project Status</span>
+                                <h4 class="text-green-50"><?php echo htmlspecialchars($project['project_title']); ?></h4>
+                                <span class="badge bg-success mb-2"><?php echo htmlspecialchars($project['project_status']); ?></span>
                             </div>
                             <!-- /project title & status -->
                             <!-- project category & description -->
                             <div class="container px-4 pt-2 pb-1 ">
-                                <h5 class="">Project Category</h5>
-                                <h6 class="text-muted small mt-3">Project Description</h6>
+                                <h5 class=""><?php echo htmlspecialchars($project['project_category']); ?></h5>
+                                <h6 class="text-muted small mt-3"><?php echo htmlspecialchars($project['project_description']); ?></h6>
                             </div>
                             <!-- /project category & description -->
                             <!-- task main card -->
@@ -117,84 +130,9 @@ include ('header.php');
                                 </div>
                                 <!-- task header & add task button -->
                                 <!-- task sub card -->
-                                <div class="container px-4 py-2">
-                                    <div class="card shadow-sm p-3 border-start-accent mb-4 bg-light">
-                                        <div class="row">
-                                            <!-- task title -->
-                                            <div class="col-md-5 mb-1">
-                                                <label for="task_title" class="text-muted small mb-2 ms-1">Task Title</label>
-                                                <input type="text" 
-                                                    name="task_title" 
-                                                    id="task_title" 
-                                                    class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                                    value="">
-                                            </div>
-                                            <!-- /task title -->
-                                            <!-- assign freelancer -->
-                                            <div class="col-md-4 mb-1">
-                                                <label for="freelancer" class="text-muted small mb-2 ms-1">Freelancer</label>
-                                                <select 
-                                                    name="freelancer" 
-                                                    id="freelancer" 
-                                                    class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
-                                                </select>
-                                            </div>
-                                            <!-- /assign freelancer -->
-                                            <!-- task status -->
-                                            <div class="col-md-3 mb-1">
-                                                <label for="status" class="text-muted small mb-2 ms-1">Status</label>
-                                                <select 
-                                                    name="status" 
-                                                    id="status" 
-                                                    class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
-                                                </select>
-                                            </div>
-                                            <!-- /task status -->
-                                        </div>
-                                        <div class="row mt-1">
-                                            <!-- task description -->
-                                            <div class="col-md-12 mb-1">
-                                                <label for="task_description" class="text-muted small mb-2 ms-1">Task Description</label>
-                                                <textarea name="task_description" id="task_description" class="form-control bg-white-100 no-outline-green-focus border-1"></textarea>
-                                            </div>
-                                            <!-- /task description -->
-                                        </div>
-                                        <div class="row">
-                                            <!-- task controls -->
-                                            <div class="container pt-3">
-                                                <button type="submit" class="btn btn-dark-green">Save Task</button>
-                                                <button type="button" class="btn btn-secondary" id="cancelAddTask">Cancel</button>
-                                            </div>
-                                            <!-- /task controls -->
-                                        </div>
-                                    </div>
-                                    <!--  -->
-                                    <div class="card shadow-sm p-3 border-start-accent mb-4 bg-light">
-                                        <div class="row">
-                                            <div class="col-12 d-flex align-items-center justify-content-between">
-                                                <h5 class="container">Task Title</h5>
-                                                <span class="badge bg-success">Task Status</span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <h6 class="container text-muted">Task Description</h6>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12 mt-2 d-flex justify-content-between align-items-center">
-                                                <div class="">
-                                                    <span class="container"><i class="fas fa-user text-green-50"></i></span>
-                                                    <h6 class="d-inline">Assigned Freelancer</h6>
-                                                </div>
-                                                <div class="">
-                                                    <button class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
-                                                    <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--  -->
+                                <div class="container px-4 py-2" id="taskContainer">
+                                    <!-- Tasks will be loaded dynamically here -->
+                                </div>
                                 <!-- /task sub card -->
                             </div>
                             <!-- /task main card -->
