@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <span class="fas fa-envelope text-green-50 ps-1"></span>
                             </div>
                         </div>
-                        <input type="email" name="email" id="email" class="form-control rounded-end-5 border px-3 py-2 no-outline" placeholder="Email" required>
+                        <input type="email" name="email" id="email" class="form-control no-outline-green-focus rounded-end-5 border px-3 py-2 no-outline" placeholder="Email" required>
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <span class="fas fa-lock text-green-50 ps-1"></span>
                             </div>
                         </div>
-                        <input type="password" name="password" id="password" class="form-control rounded-end-0 border px-3 py-2 no-outline" placeholder="Password" required>
+                        <input type="password" name="password" id="password" class="form-control no-outline-green-focus rounded-end-0 border px-3 py-2 no-outline" placeholder="Password" required>
                         <button type="button" id="togglePassword1" class="btn btn rounded-end-5 btn-outline-light border">
                             <span class="fas fa-eye text-green-50"></span>
                         </button>

@@ -81,6 +81,51 @@ header a {
     text-decoration: underline;
 }
 
-.border-red {
-    border: red 3px solid !important;
+.nav-link:hover {
+    background-color: var(--green-30);
+    color: #fff;
+}
+
+.nav-link:focus {
+    outline: none;
+    background-color: var(--green-30);
+    color: #fff;
+}
+
+.nav-link.active {
+    background-color: var(--green-30);
+    color: #fff;
+}
+
+.nav-item:hover .nav-link,
+.nav-item:focus-within .nav-link {
+    background-color: var(--green-30);
+    color: #fff;
+}
+
+.text-justify {
+    text-align: justify !important;
+}
+
+#heart-btn {
+    outline: none !important;
+    box-shadow: none !important;
+} 
+
+#heart-btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#heart-btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--green-10);
+}
+
+.accordion-button:not(.collapsed):hover {
+    background-color: var(--green-10);
 }
