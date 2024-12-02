@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2024 at 01:50 PM
+-- Generation Time: Dec 02, 2024 at 08:40 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,16 +32,43 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activate_account` (IN `p_activat
 	activation_token_hash = p_activation_token_hash;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50))   BEGIN
+    INSERT INTO client_projects (
+        user_id,
+        project_title,
+        project_category,
+        project_description,
+        project_status,
+        created_at
+    )
+    VALUES (
+        p_user_id,
+        p_project_title,
+        p_project_category,
+        p_project_description,
+        p_project_status,
+        NOW()
+    );
+     SELECT LAST_INSERT_ID() AS project_id;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_user_experience` (IN `p_user_id` INT(11), IN `p_job_title` VARCHAR(255), IN `p_company_name` VARCHAR(255), IN `p_duration` VARCHAR(255))   BEGIN
-	INSERT INTO users_experiences (user_id, job_title, company_name, duration) VALUES (p_user_id, p_job_title, p_company_name, p_duration);
+	INSERT INTO freelancer_experiences (user_id, job_title, company_name, duration) VALUES (p_user_id, p_job_title, p_company_name, p_duration);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_client_projects` (IN `p_project_id` INT(11), IN `p_user_id` INT(11))   BEGIN
+    DELETE FROM client_projects
+    WHERE 
+        project_id = p_project_id
+        AND user_id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_users_skills` (IN `p_user_id` INT(11))   BEGIN
-DELETE FROM users_skills WHERE user_id = p_user_id;
+DELETE FROM freelancer_skills WHERE user_id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_user_experience` (IN `p_user_experience_id` INT(11), IN `p_user_id` INT(11))   BEGIN
-	DELETE FROM users_experiences WHERE user_experience_id = p_user_experience_id AND user_id = p_user_id;
+	DELETE FROM freelancer_experiences WHERE user_experience_id = p_user_experience_id AND user_id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_all_user_info` (IN `p_user_id` INT(11))   BEGIN
@@ -53,14 +80,42 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_distint_user_skills` (IN `p_user_id` INT(11))   BEGIN
 SELECT DISTINCT s.skill_category, s.skill_name 
-          FROM users_skills us 
+          FROM freelancer_skills us 
           JOIN skills s ON us.skill_id = s.skill_id 
           WHERE us.user_id = p_user_id 
           ORDER BY s.skill_category;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_freelancers_from_v_freelancers` ()   BEGIN
+    SELECT * FROM v_freelancers;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_job` ()   BEGIN
 SELECT job_title_id, job_title FROM job_titles;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_projects` (IN `p_user_id` INT(11))   BEGIN
+    SELECT * 
+    FROM client_projects
+    WHERE user_id = p_user_id
+    ORDER BY created_at DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_project_details` (IN `p_project_id` INT(11), IN `p_user_id` INT(11))   BEGIN
+    SELECT * 
+    FROM client_projects
+    WHERE project_id = p_project_id
+      AND user_id = p_user_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_sidebar_projects` (IN `p_user_id` INT(11))   BEGIN
+    SELECT 
+        project_title, 
+        project_category, 
+        project_status
+    FROM client_projects
+    WHERE user_id = p_user_id
+    ORDER BY created_at DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_skills` ()   BEGIN
@@ -70,6 +125,19 @@ s.skill_name,
 s.skill_category 
 FROM skills s 
 ORDER BY s.skill_category, s.skill_name;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_skills_category` ()   BEGIN
+    SELECT DISTINCT skill_category
+    FROM skills
+    ORDER BY skill_category;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_tasks_from_v_tasks` (IN `p_project_id` INT)   BEGIN
+    SELECT * 
+    FROM v_tasks 
+    WHERE project_id = p_project_id
+    ORDER BY created_at DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_by_email` (IN `p_email` VARCHAR(255))   BEGIN
@@ -95,7 +163,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_by_reset_token_hash` (I
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_experience_order_by_duration` (IN `p_user_id` INT(11))   BEGIN
-	SELECT * FROM users_experiences WHERE user_id = p_user_id ORDER BY duration DESC;
+	SELECT * FROM freelancer_experiences WHERE user_id = p_user_id ORDER BY duration DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_from_v_user_profile` (IN `p_user_id` INT(11))   BEGIN
@@ -105,11 +173,17 @@ SELECT * FROM v_user_profile WHERE user_id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_user_skills` (IN `p_user_id` INT(11))   BEGIN
-	SELECT skill_id FROM users_skills WHERE user_id = p_user_id;
+	SELECT skill_id FROM freelancer_skills WHERE user_id = p_user_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_user_skills` (IN `p_user_id` INT(11), IN `P_skill_id` INT(11))   BEGIN
-	INSERT INTO users_skills (user_id, skill_id) VALUES (p_user_id, P_skill_id);
+	INSERT INTO freelancer_skills (user_id, skill_id) VALUES (p_user_id, P_skill_id);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_project_details` (IN `p_project_id` INT)   BEGIN
+    SELECT * 
+    FROM projects 
+    WHERE project_id = p_project_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_signup_users` (IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_birthdate` DATE, IN `p_gender` VARCHAR(21), IN `p_city` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password_hash` VARCHAR(255), IN `p_activation_token_hash` VARCHAR(255), IN `p_role` VARCHAR(255))   BEGIN
@@ -130,6 +204,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_activation_token` (IN `p_
 	user_id = p_user_id;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_client_projects` (IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50), IN `p_project_id` INT(11), IN `p_user_id` INT(11))   BEGIN
+    UPDATE client_projects
+    SET 
+        project_title = p_project_title,
+        project_category = p_project_category,
+        project_description = p_project_description,
+        project_status = p_project_status
+    WHERE 
+        project_id = p_project_id
+        AND user_id = p_user_id;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_deactivation` (IN `p_deactivation_duration` VARCHAR(255), IN `p_user_id` INT(11))   BEGIN
 	UPDATE users SET
 	deactivation_duration = p_deactivation_duration,
@@ -146,7 +232,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_reset_token` (IN `p_reset
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_experience` (IN `p_job_title` VARCHAR(255), IN `p_company_name` VARCHAR(255), IN `p_duration` VARCHAR(255), IN `p_user_experience_id` INT(11), IN `p_user_id` INT(11))   BEGIN
-	UPDATE users_experiences 
+	UPDATE freelancer_experiences 
               SET job_title = p_job_title, company_name = p_company_name, duration = p_duration 
               WHERE user_experience_id = p_user_experience_id AND user_id = p_user_id;
 END$$
@@ -187,6 +273,110 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `client_projects`
+--
+
+CREATE TABLE `client_projects` (
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `project_title` varchar(255) NOT NULL,
+  `project_category` varchar(255) NOT NULL,
+  `project_description` text DEFAULT NULL,
+  `project_status` enum('In Progress','Completed') NOT NULL DEFAULT 'In Progress',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_applications`
+--
+
+CREATE TABLE `freelancer_applications` (
+  `application_id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `application_details` text NOT NULL,
+  `portfolio_url` varchar(255) DEFAULT NULL,
+  `application_status` enum('pending','accepted','rejected') NOT NULL DEFAULT 'pending',
+  `application_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_connects`
+--
+
+CREATE TABLE `freelancer_connects` (
+  `freelancer_connects_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `connects` int(11) NOT NULL DEFAULT 100
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_credits`
+--
+
+CREATE TABLE `freelancer_credits` (
+  `freelancer_credits_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `credits` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_experiences`
+--
+
+CREATE TABLE `freelancer_experiences` (
+  `user_experience_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `job_title` varchar(255) NOT NULL,
+  `company_name` varchar(255) NOT NULL,
+  `duration` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_experiences`
+--
+
+INSERT INTO `freelancer_experiences` (`user_experience_id`, `user_id`, `job_title`, `company_name`, `duration`) VALUES
+(16, 19, 'Bamama', 'ASDaaa', '2003-2321'),
+(17, 19, 'asadasdaa', 'asd', '2003-1212'),
+(25, 19, 'sad', 'asd', '2003-1212'),
+(26, 22, 'Software Developer', 'Internet Org', '2021-2024'),
+(33, 22, 'Taga hugas ng pinggan sa bahay', 'ICOR Inc.', '2012-2024'),
+(35, 22, 'Software Engineer', 'ICOR Inc.aa', '2001-2002'),
+(47, 23, 'Software Engineer', 'ICOR Inc.', '2005-2012'),
+(53, 28, 'test', 'aaa', '2023-2024');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_skills`
+--
+
+CREATE TABLE `freelancer_skills` (
+  `user_skills_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `skill_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_skills`
+--
+
+INSERT INTO `freelancer_skills` (`user_skills_id`, `user_id`, `skill_id`) VALUES
+(188, 29, 127);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `job_titles`
 --
 
@@ -203,23 +393,6 @@ INSERT INTO `job_titles` (`job_title_id`, `job_title`) VALUES
 (1, 'Software Developer'),
 (2, '3D Artist'),
 (3, 'Database Administrator');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `projects`
---
-
-CREATE TABLE `projects` (
-  `project_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `project_title` varchar(255) NOT NULL,
-  `project_category` varchar(255) NOT NULL,
-  `project_description` text DEFAULT NULL,
-  `project_status` enum('pending','in progress','completed','approved') NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -384,7 +557,7 @@ INSERT INTO `skills` (`skill_id`, `skill_name`, `skill_category`) VALUES
 
 CREATE TABLE `tasks` (
   `task_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
   `task_title` varchar(255) NOT NULL,
   `task_description` text DEFAULT NULL,
   `status` enum('pending','in progress','completed','approved') NOT NULL,
@@ -429,67 +602,41 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`, `deactivation_duration`, `status`) VALUES
-(19, 'Kate', 'Jensen', '2003-09-13', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipinoaaaaa', 'Filipino', 'Freelancer', '../../dist/php/uploads/profile_pictures/67435dd66d0f0_received_364139713153077.jpeg', 2, '', '$2y$10$mkzVEZNEgFlgva8H0qvdG.SfI7/vjsDZgxV/Q0fTWZxgxscG00742', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
-(22, 'Ronald', 'Sullano', '2003-07-13', 'Female', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano124@gmail.com', '9515910708', 'Filipino', 'Bisaya', 'Freelancer', '../../dist/php/uploads/profile_pictures/67449aa9d1770_received_364139713153077.jpeg', 2, '', '$2y$10$I2NIOBmIp249g6dwaNZU9.2Q40KzuK2JBkUue2wdDbxNmS30A0AVK', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
-(23, 'Ronald', 'Sullano', '2003-02-20', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '2515910708', '', '', 'Freelancer', '../../dist/php/uploads/profile_pictures/6744a451b6aec_IMG_20230104_162006.png', 1, '', '$2y$10$YIQ.as2eteXAXAqt6eQtfOfaFseFWn/ZlKTbaPprPyXzxovYB6tIG', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
-(25, 'pixie', 'boo', '2003-09-13', 'Female', 'San Jose del Monte City, Bulacan, Philippines', 'jensenkajie@gmail.com', '', '', '', 'Client', '', NULL, '', '$2y$10$OjBhsejzPUoLyY40NdBczun/0SEVjz/kw/2VQVV.vwMyAVhzRLeqK', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
+(29, 'kate', 'jensen', '2003-09-08', 'Female', 'Angeles, Pampanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 'Freelancer', '', NULL, '', '$2y$10$fGb.gQEZo5SaDwxix5vXeu4Mmx5Q5h3O84R1QQ2WwL0SBeV037bhy', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users_experiences`
+-- Stand-in structure for view `v_freelancers`
+-- (See below for the actual view)
 --
-
-CREATE TABLE `users_experiences` (
-  `user_experience_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `job_title` varchar(255) NOT NULL,
-  `company_name` varchar(255) NOT NULL,
-  `duration` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users_experiences`
---
-
-INSERT INTO `users_experiences` (`user_experience_id`, `user_id`, `job_title`, `company_name`, `duration`) VALUES
-(16, 19, 'Bamama', 'ASDaaa', '2003-2321'),
-(17, 19, 'asadasdaa', 'asd', '2003-1212'),
-(25, 19, 'sad', 'asd', '2003-1212'),
-(26, 22, 'Software Developer', 'Internet Org', '2021-2024'),
-(33, 22, 'Taga hugas ng pinggan sa bahay', 'ICOR Inc.', '2012-2024'),
-(35, 22, 'Software Engineer', 'ICOR Inc.aa', '2001-2002'),
-(47, 23, 'Software Engineer', 'ICOR Inc.', '2005-2012');
+CREATE TABLE `v_freelancers` (
+`user_id` int(11)
+,`first_name` varchar(50)
+,`last_name` varchar(50)
+,`project_id` int(11)
+,`project_title` varchar(255)
+,`application_date` datetime
+,`application_status` enum('pending','accepted','rejected')
+);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users_skills`
+-- Stand-in structure for view `v_tasks`
+-- (See below for the actual view)
 --
-
-CREATE TABLE `users_skills` (
-  `user_skills_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `skill_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users_skills`
---
-
-INSERT INTO `users_skills` (`user_skills_id`, `user_id`, `skill_id`) VALUES
-(142, 22, 132),
-(143, 22, 131),
-(144, 22, 130),
-(145, 22, 133),
-(146, 22, 38),
-(147, 22, 40),
-(148, 22, 29),
-(171, 23, 132),
-(172, 23, 131),
-(173, 23, 130),
-(174, 23, 86),
-(175, 23, 95);
+CREATE TABLE `v_tasks` (
+`task_id` int(11)
+,`project_id` int(11)
+,`task_title` varchar(255)
+,`task_description` text
+,`status` enum('pending','in progress','completed','approved')
+,`assigned_to` int(11)
+,`created_at` timestamp
+,`updated_at` timestamp
+,`freelancer_name` varchar(101)
+);
 
 -- --------------------------------------------------------
 
@@ -518,6 +665,24 @@ CREATE TABLE `v_user_profile` (
 -- --------------------------------------------------------
 
 --
+-- Structure for view `v_freelancers`
+--
+DROP TABLE IF EXISTS `v_freelancers`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_freelancers`  AS SELECT `fa`.`user_id` AS `user_id`, `u`.`first_name` AS `first_name`, `u`.`last_name` AS `last_name`, `fa`.`project_id` AS `project_id`, `p`.`project_title` AS `project_title`, `fa`.`application_date` AS `application_date`, `fa`.`application_status` AS `application_status` FROM ((`freelancer_applications` `fa` join `users` `u` on(`fa`.`user_id` = `u`.`user_id`)) join `client_projects` `p` on(`fa`.`project_id` = `p`.`project_id`)) WHERE `u`.`role` = 'freelancer' AND `fa`.`application_status` = 'accepted' ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_tasks`
+--
+DROP TABLE IF EXISTS `v_tasks`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_tasks`  AS SELECT `t`.`task_id` AS `task_id`, `t`.`project_id` AS `project_id`, `t`.`task_title` AS `task_title`, `t`.`task_description` AS `task_description`, `t`.`status` AS `status`, `t`.`assigned_to` AS `assigned_to`, `t`.`created_at` AS `created_at`, `t`.`updated_at` AS `updated_at`, concat(`u`.`first_name`,' ',`u`.`last_name`) AS `freelancer_name` FROM (`tasks` `t` left join `users` `u` on(`t`.`assigned_to` = `u`.`user_id`)) ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `v_user_profile`
 --
 DROP TABLE IF EXISTS `v_user_profile`;
@@ -529,17 +694,54 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 --
+-- Indexes for table `client_projects`
+--
+ALTER TABLE `client_projects`
+  ADD PRIMARY KEY (`project_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `freelancer_applications`
+--
+ALTER TABLE `freelancer_applications`
+  ADD PRIMARY KEY (`application_id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `freelancer_connects`
+--
+ALTER TABLE `freelancer_connects`
+  ADD PRIMARY KEY (`freelancer_connects_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `freelancer_credits`
+--
+ALTER TABLE `freelancer_credits`
+  ADD PRIMARY KEY (`freelancer_credits_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `freelancer_experiences`
+--
+ALTER TABLE `freelancer_experiences`
+  ADD PRIMARY KEY (`user_experience_id`),
+  ADD KEY `user` (`user_id`);
+
+--
+-- Indexes for table `freelancer_skills`
+--
+ALTER TABLE `freelancer_skills`
+  ADD PRIMARY KEY (`user_skills_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `skill_id` (`skill_id`);
+
+--
 -- Indexes for table `job_titles`
 --
 ALTER TABLE `job_titles`
   ADD PRIMARY KEY (`job_title_id`);
-
---
--- Indexes for table `projects`
---
-ALTER TABLE `projects`
-  ADD PRIMARY KEY (`project_id`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `skills`
@@ -553,7 +755,7 @@ ALTER TABLE `skills`
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`task_id`),
   ADD KEY `project_id` (`project_id`),
-  ADD KEY `assigned_to` (`assigned_to`);
+  ADD KEY `tasks_ibfk_2` (`assigned_to`);
 
 --
 -- Indexes for table `users`
@@ -565,35 +767,50 @@ ALTER TABLE `users`
   ADD KEY `job_title_id` (`job_title_id`);
 
 --
--- Indexes for table `users_experiences`
---
-ALTER TABLE `users_experiences`
-  ADD PRIMARY KEY (`user_experience_id`),
-  ADD KEY `user` (`user_id`);
-
---
--- Indexes for table `users_skills`
---
-ALTER TABLE `users_skills`
-  ADD PRIMARY KEY (`user_skills_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `skill_id` (`skill_id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `client_projects`
+--
+ALTER TABLE `client_projects`
+  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `freelancer_applications`
+--
+ALTER TABLE `freelancer_applications`
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `freelancer_connects`
+--
+ALTER TABLE `freelancer_connects`
+  MODIFY `freelancer_connects_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `freelancer_credits`
+--
+ALTER TABLE `freelancer_credits`
+  MODIFY `freelancer_credits_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `freelancer_experiences`
+--
+ALTER TABLE `freelancer_experiences`
+  MODIFY `user_experience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
+--
+-- AUTO_INCREMENT for table `freelancer_skills`
+--
+ALTER TABLE `freelancer_skills`
+  MODIFY `user_skills_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
 
 --
 -- AUTO_INCREMENT for table `job_titles`
 --
 ALTER TABLE `job_titles`
   MODIFY `job_title_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `projects`
---
-ALTER TABLE `projects`
-  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `skills`
@@ -611,49 +828,56 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT for table `users_experiences`
---
-ALTER TABLE `users_experiences`
-  MODIFY `user_experience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
-
---
--- AUTO_INCREMENT for table `users_skills`
---
-ALTER TABLE `users_skills`
-  MODIFY `user_skills_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `projects`
+-- Constraints for table `client_projects`
 --
-ALTER TABLE `projects`
-  ADD CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `client_projects`
+  ADD CONSTRAINT `client_projects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `freelancer_applications`
+--
+ALTER TABLE `freelancer_applications`
+  ADD CONSTRAINT `freelancer_applications_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`project_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `freelancer_applications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `freelancer_connects`
+--
+ALTER TABLE `freelancer_connects`
+  ADD CONSTRAINT `freelancer_connects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `freelancer_credits`
+--
+ALTER TABLE `freelancer_credits`
+  ADD CONSTRAINT `freelancer_credits_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `freelancer_skills`
+--
+ALTER TABLE `freelancer_skills`
+  ADD CONSTRAINT `skill_id` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`skill_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`user_id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`project_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `job_titles` (`job_title_id`) ON DELETE SET NULL ON UPDATE SET NULL;
-
---
--- Constraints for table `users_skills`
---
-ALTER TABLE `users_skills`
-  ADD CONSTRAINT `skill_id` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`skill_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `job_titles` (`job_title_id`) ON DELETE CASCADE ON UPDATE SET NULL;
 
 DELIMITER $$
 --

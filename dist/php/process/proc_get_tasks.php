@@ -5,11 +5,7 @@ $mysqli = require '../../../connection.php';
 if (isset($_GET['project_id'])) {
     $project_id = $mysqli->real_escape_string($_GET['project_id']);
     
-    $query = "SELECT t.*, CONCAT(u.first_name, ' ', u.last_name) as freelancer_name 
-              FROM tasks t 
-              LEFT JOIN users u ON t.assigned_to = u.user_id 
-              WHERE t.project_id = '$project_id' 
-              ORDER BY t.created_at DESC";
+    $query = "CALL sp_get_tasks_from_v_tasks(?)";
               
     $result = $mysqli->query($query);
     

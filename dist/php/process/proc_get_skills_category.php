@@ -1,7 +1,7 @@
 <?php
 require_once('../../../connection.php');
 
-$query = "SELECT DISTINCT skill_category FROM skills ORDER BY skill_category";
+$query = "CALL sp_get_skills_category()";
 $result = $mysqli->query($query);
 
 $categories = [];

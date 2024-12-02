@@ -2,25 +2,8 @@
 session_start();
 $mysqli = require '../../../connection.php';
 
-// pagawaan ng view tapos ilagay sa stored procedure yung select
-$query = "
-    SELECT 
-        fa.user_id, 
-        u.first_name, 
-        u.last_name, 
-        fa.project_id, 
-        p.project_name, 
-        fa.application_date, 
-        fa.status 
-    FROM 
-        freelancer_applications fa
-    INNER JOIN 
-        users u ON fa.user_id = u.id
-    INNER JOIN 
-        projects p ON fa.project_id = p.id
-    WHERE 
-        u.role = 'freelancer'
-        AND fa.status = 'Accepted';";
+// may view na
+$query = "CALL sp_get_freelancers_from_v_freelancers()";
 
 $result = $mysqli->query($query);
 

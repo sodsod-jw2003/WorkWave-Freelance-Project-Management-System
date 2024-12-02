@@ -8,7 +8,7 @@ include ('header.php');
 $project_id = $_GET['id'] ?? null;
 
 // Fetch project details
-$project_query = "SELECT * FROM projects WHERE project_id = ?";
+$project_query = "CALL sp_project_details(?)";
 $stmt = $mysqli->prepare($project_query);
 $stmt->bind_param("i", $project_id);
 $stmt->execute();
