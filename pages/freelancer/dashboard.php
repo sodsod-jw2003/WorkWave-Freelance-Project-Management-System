@@ -40,19 +40,19 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
 </head>
 <body>
 <section class="container-fluid poppins">
-    <div class="row">
+    <div class="row d-flex justify-content-center">
 
         <!-- filter jobs -->
-        <div class="col-md-2 col-12 bg-light min0vh-100">
+        <!-- <div class="col-md-2 col-12 bg-light min0vh-100">
         .
-        </div>
+        </div> -->
         <!-- /filter jobs -->
 
         <!-- feed -->
-        <div class="col-md-8 col-12">
+        <div class="col-md-10 col-12">
             <!-- creds and cons -->
             <div class="row mx-0 my-3">
-                <div class="col-12 col-lg-6 d-flex align-items-center mb-3 mb-lg-0">
+                <div class="col-10 col-lg-6 d-flex align-items-center mb-3 mb-lg-0">
                     <h2 class="m-0">Dashboard</h2>
                 </div>
                 <div class="col-12 col-lg-6 pe-lg-3">
@@ -136,14 +136,20 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                                     <a href="project_application.php" class="text-green-40 fw-semibold ps-2 fs-3">Project Title</a>
                                 </div>
                                 <div class="col-md-3 bg- d-flex align-items-center justify-content-end pe-2">
-                                    <span class="">
+                                    <span class="me-3">
                                         <span class="text-muted">Cost:</span>
                                         <span class="fw-semibold text-green-40">10</span>
                                         <span class="fw-semibold text-green-40">Connects</span>
                                     </span>
+                                    <span class="">
+                                        <span class="text-muted">Worth:</span>
+                                        <span class="fw-semibold text-green-40">25</span>
+                                        <span class="fw-semibold text-green-40">Merits</span>
+                                    </span>
                                 </div>
                             </div>
                             <!-- title and cons -->
+                            <hr class="divider mx-2">
                             <!-- project category -->
                             <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
                                 <!-- proj category -->
@@ -209,9 +215,9 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
 
 
         <!-- sidebar right -->
-        <div class="col-md-2 col-12 bg-light ">
+        <!-- <div class="col-md-2 col-12 bg-light ">
             .
-        </div>
+        </div> -->
         <!-- /sidebar right -->
     </div>
 </section>

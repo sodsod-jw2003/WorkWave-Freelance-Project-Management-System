@@ -66,14 +66,21 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                 <div class="container bg-white rounded shadow p-4">
                     <div class="d-flex align-items-center justify-content-between mb-0">
                         <h3 class="fw-semibold text-green-50">Project Title</h3>
-                        <span class="">
-                            <span class="text-muted">Cost:</span>
-                            <span class="fw-semibold text-green-40">10</span>
-                            <span class="fw-semibold text-green-40">Connects</span>
+                        <span>
+                            <span class="me-2">
+                                <span class="text-muted">Cost:</span>
+                                <span class="fw-semibold text-green-40">10</span>
+                                <span class="fw-semibold text-green-40">Connects</span>
+                            </span>
+                            <span class="">
+                                <span class="text-muted">Worth:</span>
+                                <span class="fw-semibold text-green-40">10</span>
+                                <span class="fw-semibold text-green-40">Merits</span>
+                            </span>
                         </span>
                     </div>
                     <hr class="divider">
-                    <div class="d-flex align-items-center mb-2">
+                    <div class="d-flex align-items-center mb-2 text-green-50">
                         <span class="fas fa-cog fs-6 me-2"></span>
                         <span class="fs-5 fw-semibold">Project Category</span>
                     </div>

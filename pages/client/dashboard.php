@@ -38,7 +38,7 @@ include ('header.php');
             <div class="row mt-4 align-items-center">
                 <!-- Profile Title -->
                 <div class="col-12 col-md-6">
-                    <h2 class="text-start">Dashboard</h2>
+                    <h2 class="text-start">Client Dashboard</h2>
                 </div>
                 <!-- Breadcrumb Navigation -->
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
@@ -49,6 +49,96 @@ include ('header.php');
                     </nav>
                 </div>
             </div>
+            <!-- contracts, projects, freelancers, and applications -->
+            <div class="row mt-4">
+                <!-- projects, tasks, and clients -->
+                <div class="row mx-0 my-3 g-4">
+                    <div class="col-12 col-md-3 p-2">
+                        <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                            <div class="col-7 d-flex flex-column align-items-start mt-1">
+                                <div class="fw-bold fs-2 ps-2">13</div>
+                                <div class="fs-6 ps-2">Contracts</div>
+                            </div>
+                            <div class="col-5 d-flex justify-content-center align-items-center mt-2">
+                                <i class="fas fa-file-contract fa-4x text-green-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3 p-2">
+                        <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                            <div class="col-7 d-flex flex-column align-items-start mt-1">
+                                <div class="fw-bold fs-2 ps-2">4</div>
+                                <div class="fs-6 ps-2">Projects</div>
+                            </div>
+                            <div class="col-5 d-flex justify-content-center align-items-center mt-2">
+                                <i class="fas fa-diagram-project fa-4x text-green-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3 p-2">
+                        <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                            <div class="col-7 d-flex flex-column align-items-start mt-1">
+                                <div class="fw-bold fs-2 ps-2">2</div>
+                                <div class="fs-6 ps-2">Freelancers</div>
+                            </div>
+                            <div class="col-5 d-flex justify-content-center align-items-center mt-2">
+                                <i class="fas fa-briefcase fa-4x text-green-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3 p-2">
+                        <a href="applications.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center no-deco">
+                            <div class="col-7 d-flex flex-column align-items-start mt-1">
+                                <div class="fw-bold fs-2 ps-2 text-dark">2</div>
+                                <div class="fs-6 ps-2 text-green-50">Applications</div>
+                            </div>
+                            <div class="col-5 d-flex justify-content-center align-items-center mt-2">
+                                <i class="fas fa-hand fa-4x text-green-50"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- /projects, tasks, and clients -->
+            </div>
+            <!-- /contracts, projects, freelancers, and applications -->
+            <!-- post project -->
+            <div class="row px-1">
+                .
+            </div>
+            <!-- /post project -->
+            <!-- contracts feed -->
+            <div class="row px-1">
+                <div class="container px-3">
+                    <!-- project card -->
+                    <div class="card mb-4 shadow border-0 rounded-3">
+                        <div class="card-body">
+                            <div class="row my-3 mx-1 border-0">
+                                <h3>My Contracts</h3>
+                            </div>
+                            <div class="row m-3">
+                                <div class="col-12 d-flex justify-content-between align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
+                                    <div class="col-md-5">
+                                        <h6 class="text-secondary">Project Title</h6>
+                                        <div class="d-flex align-items-center mt-3">
+                                            <img src="<?php echo $user['profile_picture_url'] ?>" 
+                                                    alt="" 
+                                                    class="rounded-circle" 
+                                                    style="width: 30px; height: 30px;">
+                                            <span class="fs-5 ms-3 fw-semibold">Freelancer Name</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-end m-0">
+                                        <button class="btn btn-outline-secondary me-2"><i class="fas fa-eye"></i></button>
+                                        <button class="btn btn-success me-2">Complete</button>
+                                        <button class="btn btn-danger">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /contracts feed -->
         </div>
     </section>
 </body>

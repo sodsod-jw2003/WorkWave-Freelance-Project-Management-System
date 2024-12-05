@@ -8,8 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_category = $_POST['project_category'];
     $project_description = $_POST['project_description']; 
     $project_status = $_POST['status'];
+    $connect_cost = $_POST['connect_cost'];
+    $merit_worth = $_POST['merit_worth'];
 
-    $query = "CALL sp_add_projects(?,?,?,?,?)";
+    $query = "CALL sp_add_projects(?,?,?,?,?,?,?)";
     $stmt = $mysqli->prepare($query);
 
     if (!$stmt) {
@@ -20,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt->bind_param("issss", $user_id, $project_title, $project_category, $project_description, $project_status);
+    $stmt->bind_param("issssii", $user_id, $project_title, $project_category, $project_description, $project_status, $connect_cost, $merit_worth);
     
     $response = array();
     if ($stmt->execute()) {

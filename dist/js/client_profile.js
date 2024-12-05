@@ -322,6 +322,30 @@ function loadSkillCategories() {
                               required></textarea>
                       </div>
                   </div>
+                  <div class="row mt-1">
+                      <!-- connect cost -->
+                      <div class="col-md-6 mb-1">
+                          <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
+                          <input type="number" 
+                              name="connect_cost" 
+                              id="connect_cost" 
+                              class="form-control bg-white-100 no-outline-green-focus border-1" 
+                              min="5"
+                              max="10" 
+                              required>
+                      </div>
+                      <!-- merit -->
+                      <div class="col-md-6 mb-1">
+                          <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
+                          <input type="number" 
+                              name="merit_worth" 
+                              id="merit_worth" 
+                              class="form-control bg-white-100 no-outline-green-focus border-1" 
+                              min="10"
+                              max="50" 
+                              required>
+                      </div>
+                  </div>
                   <div class="row">
                       <!-- project controls -->
                       <div class="container pt-3 mb-3">
@@ -341,7 +365,9 @@ function loadSkillCategories() {
             project_title: $('#project_title').val(),
             project_category: $('#project_category').val(),
             project_description: $('#project_description').val(),
-            status: $('#status').val()
+            status: $('#status').val(),
+            connect_cost: $('#connect_cost').val(),
+            merit_worth: $('#merit_worth').val()
         };
 
         $.ajax({
@@ -368,6 +394,14 @@ function loadSkillCategories() {
                                         <button class="btn btn-outline-danger delete-project"><i class="fas fa-trash"></i></button>
                                     </div>                                  
                                 </div>
+                            </div>
+                            <div class="container">
+                                <span class="text-secondary small">Costs: </span>
+                                <span class="text-green-50 fw-semibold small">${projectData.connect_cost} Connects</span>
+                            </div>
+                            <div class="container mb-3">
+                                <span class="text-secondary small">Worth: </span>
+                                <span class="text-green-50 fw-semibold small">${projectData.merit_worth} Merit</span>
                             </div>
                         </div>
                     `;
@@ -403,26 +437,52 @@ function loadSkillCategories() {
                             <div class="row">
                                 <div class="col-md-5 mb-1">
                                     <label class="text-muted small mb-2 ms-1">Project Title</label>
-                                    <input type="text" name="project_title" class="form-control" value="${project.project_title}" required>
+                                    <input type="text" name="project_title" class="form-control no-outline-green-focus" value="${project.project_title}" required>
                                 </div>
                                 <div class="col-md-4 mb-1">
                                     <label class="text-muted small mb-2 ms-1">Category</label>
-                                    <select name="project_category" class="form-select" required>
+                                    <select name="project_category" class="form-select no-outline-green-focus" required>
                                         ${savedCategories}
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-1">
                                     <label class="text-muted small mb-2 ms-1">Status</label>
-                                    <select name="status" class="form-select" required>
+                                    <select name="status" class="form-select no-outline-green-focus" required>
                                         <option value="In Progress" ${project.project_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
                                         <option value="Completed" ${project.project_status === 'Completed' ? 'selected' : ''}>Completed</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mt-1">
+                            <div class="row mt-2">
                                 <div class="col-md-12 mb-1">
                                     <label class="text-muted small mb-2 ms-1">Project Description</label>
-                                    <textarea name="project_description" class="form-control" required>${project.project_description}</textarea>
+                                    <textarea name="project_description" class="form-control no-outline-green-focus" required>${project.project_description}</textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <!-- connect cost -->
+                                <div class="col-md-6 mb-1">
+                                    <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
+                                    <input type="number" 
+                                        name="connect_cost" 
+                                        id="connect_cost" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                        min="5"
+                                        max="10"
+                                        value="${project.connect_cost}" 
+                                        required>
+                                </div>
+                                <!-- merit -->
+                                <div class="col-md-6 mb-1">
+                                    <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
+                                    <input type="number" 
+                                        name="merit_worth" 
+                                        id="merit_worth" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                        min="10"
+                                        max="50" 
+                                        value="${project.merit_worth}" 
+                                        required>
                                 </div>
                             </div>
                             <div class="row">
@@ -524,6 +584,14 @@ function loadSkillCategories() {
                                           <button class="btn btn-outline-danger delete-project"><i class="fas fa-trash"></i></button>
                                       </div>                                  
                                   </div>
+                              </div>
+                              <div class="container">
+                                  <span class="text-secondary small">Costs: </span>
+                                  <span class="text-green-50 fw-semibold small">${project.connect_cost} Connects</span>
+                              </div>
+                              <div class="container mb-3">
+                                  <span class="text-secondary small">Worth: </span>
+                                  <span class="text-green-50 fw-semibold small">${project.merit_worth} Merit</span>
                               </div>
                           </div>
                       `;

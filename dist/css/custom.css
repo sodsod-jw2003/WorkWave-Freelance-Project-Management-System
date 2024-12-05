@@ -82,25 +82,25 @@ header a {
 }
 
 .nav-link:hover {
-    background-color: var(--green-30);
-    color: #fff;
+    /* background-color: var(--green-30);
+    color: #fff; */
 }
 
 .nav-link:focus {
-    outline: none;
+    /* outline: none;
     background-color: var(--green-30);
-    color: #fff;
+    color: #fff; */
 }
 
 .nav-link.active {
-    background-color: var(--green-30);
-    color: #fff;
+    /* background-color: var(--green-30);
+    color: #fff; */
 }
 
 .nav-item:hover .nav-link,
 .nav-item:focus-within .nav-link {
-    background-color: var(--green-30);
-    color: #fff;
+    /* background-color: var(--green-30);
+    color: #fff; */
 }
 
 .text-justify {

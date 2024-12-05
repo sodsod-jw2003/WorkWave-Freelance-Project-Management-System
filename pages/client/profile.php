@@ -56,7 +56,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
     <section class="container-fluid poppins">
         <div class="container">
             <!-- profile header -->
-            <div class="row mt-4 align-items-center">
+            <div class="row mt-4 align-items-center bg-danger">
                 <!-- profile title -->
                 <div class="col-12 col-md-6">
                     
@@ -78,7 +78,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
             <!-- Profile Content -->
             <div class="row">
                 <!-- Sidebar/Profile Card -->
-                <div class="col-12 col-md-4 col-lg-3 p-3">
+                <div class="col-12 col-md-4 col-lg-3 p-3 bg-danger">
                     <div class="card card-primary card-outline border-top-accent shadow border-0 mb-4 position-relative">
                         <div class="container d-flex justify-content-center mt-5 position-relative">
                             <!-- User Icon with Image Upload Trigger -->
@@ -280,7 +280,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                         </button>
                                     </div>
 
-                                    <div id="projectContainer" class="mb-0 bg-light">
+                                    <div id="projectContainer" class="mb-0">
                                         <!-- projects will be loaded here dynamically -->
                                     </div>
                                     
