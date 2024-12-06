@@ -8,6 +8,19 @@ if (!isset($_SESSION['user_id'])) {
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
+
+// After your includes
+$query = "SELECT fa.*, u.first_name, u.last_name, u.profile_picture_url, cp.project_title 
+          FROM freelancer_applications fa
+          LEFT JOIN users u ON fa.user_id = u.user_id
+          LEFT JOIN client_projects cp ON fa.project_id = cp.project_id
+          WHERE cp.user_id = ? AND fa.application_status = 'pending'
+          ORDER BY fa.application_date DESC";
+
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +42,8 @@ include ('header.php');
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
+
+    <script src="../../dist/js/applications.js"></script>
 
 </head>
 <body>
@@ -59,29 +74,44 @@ include ('header.php');
                                 <h3>Freelancers' Applications</h3>
                             </div>
                             <div class="row m-3">
-                                <!-- application card -->
-                                <div class="col-12 d-flex justify-content-between align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
-                                    <div class="col-md-5">
-                                        <h6 class="text-secondary">Project Title</h6>
-                                        <div class="d-flex align-items-center mt-3">
-                                            <img src="<?php echo $user['profile_picture_url'] ?>" 
-                                                    alt="" 
-                                                    class="rounded-circle" 
-                                                    style="width: 30px; height: 30px;">
-                                            <span class="fs-5 ms-3 fw-semibold">Freelancer Name</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 d-flex justify-content-end m-0">
-                                        <a href="view_application.php" class="btn btn-outline-secondary me-2"><i class="fas fa-eye"></i></a>
-                                        <button class="btn btn-success me-2">Hire Freelancer</button>
-                                        <button class="btn btn-danger">Remove</button>
-                                    </div>
+                                <div class="row m-3">
+                                    <?php if ($applications): ?>
+                                        <?php foreach($applications as $application): ?>
+                                            <!-- application card -->
+                                            <div class="col-12 d-flex justify-content-between align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
+                                                <div class="col-md-5">
+                                                    <h6 class="text-secondary"><?php echo htmlspecialchars($application['project_title']); ?></h6>
+                                                    <div class="d-flex align-items-center mt-3">
+                                                        <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
+                                                         alt="" 
+                                                         class="rounded-circle" 
+                                                         style="width: 30px; height: 30px;">
+                                                        <span class="fs-5 ms-3 fw-semibold">
+                                                            <?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 d-flex justify-content-end m-0">
+                                                    <a href="view_application.php?id=<?php echo htmlspecialchars($application['application_id']); ?>" 
+                                                    class="btn btn-outline-secondary me-2">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button class="btn btn-success me-2 hire-btn" 
+                                                            data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                                        Hire Freelancer
+                                                    </button>
+                                                    <button class="btn btn-danger remove-btn"
+                                                            data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
-                                <!-- /application card -->
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
             <!-- /application -->
         </div>

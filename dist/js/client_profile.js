@@ -150,7 +150,6 @@ $(document).on('submit', '#passwordChangeForm', function(e) {
     let languages = [];
 
     try {
-        // Using GitHub Gist raw URL - Replace with your own Gist URL
         const response = await fetch('https://gist.githubusercontent.com/DongDANN/c41bba3f66514fcfb7e63ae3ea2e4281/raw/a49b5fdedc2e6fbff2a971b94496a20dad7f0f6c/gistfile1.txt');
         const data = await response.json();
 
@@ -306,6 +305,7 @@ function loadSkillCategories() {
                               class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
                               required>
                               <option value="" disabled selected>Select Status</option>
+                              <option value="Hiring">Hiring</option>
                               <option value="In Progress">In Progress</option>
                               <option value="Completed">Completed</option>
                           </select>
@@ -448,6 +448,7 @@ function loadSkillCategories() {
                                 <div class="col-md-3 mb-1">
                                     <label class="text-muted small mb-2 ms-1">Status</label>
                                     <select name="status" class="form-select no-outline-green-focus" required>
+                                        <option value="Hiring" ${project.project_status === 'Hiring' ? 'selected' : ''}>Hiring</option>
                                         <option value="In Progress" ${project.project_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
                                         <option value="Completed" ${project.project_status === 'Completed' ? 'selected' : ''}>Completed</option>
                                     </select>
@@ -469,7 +470,7 @@ function loadSkillCategories() {
                                         class="form-control bg-white-100 no-outline-green-focus border-1" 
                                         min="5"
                                         max="10"
-                                        value="${project.connect_cost}" 
+                                        value="${project.project_connect_cost}" 
                                         required>
                                 </div>
                                 <!-- merit -->
@@ -481,7 +482,7 @@ function loadSkillCategories() {
                                         class="form-control bg-white-100 no-outline-green-focus border-1" 
                                         min="10"
                                         max="50" 
-                                        value="${project.merit_worth}" 
+                                        value="${project.project_merit_worth}" 
                                         required>
                                 </div>
                             </div>
@@ -587,11 +588,11 @@ function loadSkillCategories() {
                               </div>
                               <div class="container">
                                   <span class="text-secondary small">Costs: </span>
-                                  <span class="text-green-50 fw-semibold small">${project.connect_cost} Connects</span>
+                                  <span class="text-green-50 fw-semibold small">${project.project_connect_cost} Connects</span>
                               </div>
                               <div class="container mb-3">
                                   <span class="text-secondary small">Worth: </span>
-                                  <span class="text-green-50 fw-semibold small">${project.merit_worth} Merit</span>
+                                  <span class="text-green-50 fw-semibold small">${project.project_merit_worth} Merit</span>
                               </div>
                           </div>
                       `;

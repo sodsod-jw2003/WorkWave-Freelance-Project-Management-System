@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2024 at 08:40 AM
+-- Generation Time: Dec 06, 2024 at 02:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,13 +32,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activate_account` (IN `p_activat
 	activation_token_hash = p_activation_token_hash;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50), IN `p_connect_cost` INT(11), IN `p_merit_worth` INT(11))   BEGIN
     INSERT INTO client_projects (
         user_id,
         project_title,
         project_category,
         project_description,
         project_status,
+        project_connect_cost,
+        project_merit_worth,
         created_at
     )
     VALUES (
@@ -47,6 +49,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` IN
         p_project_category,
         p_project_description,
         p_project_status,
+        p_connect_cost,
+        p_merit_worth,
         NOW()
     );
      SELECT LAST_INSERT_ID() AS project_id;
@@ -182,7 +186,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_project_details` (IN `p_project_id` INT)   BEGIN
     SELECT * 
-    FROM projects 
+    FROM client_projects
     WHERE project_id = p_project_id;
 END$$
 
@@ -204,13 +208,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_activation_token` (IN `p_
 	user_id = p_user_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_client_projects` (IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50), IN `p_project_id` INT(11), IN `p_user_id` INT(11))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_client_projects` (IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50), IN `p_project_id` INT(11), IN `p_user_id` INT(11), IN `p_connect_cost` INT(11), IN `p_merit_worth` INT(11))   BEGIN
     UPDATE client_projects
     SET 
         project_title = p_project_title,
         project_category = p_project_category,
         project_description = p_project_description,
-        project_status = p_project_status
+        project_status = p_project_status,
+        project_connect_cost = p_connect_cost,
+        project_merit_worth = p_merit_worth
     WHERE 
         project_id = p_project_id
         AND user_id = p_user_id;
@@ -282,10 +288,22 @@ CREATE TABLE `client_projects` (
   `project_title` varchar(255) NOT NULL,
   `project_category` varchar(255) NOT NULL,
   `project_description` text DEFAULT NULL,
-  `project_status` enum('In Progress','Completed') NOT NULL DEFAULT 'In Progress',
+  `project_status` enum('In Progress','Completed','Hiring') NOT NULL DEFAULT 'Hiring',
+  `project_connect_cost` int(11) DEFAULT NULL,
+  `project_merit_worth` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `client_projects`
+--
+
+INSERT INTO `client_projects` (`project_id`, `user_id`, `project_title`, `project_category`, `project_description`, `project_status`, `project_connect_cost`, `project_merit_worth`, `created_at`, `updated_at`) VALUES
+(25, 31, 'Dev Ops', 'DevOps', 'Create something', 'In Progress', 10, 25, '2024-12-06 01:25:14', '2024-12-06 12:29:35'),
+(26, 31, 'Game Development', 'Graphic Design', 'DSA\nDA\nSD\nAS\nDAS\nDAS\nD\nsad\nasd', 'In Progress', 5, 10, '2024-12-06 01:41:09', '2024-12-06 12:47:44'),
+(27, 32, 'Jensen Project', 'Financial Skills', 'Testing \n', 'Hiring', 10, 10, '2024-12-06 10:59:05', '2024-12-06 12:00:17'),
+(28, 31, 'Banana Game', 'Game Development Support', 'Saging to the max', 'In Progress', 5, 10, '2024-12-06 11:40:08', '2024-12-06 12:06:30');
 
 -- --------------------------------------------------------
 
@@ -303,6 +321,28 @@ CREATE TABLE `freelancer_applications` (
   `application_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `freelancer_applications`
+--
+
+INSERT INTO `freelancer_applications` (`application_id`, `project_id`, `user_id`, `application_details`, `portfolio_url`, `application_status`, `application_date`) VALUES
+(14, 26, 30, 'sadasdasd\r\nASDAS\r\nDASD', 'https://chatgpt.com/c/6752cf26-842c-800d-b682-1fff3c29335c', 'pending', '2024-12-06 18:18:32'),
+(15, 25, 30, 'adas\r\nAD\r\nAS\r\nDA\r\n    aaaaaaa', 'https://chatgpt.com/c/6752cf26-842c-800d-b682-1fff3c29335c', 'accepted', '2024-12-06 18:57:35'),
+(16, 25, 35, 'asdas', 'https://github.com/', 'pending', '2024-12-06 19:31:45'),
+(18, 28, 35, 'fd', '', 'accepted', '2024-12-06 19:41:32');
+
+--
+-- Triggers `freelancer_applications`
+--
+DELIMITER $$
+CREATE TRIGGER `tr_after_application_status_update` AFTER UPDATE ON `freelancer_applications` FOR EACH ROW IF NEW.application_status = 'accepted' THEN
+        UPDATE client_projects
+        SET project_status = 'in progress'
+        WHERE project_id = NEW.project_id;
+    END IF
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -312,20 +352,16 @@ CREATE TABLE `freelancer_applications` (
 CREATE TABLE `freelancer_connects` (
   `freelancer_connects_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `connects` int(11) NOT NULL DEFAULT 100
+  `connects` int(11) DEFAULT 100
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `freelancer_credits`
+-- Dumping data for table `freelancer_connects`
 --
 
-CREATE TABLE `freelancer_credits` (
-  `freelancer_credits_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `credits` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `freelancer_connects` (`freelancer_connects_id`, `user_id`, `connects`) VALUES
+(1, 30, 20),
+(4, 35, 85);
 
 -- --------------------------------------------------------
 
@@ -353,7 +389,30 @@ INSERT INTO `freelancer_experiences` (`user_experience_id`, `user_id`, `job_titl
 (33, 22, 'Taga hugas ng pinggan sa bahay', 'ICOR Inc.', '2012-2024'),
 (35, 22, 'Software Engineer', 'ICOR Inc.aa', '2001-2002'),
 (47, 23, 'Software Engineer', 'ICOR Inc.', '2005-2012'),
-(53, 28, 'test', 'aaa', '2023-2024');
+(53, 28, 'test', 'aaa', '2023-2024'),
+(55, 30, 'Software Developer', 'Google', '2020-Present'),
+(56, 33, 'Software Engineer', 'Yahoo', '2020-Present'),
+(57, 35, 'Software Developer', 'Yahoo', '2020-Present');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_merits`
+--
+
+CREATE TABLE `freelancer_merits` (
+  `freelancer_credits_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `merits` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_merits`
+--
+
+INSERT INTO `freelancer_merits` (`freelancer_credits_id`, `user_id`, `merits`) VALUES
+(1, 30, 0),
+(2, 35, 0);
 
 -- --------------------------------------------------------
 
@@ -372,7 +431,11 @@ CREATE TABLE `freelancer_skills` (
 --
 
 INSERT INTO `freelancer_skills` (`user_skills_id`, `user_id`, `skill_id`) VALUES
-(188, 29, 127);
+(188, 29, 127),
+(189, 30, 132),
+(190, 30, 130),
+(193, 35, 57),
+(194, 35, 56);
 
 -- --------------------------------------------------------
 
@@ -602,7 +665,24 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `birthdate`, `gender`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role`, `profile_picture_url`, `job_title_id`, `bio`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`, `deactivation_duration`, `status`) VALUES
-(29, 'kate', 'jensen', '2003-09-08', 'Female', 'Angeles, Pampanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 'Freelancer', '', NULL, '', '$2y$10$fGb.gQEZo5SaDwxix5vXeu4Mmx5Q5h3O84R1QQ2WwL0SBeV037bhy', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
+(29, 'kate', 'jensen', '2003-09-08', 'Female', 'Angeles, Pampanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 'Freelancer', '', NULL, '', '$2y$10$fGb.gQEZo5SaDwxix5vXeu4Mmx5Q5h3O84R1QQ2WwL0SBeV037bhy', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(30, 'Freelance Ronald', 'Sullano', '2003-07-14', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910708', 'Filipino', 'Tagalog', 'Freelancer', '../../dist/php/uploads/profile_pictures/675246781cbb9_IMG_20230104_162006.png', 2, '', '$2y$10$nWpuLhxM5qvEWpsWwpwGKu4aUDewI1ZAbp39VawrkWfv0wjHVQgWu', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(31, 'Client Ronald', 'Sullano', '2003-07-14', 'Male', 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 'Client', '../../dist/php/uploads/profile_pictures/675247abedcbb_674e15dedd858_gary-chapman.jpg', 3, '', '$2y$10$6vohCxMgIJUVnrzFXXQYmuMGDQStAO5nqnZJD.46lXru1Y73w5dse', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(32, 'Kate', 'Jensen', '2003-07-10', 'Female', 'Antipolo, Rizal, Philippines', 'ronaldsullano12345@gmail.com', '9515910702', 'Thai', 'Guarani', 'Client', '../../dist/php/uploads/profile_pictures/6752d8cfd48d2_received_364139713153077.jpeg', 3, '', '$2y$10$sTftvqLPrrJnugSToi/2Ee7qHUqAU26S6RWhgIg5Rvari9KdxdAGa', NULL, NULL, NULL, NULL, NULL, NULL, 'active'),
+(35, 'Freelance Kate', 'Jensen', '2003-07-03', 'Female', 'Angeles, Pampanga, Philippines', 'ronaldsullano6666@gmail.com', '9515120708', 'Filipino', 'Tagalog', 'Freelancer', '../../dist/php/uploads/profile_pictures/6752e0aaed0bc_received_364139713153077.jpeg', 1, '', '$2y$10$I3mN3hppEF20cswF8ty1L.euzn1caw0ZyBSahmbfINVIRaCAChHbe', NULL, NULL, NULL, NULL, NULL, NULL, 'active');
+
+--
+-- Triggers `users`
+--
+DELIMITER $$
+CREATE TRIGGER `tr_freelancer_signup_merit_connects` AFTER INSERT ON `users` FOR EACH ROW IF NEW.role = 'freelancer' THEN
+        INSERT INTO freelancer_connects (user_id, connects)
+        VALUES (NEW.user_id, 100);
+		INSERT INTO freelancer_merits (user_id, merits)
+        VALUES (NEW.user_id, 0);
+    END IF
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -618,6 +698,18 @@ CREATE TABLE `v_freelancers` (
 ,`project_title` varchar(255)
 ,`application_date` datetime
 ,`application_status` enum('pending','accepted','rejected')
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_freelancer_connects_merits`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_freelancer_connects_merits` (
+`user_id` int(11)
+,`connects` int(11)
+,`merits` int(10)
 );
 
 -- --------------------------------------------------------
@@ -674,6 +766,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Structure for view `v_freelancer_connects_merits`
+--
+DROP TABLE IF EXISTS `v_freelancer_connects_merits`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_freelancer_connects_merits`  AS SELECT `users`.`user_id` AS `user_id`, `freelancer_connects`.`connects` AS `connects`, `freelancer_merits`.`merits` AS `merits` FROM ((`users` left join `freelancer_connects` on(`freelancer_connects`.`user_id` = `users`.`user_id`)) left join `freelancer_merits` on(`freelancer_merits`.`user_id` = `users`.`user_id`)) WHERE `users`.`role` = 'Freelancer' ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `v_tasks`
 --
 DROP TABLE IF EXISTS `v_tasks`;
@@ -716,18 +817,18 @@ ALTER TABLE `freelancer_connects`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `freelancer_credits`
---
-ALTER TABLE `freelancer_credits`
-  ADD PRIMARY KEY (`freelancer_credits_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
 -- Indexes for table `freelancer_experiences`
 --
 ALTER TABLE `freelancer_experiences`
   ADD PRIMARY KEY (`user_experience_id`),
   ADD KEY `user` (`user_id`);
+
+--
+-- Indexes for table `freelancer_merits`
+--
+ALTER TABLE `freelancer_merits`
+  ADD PRIMARY KEY (`freelancer_credits_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `freelancer_skills`
@@ -774,37 +875,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `freelancer_connects`
 --
 ALTER TABLE `freelancer_connects`
-  MODIFY `freelancer_connects_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `freelancer_credits`
---
-ALTER TABLE `freelancer_credits`
-  MODIFY `freelancer_credits_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `freelancer_connects_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `freelancer_experiences`
 --
 ALTER TABLE `freelancer_experiences`
-  MODIFY `user_experience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `user_experience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
+--
+-- AUTO_INCREMENT for table `freelancer_merits`
+--
+ALTER TABLE `freelancer_merits`
+  MODIFY `freelancer_credits_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `freelancer_skills`
 --
 ALTER TABLE `freelancer_skills`
-  MODIFY `user_skills_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
+  MODIFY `user_skills_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
 
 --
 -- AUTO_INCREMENT for table `job_titles`
@@ -828,7 +929,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Constraints for dumped tables
@@ -854,10 +955,10 @@ ALTER TABLE `freelancer_connects`
   ADD CONSTRAINT `freelancer_connects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `freelancer_credits`
+-- Constraints for table `freelancer_merits`
 --
-ALTER TABLE `freelancer_credits`
-  ADD CONSTRAINT `freelancer_credits_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `freelancer_merits`
+  ADD CONSTRAINT `freelancer_merits_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `freelancer_skills`

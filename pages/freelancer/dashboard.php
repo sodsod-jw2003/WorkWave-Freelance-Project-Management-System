@@ -9,9 +9,28 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-// placeholder lang
-$lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore optio ad illo mollitia qui porro asperiores et perferendis nostrum. Est aspernatur illo nam velit consequatur eum voluptatem magnam id eius voluptas. Est repellendus nihil sed dignissimos magni qui aliquam reiciendis aut nesciunt porro sit galisum dolores. Eum nobis quibusdam cum corrupti inventore hic obcaecati veritatis est illo necessitatibus eum voluptas fugit in molestias voluptas.";
+$user_id = $_SESSION['user_id'];
 
+// Query to get connects and merits
+$query = "SELECT connects, merits FROM v_freelancer_connects_merits WHERE user_id = ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$stats = $result->fetch_assoc();
+
+// Default values if no results found
+$connects = $stats['connects'] ?? 0;
+$merits = $stats['merits'] ?? 0;
+
+// Project
+$project_query = "SELECT cp.*, u.first_name AS client_name 
+                  FROM client_projects cp
+                  LEFT JOIN users u ON cp.user_id = u.user_id 
+                  WHERE cp.project_status = 'hiring'
+                  ORDER BY cp.created_at DESC";
+$result = $mysqli->query($project_query);
+$projects = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -60,12 +79,12 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                         <!-- creds -->
                         <div class="col-6 col-md-4 d-flex bg-green-30 text-white rounded shadow-sm border me-2">
                             <div class="col-5 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-coins fa-2x p-3"></i>
+                                <i class="fas fa-star fa-2x p-3"></i>
                             </div>
                             <div class="col-7 d-flex justify-content-start align-items-center">
                                 <div>
-                                    <div class="text-start text-green-10 small">Credits</div>
-                                    <div class="text-start fw-semibold">2,742</div>
+                                    <div class="text-start text-green-10 small">Merits</div>
+                                    <div class="text-start fw-semibold" id="merits-count"><?php echo htmlspecialchars($merits); ?></div>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +97,7 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                             <div class="col-7 d-flex justify-content-start align-items-center">
                                 <div>
                                     <div class="text-start text-green-10 small">Connects</div>
-                                    <div class="text-start fw-semibold">100</div>
+                                    <div class="text-start fw-semibold" id="connects-count"><?php echo htmlspecialchars($connects); ?></div>
                                 </div>
                             </div>
                         </div>
@@ -127,90 +146,80 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
             <!-- project feed -->
             <div class="row px-1">
                 <div class="container px-3">
-                    <!-- project card -->
-                    <div class="card mb-4 shadow border-0 rounded-3">
-                        <div class="card-body">
-                            <!-- title and cons -->
-                            <div class="col-12 col d-flex justify-content-between mb-2">
-                                <div class="col-md-6 pt-2 d-flex bg- align-items-center">
-                                    <a href="project_application.php" class="text-green-40 fw-semibold ps-2 fs-3">Project Title</a>
+                    <?php foreach($projects as $project): ?>
+                        <!-- project card -->
+                        <div class="card mb-4 shadow border-0 rounded-3">
+                            <div class="card-body">
+                                <!-- title and cons -->
+                                <div class="col-12 col d-flex justify-content-between mb-2">
+                                    <div class="col-md-6 pt-2 d-flex bg- align-items-center">
+                                        <a href="project_application.php?id=<?php echo htmlspecialchars($project['project_id']); ?>" 
+                                        class="text-green-40 fw-semibold ps-2 fs-3">
+                                            <?php echo htmlspecialchars($project['project_title']); ?>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 bg- d-flex align-items-center justify-content-end pe-2">
+                                        <span class="me-3">
+                                            <span class="text-muted">Cost:</span>
+                                            <span class="fw-semibold text-green-40"><?php echo htmlspecialchars($project['project_connect_cost']); ?></span>
+                                            <span class="fw-semibold text-green-40">Connects</span>
+                                        </span>
+                                        <span class="">
+                                            <span class="text-muted">Worth:</span>
+                                            <span class="fw-semibold text-green-40"><?php echo htmlspecialchars($project['project_merit_worth']); ?></span>
+                                            <span class="fw-semibold text-green-40">Merits</span>
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 bg- d-flex align-items-center justify-content-end pe-2">
-                                    <span class="me-3">
-                                        <span class="text-muted">Cost:</span>
-                                        <span class="fw-semibold text-green-40">10</span>
-                                        <span class="fw-semibold text-green-40">Connects</span>
+                                <hr class="divider mx-2">
+                                <!-- project category -->
+                                <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-flex align-items-center p-2 rounded-3 text-green-40">
+                                        <span class="fas fa-cog fs-5"></span>
+                                        <span class="px-2 fs-5 fw-semibold"><?php echo htmlspecialchars($project['project_category']); ?></span>
                                     </span>
-                                    <span class="">
-                                        <span class="text-muted">Worth:</span>
-                                        <span class="fw-semibold text-green-40">25</span>
-                                        <span class="fw-semibold text-green-40">Merits</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- title and cons -->
-                            <hr class="divider mx-2">
-                            <!-- project category -->
-                            <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
-                                <!-- proj category -->
-                                <span class="d-flex align-items-center p-2 rounded-3 text-green-40">
-                                    <span class="fas fa-cog fs-5"></span> <!-- sample icon lung shea -->
-                                    <span class="px-2 fs-5 fw-semibold">Project Category</span>
-                                </span>
-                                <!-- /proj category -->
-                                <!-- apply and heart btn -->
-                                <span class="d-flex align-items-center">
-                                    <!-- apply btn -->
-                                    <span class="d-flex align-items-center p-2 rounded-3 bg-">
-                                        <div class="d-flex align-items-center">
-                                            <a href="project_application.php" class="btn p-0" id="apply-btn">
-                                                <i id="apply-icon" class="fas fa-hand fs-4 text-green-40"></i>
-                                            </a>
-                                        </div>
-                                    </span>
-                                    <!-- /apply btn -->
-                                    <!-- heart btn -->
-                                    <span class="d-flex align-items-center p-2 me-2 rounded-3 bg-">
-                                        <div class="d-flex align-items-center">
-                                            <button class="btn p-0" id="heart-btn">
-                                                <i id="heart-icon" class="far fa-heart fs-4 text-danger"></i>
+                                    <!-- buttons -->
+                                    <span class="d-flex align-items-center">
+                                        <span class="d-flex align-items-center p-2 rounded-3">
+                                            <div class="d-flex align-items-center">
+                                                <a href="project_application.php?id=<?php echo htmlspecialchars($project['project_id']); ?>" class="btn p-0" id="apply-btn">
+                                                    <i class="fas fa-hand fs-4 text-green-40"></i>
+                                                </a>
+                                            </div>
+                                        </span>
+                                        <span class="d-flex align-items-center p-2 me-2 rounded-3">
+                                            <div class="d-flex align-items-center">
+                                            <button class="btn p-0 heart-btn" data-project-id="<?php echo htmlspecialchars($project['project_id']); ?>">
+                                                <i class="far fa-heart fs-4 text-danger heart-icon"></i>
                                             </button>
-                                        </div>
-                                    </span>
-                                    <!-- /heart btn -->
-                                </span>
-                                <!-- /apply and heart btn -->
-                            </div>
-                            <!-- /project category -->
-                            <!-- project description -->
-                            <div class="col-12 col d-flex align-items-center mt-2">
-                                <div class="px-2 text-muted small text-justify"><?php echo $lorenipsum ?></div>
-                            </div>
-                            <!-- /project description -->
-                            <!-- divider -->
-                            <hr class="divider mx-2 mt-3"></hr>
-                            <!-- divider -->
-                            <!-- client name and posted time -->
-                            <div class="col-12 col d-flex align-items-center px-2 pt-0 mt-0">
-                                <div class="col-md-6 d-flex bg- align-items-center">
-                                    <span>
-                                        <span class="text-muted me-1">Posted by:</span>
-                                        <span class="fw-semibold text-green-40">Client Name</span>
+                                            </div>
+                                        </span>
                                     </span>
                                 </div>
-                                <div class="col-md-6 d-flex bg- align-items-center justify-content-end">
-                                    <span class="text-muted small">3 hours ago</span>
+                                <!-- project description -->
+                                <div class="col-12 col d-flex align-items-center mt-2">
+                                    <div class="px-2 text-muted small text-justify">
+                                        <?php echo htmlspecialchars($project['project_description']); ?>
+                                    </div>
+                                </div>
+                                <hr class="divider mx-2 mt-3">
+                                <!-- client name and posted time -->
+                                <div class="col-12 col d-flex align-items-center px-2 pt-0 mt-0">
+                                    <div class="col-md-6 d-flex bg- align-items-center">
+                                        <span>
+                                            <span class="text-muted me-1">Posted by:</span>
+                                            <span class="fw-semibold text-green-40"><?php echo htmlspecialchars($project['client_name']); ?></span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6 d-flex bg- align-items-center justify-content-end">
+                                        <span class="text-muted small"><?php echo date('M j, Y', strtotime($project['created_at'])); ?></span>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- /client name and posted time -->
                         </div>
-                    </div>
-                    <!-- /project card -->
-                     
+                    <?php endforeach; ?>
                 </div>
             </div>
-            <!-- /project feed -->
-        </div>
         <!-- /feed -->
 
 

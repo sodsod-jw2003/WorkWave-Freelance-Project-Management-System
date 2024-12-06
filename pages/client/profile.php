@@ -2,6 +2,7 @@
 session_start();
 $mysqli1 = require ('../../connection.php');
 $mysqli2 = require ('../../connection.php');
+$mysqli3 = require ('../../connection.php');
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
@@ -18,6 +19,22 @@ $skills_by_category = [];
 while ($row = mysqli_fetch_assoc($skills_result)) {
     $skills_by_category[$row['skill_category']][] = $row;
 }
+
+//freelancers query
+$freelancers_query = "SELECT u.user_id, u.first_name, u.last_name, u.email, 
+                             u.mobile_number, u.profile_picture_url,
+                             j.job_title, cp.project_title 
+                      FROM users u
+                      JOIN freelancer_applications fa ON u.user_id = fa.user_id 
+                      JOIN client_projects cp ON fa.project_id = cp.project_id
+                      JOIN job_titles j ON u.job_title_id = j.job_title_id
+                      WHERE fa.application_status = 'accepted' 
+                      AND cp.user_id = ?";
+
+$stmt = $mysqli3->prepare($freelancers_query);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 ?>
 
@@ -56,7 +73,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
     <section class="container-fluid poppins">
         <div class="container">
             <!-- profile header -->
-            <div class="row mt-4 align-items-center bg-danger">
+            <div class="row mt-4 align-items-center">
                 <!-- profile title -->
                 <div class="col-12 col-md-6">
                     
@@ -78,7 +95,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
             <!-- Profile Content -->
             <div class="row">
                 <!-- Sidebar/Profile Card -->
-                <div class="col-12 col-md-4 col-lg-3 p-3 bg-danger">
+                <div class="col-12 col-md-4 col-lg-3 p-3">
                     <div class="card card-primary card-outline border-top-accent shadow border-0 mb-4 position-relative">
                         <div class="container d-flex justify-content-center mt-5 position-relative">
                             <!-- User Icon with Image Upload Trigger -->
@@ -300,52 +317,39 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                         <!-- Freelancer Cards Wrapper -->
                                         <div class="row row-cols-1 row-cols-md-2 g-3">
                                             <!-- Freelancer Card -->
-                                            <div class="col mb-3">
-                                                <div class="card px-3 pt-3 pb-2 mx-2 bg-light border-start-accent shadow-sm" style="border-radius: 10px;">
-                                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                                        <div class="">
-                                                            <h6 class="text-muted">Job Title</h6>
-                                                            <h5 class="fw-bold text-accent mb-2">Freelancer Name</h5>
-                                                            <p class="small text-muted mb-4">Project Working On</p>
-                                                            <p class="mb-1 text-muted"><i class="fas fa-envelope me-2"></i> Email</p>
-                                                            <p class="mb-0 text-muted"><i class="fas fa-phone me-2"></i> Mobile Number</p>
-                                                        </div>
-                                                        <div class="profile">
-                                                            <img src="<?php echo $user['profile_picture_url'] ?>" 
-                                                                alt="" 
-                                                                class="rounded-circle border border-accent shadow-sm" 
-                                                                style="width: 100px; height: 100px;">
+                                            <?php foreach($freelancers as $freelancer): ?>
+                                                <div class="col mb-3">
+                                                    <div class="card px-3 pt-3 pb-2 mx-2 bg-light border-start-accent shadow-sm" style="border-radius: 10px;">
+                                                        <div class="card-body d-flex justify-content-between align-items-center">
+                                                            <div class="">
+                                                                <h6 class="text-muted"><?php echo htmlspecialchars($freelancer['job_title']); ?></h6>
+                                                                <h5 class="fw-bold text-accent mb-2">
+                                                                    <?php echo htmlspecialchars($freelancer['first_name'] . ' ' . $freelancer['last_name']); ?>
+                                                                </h5>
+                                                                <p class="small text-muted mb-4"><?php echo htmlspecialchars($freelancer['project_title']); ?></p>
+                                                                <p class="mb-1 text-muted">
+                                                                    <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($freelancer['email']); ?>
+                                                                </p>
+                                                                <p class="mb-0 text-muted">
+                                                                    <i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($freelancer['mobile_number']); ?>
+                                                                </p>
+                                                            </div>
+                                                            <div class="profile">
+                                                                <img src="<?php echo htmlspecialchars($freelancer['profile_picture_url']); ?>" 
+                                                                    alt="" 
+                                                                    class="rounded-circle border border-accent shadow-sm" 
+                                                                    style="width: 100px; height: 100px;">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <?php endforeach; ?>
+                                        </div>
                                             <!-- End Freelancer Card -->
 
                                             <!-- Freelancer Card -->
-                                            <div class="col mb-3">
-                                                <div class="card px-3 pt-3 pb-2 mx-2 bg-light border-start-accent shadow-sm" style="border-radius: 10px;">
-                                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                                        <div class="">
-                                                            <h6 class="text-muted">Job Title</h6>
-                                                            <h5 class="fw-bold text-accent mb-2">Freelancer Name</h5>
-                                                            <p class="small text-muted mb-4">Project Working On</p>
-                                                            <p class="mb-1 text-muted"><i class="fas fa-envelope me-2"></i> Email</p>
-                                                            <p class="mb-0 text-muted"><i class="fas fa-phone me-2"></i> Mobile Number</p>
-                                                        </div>
-                                                        <div class="profile">
-                                                            <img src="<?php echo $user['profile_picture_url'] ?>" 
-                                                                alt="" 
-                                                                class="rounded-circle border border-accent shadow-sm" 
-                                                                style="width: 100px; height: 100px;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <!-- End Freelancer Card -->
-                                        </div>
                                     </div>
-
-
                                 </div>
                                 <!-- end freelancers: tab pane -->
                                 <!-- personal information: tab pane -->

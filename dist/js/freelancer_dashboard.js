@@ -17,8 +17,16 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
     // JavaScript for toggling heart icon
-    document.getElementById("heart-btn").addEventListener("click", function () {
-        const icon = document.getElementById("heart-icon"); // Target icon using ID
-        icon.classList.toggle("far"); // Outline heart
-        icon.classList.toggle("fas"); // Filled heart
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get all heart buttons
+        const heartButtons = document.querySelectorAll('.heart-btn');
+        
+        // Add click handler to each button
+        heartButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const icon = this.querySelector('.heart-icon');
+                icon.classList.toggle("far");
+                icon.classList.toggle("fas");
+            });
+        });
     });

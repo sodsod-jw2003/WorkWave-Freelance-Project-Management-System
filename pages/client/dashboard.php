@@ -1,4 +1,7 @@
-<?php 
+<?php
+$mysqli1 = require ('../../connection.php');
+$mysqli2 = require ('../../connection.php');
+$mysqli3 = require ('../../connection.php');
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
@@ -8,6 +11,35 @@ if (!isset($_SESSION['user_id'])) {
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
+
+// Count projects
+$projects_query = "SELECT COUNT(*) as project_count 
+                  FROM client_projects 
+                  WHERE user_id = ?";
+$stmt = $mysqli1->prepare($projects_query);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$project_count = $stmt->get_result()->fetch_assoc()['project_count'];
+
+// Count hired freelancers
+$freelancers_query = "SELECT COUNT(DISTINCT fa.user_id) as freelancer_count 
+                      FROM freelancer_applications fa
+                      JOIN client_projects cp ON fa.project_id = cp.project_id
+                      WHERE cp.user_id = ? AND fa.application_status = 'accepted'";
+$stmt = $mysqli2->prepare($freelancers_query);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$freelancer_count = $stmt->get_result()->fetch_assoc()['freelancer_count'];
+
+// Count total applications
+$applications_query = "SELECT COUNT(*) as application_count 
+                      FROM freelancer_applications fa
+                      JOIN client_projects cp ON fa.project_id = cp.project_id
+                      WHERE cp.user_id = ? AND fa.application_status = 'pending'";
+$stmt = $mysqli3->prepare($applications_query);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$application_count = $stmt->get_result()->fetch_assoc()['application_count'];
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +99,7 @@ include ('header.php');
                     <div class="col-12 col-md-3 p-2">
                         <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
-                                <div class="fw-bold fs-2 ps-2">4</div>
+                                <div class="fw-bold fs-2 ps-2"><?php echo htmlspecialchars($project_count ?? 0); ?></div>
                                 <div class="fs-6 ps-2">Projects</div>
                             </div>
                             <div class="col-5 d-flex justify-content-center align-items-center mt-2">
@@ -78,7 +110,7 @@ include ('header.php');
                     <div class="col-12 col-md-3 p-2">
                         <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
-                                <div class="fw-bold fs-2 ps-2">2</div>
+                                <div class="fw-bold fs-2 ps-2"><?php echo htmlspecialchars($freelancer_count ?? 0); ?></div>
                                 <div class="fs-6 ps-2">Freelancers</div>
                             </div>
                             <div class="col-5 d-flex justify-content-center align-items-center mt-2">
@@ -89,7 +121,7 @@ include ('header.php');
                     <div class="col-12 col-md-3 p-2">
                         <a href="applications.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center no-deco">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
-                                <div class="fw-bold fs-2 ps-2 text-dark">2</div>
+                                <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($application_count ?? 0); ?></div>
                                 <div class="fs-6 ps-2 text-green-50">Applications</div>
                             </div>
                             <div class="col-5 d-flex justify-content-center align-items-center mt-2">

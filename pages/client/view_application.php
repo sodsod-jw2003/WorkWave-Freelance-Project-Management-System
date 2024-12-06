@@ -9,9 +9,36 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-// placeholder lang
-$lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore optio ad illo mollitia qui porro asperiores et perferendis nostrum. Est aspernatur illo nam velit consequatur eum voluptatem magnam id eius voluptas. Est repellendus nihil sed dignissimos magni qui aliquam reiciendis aut nesciunt porro sit galisum dolores. Eum nobis quibusdam cum corrupti inventore hic obcaecati veritatis est illo necessitatibus eum voluptas fugit in molestias voluptas.";
+$application_id = $_GET['id'];
 
+// Query to get application, user and project details
+$query = "SELECT 
+                fa.*, 
+                u.*, 
+                cp.*, 
+                jt.*, 
+                fa.application_status AS app_status
+            FROM 
+                freelancer_applications fa
+            LEFT JOIN 
+                users u ON fa.user_id = u.user_id
+            LEFT JOIN 
+                client_projects cp ON fa.project_id = cp.project_id
+            LEFT JOIN 
+                job_titles jt ON u.job_title_id = jt.job_title_id
+            WHERE 
+                fa.application_id = ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $application_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$application = $result->fetch_assoc();
+
+// Redirect if not found
+if (!$application) {
+    header("Location: applications.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +61,8 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
 
+    <!-- view_application.js -->
+    <script src="../../dist/js/view_application.js"></script>
 </head>
 <body>
     <section class="container-fluid poppins">
@@ -58,87 +87,103 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
             <!-- /profile header -->
             <!-- application -->
             <div class="row mt-4 d-flex g-3">
-                <div class="col-md-9 ">
+                <div class="col-md-9">
                     <div class="rounded shadow border p-4 mb-3">
                         <div class="col-12 d-flex justify-content-between align-items-center">
-                            <div class="col-md-6 fs-4 text-green-50 fw-semibold bg-">Project Title</div>
-                            <div class="col-md-6 d-flex justify-content-end bg-">
+                            <div class="col-md-6 fs-4 text-green-50 fw-semibold">
+                                <?php echo htmlspecialchars($application['project_title']); ?>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
                                 <span class="me-3">
                                     <span class="small text-muted">Costs:</span>
-                                    <span class="small text-green-40 fw-semibold">10 Connects</span>
+                                    <span class="small text-green-40 fw-semibold">
+                                        <?php echo htmlspecialchars($application['project_connect_cost']); ?> Connects
+                                    </span>
                                 </span>
                                 <span>
                                     <span class="small text-muted">Worth:</span>
-                                    <span class="small text-green-40 fw-semibold">25 Merits</span>
+                                    <span class="small text-green-40 fw-semibold">
+                                        <?php echo htmlspecialchars($application['project_merit_worth']); ?> Merits
+                                    </span>
                                 </span>
                             </div>
                         </div>
+                        <!-- Project Category and Description -->
                         <hr class="divider">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-cog me-2 text-green-50"></i>
-                            <span class="fs-5 text-green-50 fw-semibold">Project Category</span>
+                            <span class="fs-5 text-green-50 fw-semibold">
+                                <?php echo htmlspecialchars($application['project_category']); ?>
+                            </span>
                         </div>
-                        <h6 class="text-muted small mt-2 text-justify">Project Description</h6>
+                        <h6 class="text-muted small mt-2 text-justify">
+                            <?php echo nl2br(htmlspecialchars($application['project_description'])); ?>
+                        </h6>
                     </div>
+
                     <div class="bg-white rounded shadow border p-4">
                             <h4 class="fw-semibold text-green-50">Proposal</h4>
                             <hr class="divider">
                             <h5 class="mt-3">Cover Letter</h5>
-                            <h6 class="small text-muted text-justify"><?php echo $lorenipsum ?></h6>
+                            <h6 class="small text-muted text-justify"><?php echo nl2br(htmlspecialchars($application['application_details'])); ?></h6>
                             <h5 class="mt-3">Portfolio Link</h5>
-                            <a href="#" class="small no-deco text-muted">https://www.google.com/</a> 
-                        <div class="mt-3">
-                            <button class="btn btn-success">Hire Freelancer</button>
-                            <a href="applications.php" class="btn btn-secondary">Ignore</a>
-                        </div>
+                            <a href="#" class="small no-deco text-muted"><?php echo htmlspecialchars($application['portfolio_url']); ?></a> 
+                            <div class="mt-3">
+                                <button class="btn btn-success hire-btn" 
+                                        data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                    Hire Freelancer
+                                </button>
+                                <a href="applications.php" class="btn btn-secondary">Back</a>
+                            </div>
                     </div>
                 </div>
+
                 <div class="col-md-3 d-flex h-100">
                     <div class="rounded shadow border p-4 mb-3 w-100">
                         <div class="container d-flex justify-content-center mt-2 position-relative">
                             <div class="profile-pic-wrapper">
-                                <img src="<?php echo $user['profile_picture_url'] ?>" 
+                                <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
                                     class="profile-pic rounded-circle" 
                                     style="width: 100px; height: 100px; object-fit: cover;">
                             </div>
                         </div>
-                        <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($full_name); ?></div>
-                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($job_title); ?></div>
+                        <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?></div>
+                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($application['job_title']); ?></div>
                         <div class="bg- mt-4">
                             <div class="mb-3">
                                 <span class="fas fa-phone me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                <div class="text-muted small"><?php echo $user['first_name'] ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($application['mobile_number']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-envelope me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Email</span>
-                                <div class="text-muted small"><?php echo $user['email'] ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($application['email']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Gender</span>
-                                <div class="text-muted small"><?php echo $user['gender'] ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($application['gender']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-location-dot me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Location</span>
-                                <div class="text-muted small"><?php echo $user['city'] ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($application['gender']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-flag me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo $user['nationality'] ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($application['nationality']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>
-                                <div class="text-muted small"><?php echo $user['language'] ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($application['language']); ?></div>
                             </div>
                         </div>
                     </div>

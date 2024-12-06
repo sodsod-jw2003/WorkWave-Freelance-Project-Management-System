@@ -9,10 +9,26 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 include ('../../misc/accordion_values.php');
+$project_id = $_GET['id'];
 
-// placeholder lang
-$lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore optio ad illo mollitia qui porro asperiores et perferendis nostrum. Est aspernatur illo nam velit consequatur eum voluptatem magnam id eius voluptas. Est repellendus nihil sed dignissimos magni qui aliquam reiciendis aut nesciunt porro sit galisum dolores. Eum nobis quibusdam cum corrupti inventore hic obcaecati veritatis est illo necessitatibus eum voluptas fugit in molestias voluptas.";
+// Check existing application
+$check_query = "SELECT * FROM freelancer_applications 
+                WHERE project_id = ? AND user_id = ?";
+$stmt = $mysqli->prepare($check_query);
+$stmt->bind_param("ii", $project_id, $_SESSION['user_id']);
+$stmt->execute();
+$existing_application = $stmt->get_result()->fetch_assoc();
 
+
+$query1 = "SELECT cp.*, u.first_name AS client_name 
+          FROM client_projects cp
+          LEFT JOIN users u ON cp.user_id = u.user_id 
+          WHERE cp.project_id = ?";
+$stmt = $mysqli->prepare($query1);
+$stmt->bind_param("i", $project_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$project = $result->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -35,12 +51,17 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
 
+    <!-- project_id -->
+    <script>const projectId = <?php echo json_encode($project_id); ?>;</script>
+    
+    <!-- freelancer_application.js -->
+    <script src="../../dist/js/freelancer_application.js"></script>
 
-</head>
-<body>
-<section class="container-fluid poppins">
-    <div class="container">
-        <!-- heading and breadcrumb -->
+  </head>
+  <body>
+  <section class="container-fluid poppins">
+      <div class="container">
+          <!-- heading and breadcrumb -->
         <div class="row mt-4">
             <div class="col-12 col-md-6">
                 <h2 class="text-start">Project Application</h2>
@@ -49,11 +70,9 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
-                            <a href="dashboard.php">
-                                <?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard
-                            </a>
+                            <a href="dashboard.php"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Project Application</li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($project['project_title']); ?></li>
                     </ol>
                 </nav>
             </div>
@@ -65,16 +84,16 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
             <div class="col-12 col-lg-9 pb-4 pt-0  d-flex justify-content-center">
                 <div class="container bg-white rounded shadow p-4">
                     <div class="d-flex align-items-center justify-content-between mb-0">
-                        <h3 class="fw-semibold text-green-50">Project Title</h3>
+                        <h3 class="fw-semibold text-green-50"><?php echo htmlspecialchars($project['project_title']); ?></h3>
                         <span>
                             <span class="me-2">
                                 <span class="text-muted">Cost:</span>
-                                <span class="fw-semibold text-green-40">10</span>
+                                <span class="fw-semibold text-green-40"><?php echo htmlspecialchars($project['project_connect_cost']); ?></span>
                                 <span class="fw-semibold text-green-40">Connects</span>
                             </span>
                             <span class="">
                                 <span class="text-muted">Worth:</span>
-                                <span class="fw-semibold text-green-40">10</span>
+                                <span class="fw-semibold text-green-40"><?php echo htmlspecialchars($project['project_merit_worth']); ?></span>
                                 <span class="fw-semibold text-green-40">Merits</span>
                             </span>
                         </span>
@@ -82,12 +101,11 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                     <hr class="divider">
                     <div class="d-flex align-items-center mb-2 text-green-50">
                         <span class="fas fa-cog fs-6 me-2"></span>
-                        <span class="fs-5 fw-semibold">Project Category</span>
+                        <span class="fs-5 fw-semibold"><?php echo htmlspecialchars($project['project_category']); ?></span>
                     </div>
-                    <h6 class="text-muted small text-justify mb-0"><?php echo htmlspecialchars($lorenipsum); ?></h6>
+                    <h6 class="text-muted small text-justify mb-0"><?php echo nl2br(htmlspecialchars($project['project_description'])); ?></h6>
                 </div>
-            </div>
-            <!-- /proj title, category, description, and cost connects -->
+            </div>            <!-- /proj title, category, description, and cost connects -->
             <!-- client pic, name, and industry -->
             <div class="col-12 col-lg-3 pb-4 pt-0  d-flex justify-content-center">
                 <div class="container bg-white rounded shadow p-4 d-flex align-items-center">
@@ -123,40 +141,58 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
                     </h6>
                     <!-- /heading and definition of proposal -->
                     <!-- text area ng proposal -->
-                    <div class="mt-4">
-                        <div class="col-md-12 mb-1">
-                            <label 
-                                for="proposal" 
-                                class="text-muted small mb-2">Write a cover letter <i>(Why should <?php echo htmlspecialchars($full_name); ?> hire you?)</i>
-                            </label>
-                            <textarea name="proposal" id="proposal" class="form-control bg-light no-outline-green-focus border-1" rows="3"></textarea>
+                    <form id="proposalForm">
+                        <input type="hidden" name="project_id" value="<?php echo htmlspecialchars($project_id); ?>">
+                        <div class="mt-4">
+                            <div class="col-md-12 mb-1">
+                                <label 
+                                    for="proposal" 
+                                    class="text-muted small mb-2">Write a cover letter <i>(Why should <?php echo htmlspecialchars($project['client_name']); ?> hire you?)</i>
+                                </label>
+                                <textarea 
+                                    name="application_details" 
+                                    id="proposal" 
+                                    class="form-control bg-light no-outline-green-focus border-1" 
+                                    rows="3" 
+                                    required
+                                    <?php echo $existing_application ? 'disabled' : ''; ?>
+                                ><?php echo $existing_application ? htmlspecialchars($existing_application['application_details']) : ''; ?></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <!-- /text arae ng proposal -->
-                    <!-- link to portfolio -->
-                    <div class="mt-4">
-                        <div class="col-md-12 mb-1">
-                            <label 
-                                for="portfolio_link"
-                                class="text-muted small mb-2">Enter link to your portfolio <i>(if you have any)</i>
-                            </label>
-                            <input 
-                                id="portfolio_link" 
-                                type="text" 
-                                name="portfolio_link" 
-                                class="form-control bg-light no-outline-green-focus border-1 w-100" 
-                                placeholder="https://">
+                        <!-- /text arae ng proposal -->
+                        <!-- link to portfolio -->
+                        <div class="mt-4">
+                            <div class="col-md-12 mb-1">
+                                <label 
+                                    for="portfolio_link"
+                                    class="text-muted small mb-2">Enter link to your portfolio <i>(if you have any)</i>
+                                </label>
+                                <input 
+                                    type="url" 
+                                    name="portfolio_url" 
+                                    id="portfolio_link" 
+                                    class="form-control bg-light no-outline-green-focus border-1 w-100" 
+                                    placeholder="https://" 
+                                    value="<?php echo $existing_application ? htmlspecialchars($existing_application['portfolio_url']) : ''; ?>"
+                                    <?php echo $existing_application ? 'disabled' : ''; ?>
+                                >
+                            </div>
                         </div>
-                    </div>
-                    <!-- /link to portfolio -->
-                    <!-- submit and canvel button -->
-                    <div class="mt-4">
-                        <div class="">
-                            <button type="submit" class="btn btn-dark-green">Submit Proposal</button>
-                            <button type="button" class="btn btn-secondary" id="cancelAdd">Cancel</button>
+                        <!-- /link to portfolio -->
+                        <!-- submit and canvel button -->
+                        <div class="mt-4">
+                            <?php if ($existing_application): ?>
+                                <button type="submit" id="submitProposal" class="btn btn-dark-green" disabled>
+                                    Status: <?php echo htmlspecialchars(ucfirst($existing_application['application_status'])); ?>
+                                </button>
+                                <button type="button" id="cancelProposal" class="btn btn-danger">Withdraw Application</button>
+                            <?php else: ?>
+                                <button type="submit" id="submitProposal" class="btn btn-dark-green">Submit Proposal</button>
+                                <button type="button" id="cancelProposal" class="btn btn-secondary">Cancel</button>
+                            <?php endif; ?>
                         </div>
-                    </div>
-                    <!-- /submit and canvel button -->
+                        <!-- /submit and canvel button -->
+                    </form>
                 </div>
             </div>
 
@@ -419,6 +455,5 @@ $lorenipsum = "Lorem ipsum dolor sit amet. Sit quidem molestias aut inventore op
 
     </div>
 </section>
-
 </body>
 </html>

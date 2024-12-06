@@ -116,7 +116,7 @@ $project = $project_result->fetch_assoc();
                             <!-- project category & description -->
                             <div class="container px-4 pt-2 pb-1 ">
                                 <h5 class=""><?php echo htmlspecialchars($project['project_category']); ?></h5>
-                                <h6 class="text-muted small mt-3"><?php echo htmlspecialchars($project['project_description']); ?></h6>
+                                <h6 class="text-muted small mt-3"><?php echo nl2br(htmlspecialchars($project['project_description'])); ?></h6>
                             </div>
                             <!-- /project category & description -->
                             <!-- task main card -->
