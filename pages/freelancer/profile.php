@@ -50,6 +50,10 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
 
     <!-- maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8ps9u4llkxJ9vymRLuIFHt0t-Z8eF76U&libraries=places"></script>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     
@@ -361,15 +365,17 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                         <div class="card-body">
                                         <form id="personalInfoForm">
                                             <!-- fname, lname, and job title -->
-                                            <form id="personalInfoForm">
+                                            <form id="personalInfoForm" class="needs-validation" novalidate>
                                                 <div class="row">
                                                     <div class="col-md-4 mb-1">
                                                         <label for="first_name" class="text-muted small mb-2 ms-1">First Name</label>
                                                         <input type="text" name="first_name" id="first_name" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['first_name']); ?>">
+                                                        <div class="invalid-feedback">Enter your first name.</div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="last_name" class="text-muted small mb-2 ms-1">Last Name</label>
                                                         <input type="text" name="last_name" id="last_name" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['last_name']); ?>">
+                                                        <div class="invalid-feedback">Enter your last name.</div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="job_title" class="text-muted small mb-2 ms-1">Job Title</label>
@@ -388,6 +394,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                         }
                                                         ?>
                                                         </select>
+                                                        <div class="invalid-feedback">Select your job title.</div>
                                                     </div>
                                                 </div>
 
@@ -399,17 +406,20 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                             <option value="Female" <?php echo $user['gender'] == 'Female' ? 'selected' : ''; ?>>Female</option>
                                                             <option value="Prefer not to say" <?php echo $user['gender'] == 'Prefer not to say' ? 'selected' : ''; ?>>Prefer not to say</option>
                                                         </select>
+                                                        <div class="invalid-feedback">Select your gender.</div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="mobile_number" class="text-muted small mb-2 ms-1">Mobile Number</label>
                                                         <div class="input-group">
                                                         <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
                                                         <input type="text" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
+                                                        <div class="invalid-feedback">Enter your mobile number.</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="email" class="text-muted small mb-2 ms-1">Email</label>
                                                         <input type="email" name="email" id="email" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['email']); ?>">
+                                                        <div class="invalid-feedback">Enter your email.</div>
                                                     </div>
                                                 </div>
 
@@ -417,6 +427,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                     <div class="col-md-4 mb-1">
                                                         <label for="city" class="text-muted small mb-2 ms-1">Location</label>
                                                         <input type="text" name="city" id="city" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['city']); ?>">
+                                                        <div class="invalid-feedback">Enter your location.</div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
                                                         <label for="nationality" class="text-muted small mb-2 ms-1">Nationality</label>
@@ -428,6 +439,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                             placeholder="Enter your Nationality"
                                                             value="<?php echo $user['nationality'] ?>"
                                                             list="nationalities">
+                                                        <div class="invalid-feedback">Enter your nationality.</div>
                                                         <datalist id="nationalities"></datalist>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
@@ -440,6 +452,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                             placeholder="Enter your Primary Language"
                                                             value="<?php echo $user['language'] ?>"
                                                             list="languages">
+                                                        <div class="invalid-feedback">Enter your language.</div>
                                                         <datalist id="languages"></datalist>
                                                     </div>
                                                 </div>

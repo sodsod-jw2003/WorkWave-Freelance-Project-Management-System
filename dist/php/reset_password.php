@@ -45,7 +45,7 @@ if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
     <script src="../js/register.js" defer></script>
 </head>
 <body>
-    <section class="container-fluid poppins bg-green-10 vh-100 p-5 d-flex justify-content-center align-items-center">
+    <section class="container-fluid poppins vh-100 p-5 d-flex justify-content-center align-items-center">
         <div class="card p-5 rounded-5 shadow w-50">
 
             <!-- header -->

@@ -1,6 +1,7 @@
 <?php 
 
 require ('../../connection.php');
+$mysqli2 = require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
     exit;
@@ -31,6 +32,16 @@ $project_query = "SELECT cp.*, u.first_name AS client_name
                   ORDER BY cp.created_at DESC";
 $result = $mysqli->query($project_query);
 $projects = $result->fetch_all(MYSQLI_ASSOC);
+
+//skills query
+$skills_query = "CALL sp_get_skills";
+$skills_result = mysqli_query($mysqli2, $skills_query);
+
+$skills_by_category = [];
+while ($row = mysqli_fetch_assoc($skills_result)) {
+    $skills_by_category[$row['skill_category']][] = $row;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -143,12 +154,65 @@ $projects = $result->fetch_all(MYSQLI_ASSOC);
                 </div>
             </div>
             <!-- /projects, tasks, and clients -->
+            <!-- filter and sort -->
+            <div class="row px-2 mb-4">
+                <div class=" border-0 rounded-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <!-- filter and sort -->
+                        <div class="col-lg-6 col-md-12 mb-3 mb-lg-0 d-flex justify-content-between">
+                            <div class="row w-100 align-items-center">
+                                <!-- filter -->
+                                <div class="col-md-4 p-2 ms-1">
+                                    <select id="filterProjects" class="form-select no-outline-green-focus bg-light" >
+                                        <option value="" selected disabled>Select Category</option>
+                                        <?php
+                                            foreach ($skills_by_category as $category => $skills) {
+                                                // Echo option for each category
+                                                echo "<option value=\"$category\">$category</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <!-- /filter -->
+                                <!-- sort -->
+                                <div class="col-md-5 d-flex align-items-center bg- p-2">
+                                    <select class="form-select no-outline-green-focus me-2 bg-light" aria-label="Sort Projects">
+                                        <option selected disabled>Sort Projects:</option>
+                                        <option value="">Project Name</option>
+                                        <option value="">Time Posted</option>
+                                    </select>
+                                    <button class="btn btn-light border me-1">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                    <button class="btn btn-light border me-1">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </button>
+                                </div>
+                                <!-- /sort -->
+                            </div>
+                        </div>
+                        <!-- /filter and sort -->
+                        <!-- search -->
+                        <div class="col-lg-3 col-12">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control no-outline-green-focus border-end-0" placeholder="Search">
+                                <span class="input-group-text bg-transparent border-start-0">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /search -->
+                    </div>
+                </div>
+            </div>
+            <!-- /filter and sort -->
+             
             <!-- project feed -->
             <div class="row px-1">
                 <div class="container px-3">
                     <?php foreach($projects as $project): ?>
                         <!-- project card -->
-                        <div class="card mb-4 shadow border-0 rounded-3">
+                        <div class="card mb-4 shadow-sm bg-light border rounded-3">
                             <div class="card-body">
                                 <!-- title and cons -->
                                 <div class="col-12 col d-flex justify-content-between mb-2">
@@ -175,7 +239,7 @@ $projects = $result->fetch_all(MYSQLI_ASSOC);
                                 <!-- project category -->
                                 <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
                                     <span class="d-flex align-items-center p-2 rounded-3 text-green-40">
-                                        <span class="fas fa-cog fs-5"></span>
+                                        <span class="fas fa-diagram-project fs-5"></span>
                                         <span class="px-2 fs-5 fw-semibold"><?php echo htmlspecialchars($project['project_category']); ?></span>
                                     </span>
                                     <!-- buttons -->
@@ -220,6 +284,8 @@ $projects = $result->fetch_all(MYSQLI_ASSOC);
                     <?php endforeach; ?>
                 </div>
             </div>
+            <!-- /project feed -->
+
         <!-- /feed -->
 
 

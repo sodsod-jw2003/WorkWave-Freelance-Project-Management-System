@@ -2,6 +2,7 @@
 $mysqli1 = require ('../../connection.php');
 $mysqli2 = require ('../../connection.php');
 $mysqli3 = require ('../../connection.php');
+$mysqli4 = require ('../../connection.php');
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
@@ -40,6 +41,15 @@ $stmt = $mysqli3->prepare($applications_query);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $application_count = $stmt->get_result()->fetch_assoc()['application_count'];
+
+//skills query
+$skills_query = "CALL sp_get_skills";
+$skills_result = mysqli_query($mysqli4, $skills_query);
+
+$skills_by_category = [];
+while ($row = mysqli_fetch_assoc($skills_result)) {
+    $skills_by_category[$row['skill_category']][] = $row;
+}
 ?>
 
 <!DOCTYPE html>
@@ -85,29 +95,18 @@ $application_count = $stmt->get_result()->fetch_assoc()['application_count'];
             <div class="row mt-4">
                 <!-- projects, tasks, and clients -->
                 <div class="row mx-0 my-3 g-4">
-                    <div class="col-12 col-md-3 p-2">
-                        <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                    <div class="col-12 col-md-4 p-2">
+                        <a href="projects.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center no-deco">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
-                                <div class="fw-bold fs-2 ps-2">13</div>
-                                <div class="fs-6 ps-2">Contracts</div>
-                            </div>
-                            <div class="col-5 d-flex justify-content-center align-items-center mt-2">
-                                <i class="fas fa-file-contract fa-4x text-green-50"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3 p-2">
-                        <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
-                            <div class="col-7 d-flex flex-column align-items-start mt-1">
-                                <div class="fw-bold fs-2 ps-2"><?php echo htmlspecialchars($project_count ?? 0); ?></div>
-                                <div class="fs-6 ps-2">Projects</div>
+                                <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($project_count ?? 0); ?></div>
+                                <div class="fs-6 ps-2 text-green-50 fw-semibold">Projects</div>
                             </div>
                             <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                                 <i class="fas fa-diagram-project fa-4x text-green-50"></i>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                    <div class="col-12 col-md-3 p-2">
+                    <div class="col-12 col-md-4 p-2">
                         <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
                                 <div class="fw-bold fs-2 ps-2"><?php echo htmlspecialchars($freelancer_count ?? 0); ?></div>
@@ -118,11 +117,11 @@ $application_count = $stmt->get_result()->fetch_assoc()['application_count'];
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3 p-2">
+                    <div class="col-12 col-md-4 p-2">
                         <a href="applications.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center no-deco">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
                                 <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($application_count ?? 0); ?></div>
-                                <div class="fs-6 ps-2 text-green-50">Applications</div>
+                                <div class="fs-6 ps-2 text-green-50 fw-semibold">Applications</div>
                             </div>
                             <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                                 <i class="fas fa-hand fa-4x text-green-50"></i>
@@ -133,44 +132,69 @@ $application_count = $stmt->get_result()->fetch_assoc()['application_count'];
                 <!-- /projects, tasks, and clients -->
             </div>
             <!-- /contracts, projects, freelancers, and applications -->
-            <!-- post project -->
-            <div class="row px-1">
-                .
+            <!-- filter and sort -->
+            <div class="row px-2 mb-4">
+                <div class=" border-0 rounded-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <!-- filter and sort -->
+                        <div class="col-lg-6 col-md-12 mb-3 mb-lg-0 d-flex justify-content-between">
+                            <div class="row w-100 align-items-center">
+                                <!-- filter -->
+                                <div class="col-md-4 p-2 ms-1">
+                                    <select id="filterProjects" class="form-select no-outline-green-focus bg-light" >
+                                        <option value="" selected disabled>Select Category</option>
+                                        <?php
+                                            foreach ($skills_by_category as $category => $skills) {
+                                                // Echo option for each category
+                                                echo "<option value=\"$category\">$category</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <!-- /filter -->
+                                <!-- sort -->
+                                <div class="col-md-5 d-flex align-items-center bg- p-2">
+                                    <select class="form-select no-outline-green-focus me-2 bg-light" aria-label="Sort Projects">
+                                        <option selected disabled>Sort Projects:</option>
+                                        <option value="">Project Title</option>
+                                        <option value="">Time Posted</option>
+                                    </select>
+                                    <button class="btn btn-light border me-1">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                    <button class="btn btn-light border me-1">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </button>
+                                </div>
+                                <!-- /sort -->
+                            </div>
+                        </div>
+                        <!-- /filter and sort -->
+                        <!-- search -->
+                        <div class="col-lg-3 col-12">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control no-outline-green-focus border-end-0" placeholder="Search">
+                                <span class="input-group-text bg-transparent border-start-0">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /search -->
+                    </div>
+                </div>
             </div>
-            <!-- /post project -->
-            <!-- contracts feed -->
+            <!-- /filter and sort -->
+            <!-- projects -->
             <div class="row px-1">
                 <div class="container px-3">
-                    <!-- project card -->
                     <div class="card mb-4 shadow border-0 rounded-3">
                         <div class="card-body">
-                            <div class="row my-3 mx-1 border-0">
-                                <h3>My Contracts</h3>
-                            </div>
-                            <div class="row m-3">
-                                <div class="col-12 d-flex justify-content-between align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
-                                    <div class="col-md-5">
-                                        <h6 class="text-secondary">Project Title</h6>
-                                        <div class="d-flex align-items-center mt-3">
-                                            <img src="<?php echo $user['profile_picture_url'] ?>" 
-                                                    alt="" 
-                                                    class="rounded-circle" 
-                                                    style="width: 30px; height: 30px;">
-                                            <span class="fs-5 ms-3 fw-semibold">Freelancer Name</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 d-flex justify-content-end m-0">
-                                        <button class="btn btn-outline-secondary me-2"><i class="fas fa-eye"></i></button>
-                                        <button class="btn btn-success me-2">Complete</button>
-                                        <button class="btn btn-danger">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /contracts feed -->
+            <!-- /projects -->
         </div>
     </section>
 </body>

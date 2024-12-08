@@ -253,7 +253,7 @@ function loadSkillCategories() {
         },
         error: function () {
             console.error('Failed to fetch skill categories.');
-            alert('Unable to load categories. Please try again.');
+            alert('Unable to load categories. Try again.');
         }
     });
 }
@@ -264,289 +264,411 @@ function loadSkillCategories() {
       updateSidebarProjects();
   });
 
-  // add project form
-  $('#addProject').click(function () {
-      if (!savedCategories) {
-          alert('Categories are not loaded yet. Please wait.');
-          return;
-      }
-
-      const newProjectForm = `
-          <form id="addProjectForm">
-              <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
-                  <div class="row">
-                      <!-- project title -->
-                      <div class="col-md-5 mb-1">
-                          <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
-                          <input type="text" 
-                              name="project_title" 
-                              id="project_title" 
-                              class="form-control bg-white-100 no-outline-green-focus border-1" 
-                              required>
-                      </div>
-                      <!-- category -->
-                      <div class="col-md-4 mb-1">
-                          <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
-                          <select 
-                              name="project_category" 
-                              id="project_category" 
-                              class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category"
-                              required>
-                              <option value="" disabled selected>Select Category</option>
-                              ${savedCategories}
-                          </select>
-                      </div>
-                      <!-- task status -->
-                      <div class="col-md-3 mb-1">
-                          <label for="status" class="text-muted small mb-2 ms-1">Status</label>
-                          <select 
-                              name="status" 
-                              id="status" 
-                              class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
-                              required>
-                              <option value="" disabled selected>Select Status</option>
-                              <option value="Hiring">Hiring</option>
-                              <option value="In Progress">In Progress</option>
-                              <option value="Completed">Completed</option>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="row mt-1">
-                      <!-- project description -->
-                      <div class="col-md-12 mb-1">
-                          <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
-                          <textarea 
-                              name="project_description" 
-                              id="project_description" 
-                              class="form-control bg-white-100 no-outline-green-focus border-1"
-                              required></textarea>
-                      </div>
-                  </div>
-                  <div class="row mt-1">
-                      <!-- connect cost -->
-                      <div class="col-md-6 mb-1">
-                          <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
-                          <input type="number" 
-                              name="connect_cost" 
-                              id="connect_cost" 
-                              class="form-control bg-white-100 no-outline-green-focus border-1" 
-                              min="5"
-                              max="10" 
-                              required>
-                      </div>
-                      <!-- merit -->
-                      <div class="col-md-6 mb-1">
-                          <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
-                          <input type="number" 
-                              name="merit_worth" 
-                              id="merit_worth" 
-                              class="form-control bg-white-100 no-outline-green-focus border-1" 
-                              min="10"
-                              max="50" 
-                              required>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <!-- project controls -->
-                      <div class="container pt-3 mb-3">
-                          <button type="submit" class="btn btn-dark-green">Save Project</button>
-                          <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
-                      </div>
-                  </div>
-              </div>
-          </form>
-      `;    $('#projectContainer').prepend(newProjectForm);
-  });
-  // Added project card
-  $(document).on('submit', '#addProjectForm', function(e) {
-        e.preventDefault();
-  
-        const projectData = {
-            project_title: $('#project_title').val(),
-            project_category: $('#project_category').val(),
-            project_description: $('#project_description').val(),
-            status: $('#status').val(),
-            connect_cost: $('#connect_cost').val(),
-            merit_worth: $('#merit_worth').val()
-        };
-
-        $.ajax({
-            url: '../../dist/php/process/proc_add_project.php',
-            type: 'POST',
-            data: projectData,
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    const newProjectCard = `
-                        <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent" data-project-id="${response.project_id}">
-                            <div class="container d-flex justify-content-between align-items-center my-2">
-                                <h5><a href="project_details.php?id=${response.project_id}" class="text-dark fw-semibold">${projectData.project_title}</a></h5>
-                                <span class="badge bg-success mb-2">${projectData.status}</span>
-                            </div>
-                            <div class="container mb-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="">
-                                        <h6 class="">${projectData.project_category}</h6>
-                                        <h6 class="text-muted small">${projectData.project_description.length > 10 ? projectData.project_description.substring(0, 10) + '...' : projectData.project_description}</h6>     
-                                    </div>
-                                    <div class="">
-                                        <button class="btn btn-outline-primary edit-project"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-outline-danger delete-project"><i class="fas fa-trash"></i></button>
-                                    </div>                                  
-                                </div>
-                            </div>
-                            <div class="container">
-                                <span class="text-secondary small">Costs: </span>
-                                <span class="text-green-50 fw-semibold small">${projectData.connect_cost} Connects</span>
-                            </div>
-                            <div class="container mb-3">
-                                <span class="text-secondary small">Worth: </span>
-                                <span class="text-green-50 fw-semibold small">${projectData.merit_worth} Merit</span>
-                            </div>
-                        </div>
-                    `;
-              
-                    $('#projectContainer').prepend(newProjectCard);
-                    $('#addProjectForm').remove();
-                    updateSidebarProjects();
-              
-                } else {
-                    alert('Failed to add project: ' + response.message);
-                }
-            },
-            error: function() {
-                alert('Error occurred while adding project');
-            }
+// Add project form
+$('#addProject').click(function () {
+    if (!savedCategories) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Categories Not Loaded',
+            text: 'Categories are not loaded yet. Please wait.',
         });
-  });
+        return;
+    }
 
-  // Edit project
-  $(document).on('click', '.edit-project', function() {
-        const projectCard = $(this).closest('.card');
-        const projectId = projectCard.data('project-id');
-      
-        $.ajax({
-            url: '../../dist/php/process/proc_get_project_details.php',
-            type: 'GET',
-            data: { project_id: projectId },
-            dataType: 'json',
-            success: function(project) {
-                const editForm = `
-                    <form id="editProjectForm" data-project-id="${projectId}">
-                        <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
-                            <div class="row">
-                                <div class="col-md-5 mb-1">
-                                    <label class="text-muted small mb-2 ms-1">Project Title</label>
-                                    <input type="text" name="project_title" class="form-control no-outline-green-focus" value="${project.project_title}" required>
+    const newProjectForm = `
+        <form id="addProjectForm" class="needs-validation" novalidate>
+            <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
+                <div class="row">
+                    <div class="col-md-5 mb-1">
+                        <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
+                        <input type="text" 
+                            name="project_title" 
+                            id="project_title" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1" 
+                            required>
+                        <div class="invalid-feedback">Enter a project title.</div>
+                    </div>
+                    <div class="col-md-4 mb-1">
+                        <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
+                        <select 
+                            name="project_category" 
+                            id="project_category" 
+                            class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category"
+                            required>
+                            <option value="" disabled selected>Select Category</option>
+                            ${savedCategories}
+                        </select>
+                        <div class="invalid-feedback">Select a category.</div>
+                    </div>
+                    <div class="col-md-3 mb-1">
+                        <label for="status" class="text-muted small mb-2 ms-1">Status</label>
+                        <select 
+                            name="status" 
+                            id="status" 
+                            class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
+                            required>
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="Hiring">Hiring</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                        <div class="invalid-feedback">Select a status.</div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-12 mb-1">
+                        <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
+                        <textarea 
+                            name="project_description" 
+                            id="project_description" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1"
+                            required></textarea>
+                        <div class="invalid-feedback">Enter a project description.</div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-6 mb-1">
+                        <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
+                        <input type="number" 
+                            name="connect_cost" 
+                            id="connect_cost" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1" 
+                            min="5"
+                            max="10" 
+                            required>
+                        <div class="invalid-feedback">Enter a connect cost between 5 and 10.</div>
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
+                        <input type="number" 
+                            name="merit_worth" 
+                            id="merit_worth" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1" 
+                            min="10"
+                            max="50" 
+                            required>
+                        <div class="invalid-feedback">Enter a merit worth between 10 and 50.</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container pt-3 mb-3">
+                        <button type="submit" class="btn btn-dark-green">Save Project</button>
+                        <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    `;
+    $('#projectContainer').prepend(newProjectForm);
+});
+
+// handle project add
+$(document).on('submit', '#addProjectForm', function (e) {
+    e.preventDefault();
+    
+    // Bootstrap validation
+    const form = this;
+    if (!form.checkValidity()) {
+        e.stopPropagation();
+        $(form).addClass('was-validated');
+        return;
+    }
+
+    // Gather project data
+    const projectData = {
+        project_title: $('#project_title').val(),
+        project_category: $('#project_category').val(),
+        project_description: $('#project_description').val(),
+        status: $('#status').val(),
+        connect_cost: $('#connect_cost').val(),
+        merit_worth: $('#merit_worth').val()
+    };
+
+    // AJAX request
+    $.ajax({
+        url: '../../dist/php/process/proc_add_project.php',
+        type: 'POST',
+        data: projectData,
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Project Added',
+                    text: 'The project was successfully added.',
+                });
+
+                // Add the new project card
+                const newProjectCard = `
+                    <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent" data-project-id="${response.project_id}">
+                        <div class="container d-flex justify-content-between align-items-center my-2">
+                            <h5><a href="project_details.php?id=${response.project_id}" class="text-dark fw-semibold">${projectData.project_title}</a></h5>
+                            <span class="badge bg-success mb-2">${projectData.status}</span>
+                        </div>
+                        <div class="container mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6>${projectData.project_category}</h6>
+                                    <h6 class="text-muted small">${projectData.project_description.substring(0, 10)}...</h6>
                                 </div>
-                                <div class="col-md-4 mb-1">
-                                    <label class="text-muted small mb-2 ms-1">Category</label>
-                                    <select name="project_category" class="form-select no-outline-green-focus" required>
-                                        ${savedCategories}
-                                    </select>
-                                </div>
-                                <div class="col-md-3 mb-1">
-                                    <label class="text-muted small mb-2 ms-1">Status</label>
-                                    <select name="status" class="form-select no-outline-green-focus" required>
-                                        <option value="Hiring" ${project.project_status === 'Hiring' ? 'selected' : ''}>Hiring</option>
-                                        <option value="In Progress" ${project.project_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                                        <option value="Completed" ${project.project_status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-md-12 mb-1">
-                                    <label class="text-muted small mb-2 ms-1">Project Description</label>
-                                    <textarea name="project_description" class="form-control no-outline-green-focus" required>${project.project_description}</textarea>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <!-- connect cost -->
-                                <div class="col-md-6 mb-1">
-                                    <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
-                                    <input type="number" 
-                                        name="connect_cost" 
-                                        id="connect_cost" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                        min="5"
-                                        max="10"
-                                        value="${project.project_connect_cost}" 
-                                        required>
-                                </div>
-                                <!-- merit -->
-                                <div class="col-md-6 mb-1">
-                                    <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
-                                    <input type="number" 
-                                        name="merit_worth" 
-                                        id="merit_worth" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                        min="10"
-                                        max="50" 
-                                        value="${project.project_merit_worth}" 
-                                        required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="container pt-3 mb-3">
-                                    <button type="submit" class="btn btn-dark-green">Update Project</button>
-                                    <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+                                <div>
+                                    <button class="btn btn-outline-primary edit-project"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-outline-danger delete-project"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                        <div class="container">
+                            <span class="text-secondary small">Costs: </span>
+                            <span class="text-green-50 fw-semibold small">${projectData.connect_cost} Connects</span>
+                        </div>
+                        <div class="container mb-3">
+                            <span class="text-secondary small">Worth: </span>
+                            <span class="text-green-50 fw-semibold small">${projectData.merit_worth} Merit</span>
+                        </div>
+                    </div>
                 `;
-
-                projectCard.replaceWith(editForm);
-                $('select[name="project_category"]').val(project.project_category);
+                $('#projectContainer').prepend(newProjectCard);
+                $('#addProjectForm').remove();
+                updateSidebarProjects();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Add Project',
+                    text: response.message,
+                });
             }
+        },
+        error: function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Occurred',
+                text: 'There was an issue adding the project. Try again.',
+            });
+        },
+    });
+});
+
+// Edit project
+$(document).on('click', '.edit-project', function () {
+    const projectCard = $(this).closest('.card');
+    const projectId = projectCard.data('project-id');
+
+    $.ajax({
+        url: '../../dist/php/process/proc_get_project_details.php',
+        type: 'GET',
+        data: { project_id: projectId },
+        dataType: 'json',
+        success: function (project) {
+            const editForm = `
+                <form id="editProjectForm" data-project-id="${projectId}" class="needs-validation" novalidate>
+                    <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
+                        <div class="row">
+                            <div class="col-md-5 mb-1">
+                                <label class="text-muted small mb-2 ms-1">Project Title</label>
+                                <input type="text" name="project_title" class="form-control no-outline-green-focus" value="${project.project_title}" required>
+                                <div class="invalid-feedback">Provide a project title.</div>
+                            </div>
+                            <div class="col-md-4 mb-1">
+                                <label class="text-muted small mb-2 ms-1">Category</label>
+                                <select name="project_category" class="form-select no-outline-green-focus" required>
+                                    ${savedCategories}
+                                </select>
+                                <div class="invalid-feedback">Select a category.</div>
+                            </div>
+                            <div class="col-md-3 mb-1">
+                                <label class="text-muted small mb-2 ms-1">Status</label>
+                                <select name="status" class="form-select no-outline-green-focus" required>
+                                    <option value="Hiring" ${project.project_status === 'Hiring' ? 'selected' : ''}>Hiring</option>
+                                    <option value="In Progress" ${project.project_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="Completed" ${project.project_status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                                <div class="invalid-feedback">Select a status.</div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12 mb-1">
+                                <label class="text-muted small mb-2 ms-1">Project Description</label>
+                                <textarea name="project_description" class="form-control no-outline-green-focus" required>${project.project_description}</textarea>
+                                <div class="invalid-feedback">Provide a project description.</div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6 mb-1">
+                                <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
+                                <input type="number" 
+                                    name="connect_cost" 
+                                    id="connect_cost" 
+                                    class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                    min="5"
+                                    max="10"
+                                    value="${project.project_connect_cost}" 
+                                    required>
+                                <div class="invalid-feedback">Connect cost must be between 5 and 10.</div>
+                            </div>
+                            <div class="col-md-6 mb-1">
+                                <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
+                                <input type="number" 
+                                    name="merit_worth" 
+                                    id="merit_worth" 
+                                    class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                    min="10"
+                                    max="50" 
+                                    value="${project.project_merit_worth}" 
+                                    required>
+                                <div class="invalid-feedback">Merit worth must be between 10 and 50.</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="container pt-3 mb-3">
+                                <button type="submit" class="btn btn-dark-green">Update Project</button>
+                                <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            `;
+
+            projectCard.replaceWith(editForm);
+            $('select[name="project_category"]').val(project.project_category);
+        }
+    });
+});
+
+// Handle project update with client side validation and swal
+$(document).on('submit', '#editProjectForm', function (e) {
+    e.preventDefault();
+
+    // Check if form is valid
+    const form = $(this)[0];
+    if (!form.checkValidity()) {
+        e.stopPropagation();
+        form.classList.add('was-validated');
+        return;
+    }
+
+    const projectTitle = $('input[name="project_title"]').val().trim();
+    const projectCategory = $('select[name="project_category"]').val();
+    const projectStatus = $('select[name="status"]').val();
+    const projectDescription = $('textarea[name="project_description"]').val().trim();
+    const connectCost = $('input[name="connect_cost"]').val().trim();
+    const meritWorth = $('input[name="merit_worth"]').val().trim();
+
+    if (connectCost < 5 || connectCost > 10) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Connect Cost',
+            text: 'Connect Cost must be between 5 and 10.',
         });
-  });
+        return;
+    }
 
-  // Handle project update
-  $(document).on('submit', '#editProjectForm', function(e) {
-          e.preventDefault();
-          const projectId = $(this).data('project-id');
-          const formData = $(this).serializeArray();
-          formData.push({name: 'action', value: 'update'});
-          formData.push({name: 'project_id', value: projectId});
+    if (meritWorth < 10 || meritWorth > 50) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Merit Worth',
+            text: 'Merit Worth must be between 10 and 50.',
+        });
+        return;
+    }
 
-          $.ajax({
-              url: '../../dist/php/process/proc_manage_project.php',
-              type: 'POST',
-              data: formData,
-              dataType: 'json',
-              success: function(response) {
-                  if (response.success) {
-                      loadProjects();
-                      updateSidebarProjects();
-                  }
-              }
-          });
-  });
+    const projectId = $(this).data('project-id');
+    const formData = $(this).serializeArray();
+    formData.push({ name: 'action', value: 'update' });
+    formData.push({ name: 'project_id', value: projectId });
 
-  // Delete project
-  $(document).on('click', '.delete-project', function() {
-          if (confirm('Are you sure you want to delete this project?')) {
-              const projectCard = $(this).closest('.card');
-              const projectId = projectCard.data('project-id');
+    $.ajax({
+        url: '../../dist/php/process/proc_manage_project.php',
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Project Updated',
+                    text: 'The project has been updated successfully.',
+                });
+                loadProjects();
+                updateSidebarProjects();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: 'There was an error updating the project.',
+                });
+            }
+        },
+        error: function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while processing your request.',
+            });
+        }
+    });
+});
 
-              $.ajax({
-                  url: '../../dist/php/process/proc_manage_project.php',
-                  type: 'POST',
-                  data: {
-                      action: 'delete',
-                      project_id: projectId
-                  },
-                  dataType: 'json',
-                  success: function(response) {
-                      if (response.success) {
-                          loadProjects();
-                          updateSidebarProjects();
-                      }
-                  }
-              });
-          }
-  });
+
+// Delete project with SweetAlert confirmation and success
+$(document).on('click', '.delete-project', function () {
+    const projectCard = $(this).closest('.card');
+    const projectId = projectCard.data('project-id');
+
+    // SweetAlert confirmation before deletion
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Proceed with the deletion
+            $.ajax({
+                url: '../../dist/php/process/proc_manage_project.php',
+                type: 'POST',
+                data: {
+                    action: 'delete',
+                    project_id: projectId
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        // SweetAlert success message after deletion
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Your project has been deleted.',
+                        });
+
+                        // Reload projects and update sidebar
+                        loadProjects();
+                        updateSidebarProjects();
+                    } else {
+                        // SweetAlert error message if deletion fails
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'There was an issue deleting the project.',
+                        });
+                    }
+                },
+                error: function () {
+                    // SweetAlert error if the request fails
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while processing your request.',
+                    });
+                }
+            });
+        }
+    });
+});
+
 
   // Cancell add
   $(document).on('click', '#cancelAddProject', function () {

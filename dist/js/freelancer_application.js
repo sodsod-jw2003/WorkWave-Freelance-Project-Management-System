@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     proposalForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
+        // check form validity
+        if (!proposalForm.checkValidity()) {
+            // add client side validation if invalid
+            proposalForm.classList.add('was-validated');
+            return;
+        }
+
         const formData = new FormData(this);
         formData.append('project_id', projectId); // projectId should be set in your PHP file
 
@@ -27,36 +34,77 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelBtn.classList.remove('btn-secondary');
                 cancelBtn.classList.add('btn-danger');
                 
-                alert('Proposal submitted successfully!');
+                // swal success submission
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Proposal Submitted!',
+                    text: 'Your proposal has been submitted successfully!',
+                    confirmButtonText: 'Ok',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
             } else {
-                alert(data.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.message,
+                    confirmButtonText: 'Ok'
+                });
                 submitBtn.disabled = false;
             }
         })        
         .catch(error => {
             console.error('Error:', error);
-            console.log('Response:', error.response);
             submitBtn.disabled = false;
         });
     });
 
     cancelBtn.addEventListener('click', function() {
         if (this.classList.contains('btn-danger')) {
-            // Withdraw application
-            if (confirm('Are you sure you want to withdraw your application?')) {
-                fetch('../../dist/php/process/proc_withdraw_application.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ project_id: projectId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert(data.message);
-                    }
-                });
-            }
+            // confirmation before withdrawing applciation
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to withdraw your application? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, withdraw it!',
+                cancelButtonText: 'No, keep it',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Proceed with withdrawal if confirmed
+                    fetch('../../dist/php/process/proc_withdraw_application.php', {
+                        method: 'POST',
+                        body: JSON.stringify({ project_id: projectId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // swal success withdrawal
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Application Withdrawn!',
+                                text: 'Your application has been successfully withdrawn.',
+                                confirmButtonText: 'Ok',
+                                timer: 3000, 
+                                timerProgressBar: true
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: data.message,
+                                confirmButtonText: 'Ok'
+                            });
+                        }
+                    });
+                } else {
+                    // swal cancel withdrwal
+                    Swal.fire('Cancelled', 'Your application was not withdrawn.', 'info');
+                }
+            });
         } else {
             window.location.href = 'dashboard.php';
         }

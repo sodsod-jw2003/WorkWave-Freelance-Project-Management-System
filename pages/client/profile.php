@@ -67,6 +67,9 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
     <!-- maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8ps9u4llkxJ9vymRLuIFHt0t-Z8eF76U&libraries=places"></script>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     

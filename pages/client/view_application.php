@@ -111,7 +111,7 @@ if (!$application) {
                         <!-- Project Category and Description -->
                         <hr class="divider">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-cog me-2 text-green-50"></i>
+                            <i class="fas fa-diagram-project me-2 text-green-50"></i>
                             <span class="fs-5 text-green-50 fw-semibold">
                                 <?php echo htmlspecialchars($application['project_category']); ?>
                             </span>

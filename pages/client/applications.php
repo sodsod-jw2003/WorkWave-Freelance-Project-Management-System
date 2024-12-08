@@ -73,42 +73,40 @@ $applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             <div class="row my-3 mx-1 border-0">
                                 <h3>Freelancers' Applications</h3>
                             </div>
-                            <div class="row m-3">
-                                <div class="row m-3">
-                                    <?php if ($applications): ?>
-                                        <?php foreach($applications as $application): ?>
-                                            <!-- application card -->
-                                            <div class="col-12 d-flex justify-content-between align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
-                                                <div class="col-md-5">
-                                                    <h6 class="text-secondary"><?php echo htmlspecialchars($application['project_title']); ?></h6>
-                                                    <div class="d-flex align-items-center mt-3">
-                                                        <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
-                                                         alt="" 
-                                                         class="rounded-circle" 
-                                                         style="width: 30px; height: 30px;">
-                                                        <span class="fs-5 ms-3 fw-semibold">
-                                                            <?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 d-flex justify-content-end m-0">
-                                                    <a href="view_application.php?id=<?php echo htmlspecialchars($application['application_id']); ?>" 
-                                                    class="btn btn-outline-secondary me-2">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <button class="btn btn-success me-2 hire-btn" 
-                                                            data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
-                                                        Hire Freelancer
-                                                    </button>
-                                                    <button class="btn btn-danger remove-btn"
-                                                            data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
-                                                        Remove
-                                                    </button>
+                            <div class="row px-4">
+                                <?php if ($applications): ?>
+                                    <?php foreach($applications as $application): ?>
+                                        <!-- application card -->
+                                        <div class="col-12 d-flex justify-content-between align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
+                                            <div class="col-md-5">
+                                                <h6 class="text-secondary"><?php echo htmlspecialchars($application['project_title']); ?></h6>
+                                                <div class="d-flex align-items-center mt-3">
+                                                    <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
+                                                     alt="" 
+                                                     class="rounded-circle" 
+                                                     style="width: 30px; height: 30px;">
+                                                    <span class="fs-5 ms-3 fw-semibold">
+                                                        <?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?>
+                                                    </span>
                                                 </div>
                                             </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
+                                            <div class="col-md-6 d-flex justify-content-end m-0">
+                                                <a href="view_application.php?id=<?php echo htmlspecialchars($application['application_id']); ?>" 
+                                                class="btn btn-outline-secondary me-2">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <button class="btn btn-success me-2 hire-btn" 
+                                                        data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                                    Hire Freelancer
+                                                </button>
+                                                <button class="btn btn-danger remove-btn"
+                                                        data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

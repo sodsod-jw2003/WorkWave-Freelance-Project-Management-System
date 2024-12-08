@@ -57,6 +57,9 @@ $project = $result->fetch_assoc();
     <!-- freelancer_application.js -->
     <script src="../../dist/js/freelancer_application.js"></script>
 
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   </head>
   <body>
   <section class="container-fluid poppins">
@@ -100,7 +103,7 @@ $project = $result->fetch_assoc();
                     </div>
                     <hr class="divider">
                     <div class="d-flex align-items-center mb-2 text-green-50">
-                        <span class="fas fa-cog fs-6 me-2"></span>
+                        <span class="fas fa-diagram-project fs-6 me-2"></span>
                         <span class="fs-5 fw-semibold"><?php echo htmlspecialchars($project['project_category']); ?></span>
                     </div>
                     <h6 class="text-muted small text-justify mb-0"><?php echo nl2br(htmlspecialchars($project['project_description'])); ?></h6>
@@ -141,46 +144,38 @@ $project = $result->fetch_assoc();
                     </h6>
                     <!-- /heading and definition of proposal -->
                     <!-- text area ng proposal -->
-                    <form id="proposalForm">
+                    <form id="proposalForm" class="row g-3 needs-validation" novalidate>
                         <input type="hidden" name="project_id" value="<?php echo htmlspecialchars($project_id); ?>">
-                        <div class="mt-4">
-                            <div class="col-md-12 mb-1">
-                                <label 
-                                    for="proposal" 
-                                    class="text-muted small mb-2">Write a cover letter <i>(Why should <?php echo htmlspecialchars($project['client_name']); ?> hire you?)</i>
-                                </label>
-                                <textarea 
-                                    name="application_details" 
-                                    id="proposal" 
-                                    class="form-control bg-light no-outline-green-focus border-1" 
-                                    rows="3" 
-                                    required
-                                    <?php echo $existing_application ? 'disabled' : ''; ?>
-                                ><?php echo $existing_application ? htmlspecialchars($existing_application['application_details']) : ''; ?></textarea>
-                            </div>
+
+                        <div class="col-md-12 mb-1">
+                            <label for="proposal" class="text-muted small mb-2">Write a cover letter <i>(Why should <?php echo htmlspecialchars($project['client_name']); ?> hire you?)</i></label>
+                            <textarea 
+                                name="application_details" 
+                                id="proposal" 
+                                class="form-control bg-light no-outline-green-focus border-1" 
+                                rows="3" 
+                                required
+                                <?php echo $existing_application ? 'disabled' : ''; ?>
+                            ><?php echo $existing_application ? htmlspecialchars($existing_application['application_details']) : ''; ?></textarea>
+                            <div class="invalid-feedback">Write a cover letter.</div>
                         </div>
-                        <!-- /text arae ng proposal -->
-                        <!-- link to portfolio -->
-                        <div class="mt-4">
-                            <div class="col-md-12 mb-1">
-                                <label 
-                                    for="portfolio_link"
-                                    class="text-muted small mb-2">Enter link to your portfolio <i>(if you have any)</i>
-                                </label>
-                                <input 
-                                    type="url" 
-                                    name="portfolio_url" 
-                                    id="portfolio_link" 
-                                    class="form-control bg-light no-outline-green-focus border-1 w-100" 
-                                    placeholder="https://" 
-                                    value="<?php echo $existing_application ? htmlspecialchars($existing_application['portfolio_url']) : ''; ?>"
-                                    <?php echo $existing_application ? 'disabled' : ''; ?>
-                                >
-                            </div>
+
+                        <div class="col-md-12 mb-1">
+                            <label for="portfolio_link" class="text-muted small mb-2">Enter link to your portfolio <i>(if you have any)</i></label>
+                            <input 
+                                type="url" 
+                                name="portfolio_url" 
+                                id="portfolio_link" 
+                                class="form-control bg-light no-outline-green-focus border-1 w-100" 
+                                placeholder="https://" 
+                                value="<?php echo $existing_application ? htmlspecialchars($existing_application['portfolio_url']) : ''; ?>"
+                                required
+                                <?php echo $existing_application ? 'disabled' : ''; ?>
+                            >
+                            <div class="invalid-feedback">Enter a valid URL for your portfolio.</div>
                         </div>
-                        <!-- /link to portfolio -->
-                        <!-- submit and canvel button -->
-                        <div class="mt-4">
+
+                        <div class="col-12">
                             <?php if ($existing_application): ?>
                                 <button type="submit" id="submitProposal" class="btn btn-dark-green" disabled>
                                     Status: <?php echo htmlspecialchars(ucfirst($existing_application['application_status'])); ?>
@@ -191,7 +186,6 @@ $project = $result->fetch_assoc();
                                 <button type="button" id="cancelProposal" class="btn btn-secondary">Cancel</button>
                             <?php endif; ?>
                         </div>
-                        <!-- /submit and canvel button -->
                     </form>
                 </div>
             </div>
@@ -223,7 +217,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #1  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseOne" 
@@ -233,7 +227,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseOne" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingOne" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">
@@ -254,7 +248,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #2  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseTwo" 
@@ -264,7 +258,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingTwo" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">
@@ -285,7 +279,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #3  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingThree">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseThree" 
@@ -295,7 +289,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseThree" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingThree" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">
@@ -316,7 +310,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #4  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingFour">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseFour" 
@@ -326,7 +320,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseFour" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingFour" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">
@@ -347,7 +341,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #5  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingFive">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseFive" 
@@ -357,7 +351,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseFive" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingFive" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">
@@ -378,7 +372,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #6  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingSix">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseSix" 
@@ -388,7 +382,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseSix" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingSix" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">
@@ -409,7 +403,7 @@ $project = $result->fetch_assoc();
                                 <!-- tip #7  -->
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingSeven">
-                                        <button class="accordion-button no-outline-green-focus" 
+                                        <button class="accordion-button bg-light no-outline-green-focus" 
                                             type="button" 
                                             data-bs-toggle="collapse" 
                                             data-bs-target="#collapseSeven" 
@@ -419,7 +413,7 @@ $project = $result->fetch_assoc();
                                         </button>
                                     </h2>
                                     <div id="collapseSeven" 
-                                        class="accordion-collapse collapse show" 
+                                        class="accordion-collapse collapse " 
                                         aria-labelledby="headingSeven" 
                                         data-bs-parent="#proposalAccordion">
                                         <div class="accordion-body ">

@@ -96,19 +96,27 @@ $(document).ready(function() {
         const newJobForm = `
             <div class="card mb-4">
                 <div class="card-body bg-light border-start-accent rounded shadow-sm">
-                    <form id="newJobForm">
+                    <form id="newJobForm" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <input type="text" class="form-control no-outline-green-focus" name="job_title" placeholder="Job Title" required>
+                            <div class="invalid-feedback">
+                                Provide a job title.
+                            </div>
                         </div>
                         <div class="mb-3">
                             <input type="text" class="form-control no-outline-green-focus" name="company_name" placeholder="Company Name" required>
+                            <div class="invalid-feedback">
+                                Provide a company name.
+                            </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <input type="text" class="form-control no-outline-green-focus" name="start_year" placeholder="Start Year" required>
+                                <input type="number" class="form-control no-outline-green-focus" name="start_year" placeholder="Start Year" min="1975" max="2025" required>
+                                <div class="invalid-feedback">Provide a valid end year (1975-2025).</div>      
                             </div>
                             <div class="col">
-                                <input type="text" class="form-control no-outline-green-focus" name="end_year" placeholder="End Year" required>
+                                <input type="number" class="form-control no-outline-green-focus" name="end_year" placeholder="End Year" min="1975" max="2025" required>
+                                <div class="invalid-feedback">Provide a valid end year (1975-2025).</div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-dark-green">Save Experience</button>
@@ -123,9 +131,22 @@ $(document).ready(function() {
     // Handle new job form submission
     $(document).on('submit', '#newJobForm', function(e) {
         e.preventDefault();
+
+        // Get form reference
+        const form = this;
+
+        // Check form validity
+        if (form.checkValidity() === false) {
+            // Add client-side validation if form is invalid
+            form.classList.add('was-validated');
+            return;
+        }
+
+        // Serialize form data
         const formData = $(this).serializeArray();
         const duration = formData.find(f => f.name === 'start_year').value + '-' + formData.find(f => f.name === 'end_year').value;
-        
+
+        // Send data via AJAX
         $.ajax({
             url: '../../dist/php/process/proc_add_job_experience.php',
             type: 'POST',
@@ -135,58 +156,112 @@ $(document).ready(function() {
                 duration: duration
             },
             success: function(response) {
+                // Success alert with SweetAlert2
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your job experience has been saved.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+
+                // Reload job experiences
                 loadJobExperiences();
                 updateSidebarJobs();
+            },
+            error: function(xhr, status, error) {
+                // Error alert with SweetAlert2
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an issue saving your job experience. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
 
     // Handle delete job experience
-    $(document).on('click', '.delete-job', function() {
-        if(confirm('Are you sure you want to delete this experience?')) {
-            const jobId = $(this).data('id');
-            
-            $.ajax({
-                url: '../../dist/php/process/proc_delete_job_experience.php',
-                type: 'POST',
-                data: { user_experience_id: jobId },
-                success: function(response) {
-                    $(`[data-job-id="${jobId}"]`).remove();
-                    updateSidebarJobs();
-                }
-            });
-        }
+    $(document).on('click', '.delete-job', function () {
+        const jobId = $(this).data('id');
+
+        // SweetAlert2 confirmation modal
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action cannot be undone. Do you want to delete this job experience?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with the deletion
+                $.ajax({
+                    url: '../../dist/php/process/proc_delete_job_experience.php',
+                    type: 'POST',
+                    data: { user_experience_id: jobId },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Your job experience has been successfully deleted.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+
+                        // Remove the job card from the DOM
+                        $(`[data-job-id="${jobId}"]`).remove();
+                        updateSidebarJobs();
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'There was an error deleting the job experience. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
     });
 
     // Cancel add form
     $(document).on('click', '#cancelAdd', function() {
         $(this).closest('.card').remove();
-    });
-
+        });
     // Add edit button click handler
-    $(document).on('click', '.edit-job', function() {
+    $(document).on('click', '.edit-job', function () {
         const jobCard = $(this).closest('.job-card');
         const jobId = jobCard.data('job-id');
         const jobTitle = jobCard.find('.card-title').text();
         const companyName = jobCard.find('.card-subtitle').text();
         const duration = jobCard.find('.text-muted.small').text();
         const [startYear, endYear] = duration.split('-');
-    
+
         const editForm = `
             <div class="card-body">
-                <form class="edit-job-form" data-id="${jobId}">
+                <form class="edit-job-form needs-validation" data-id="${jobId}" novalidate>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="job_title" value="${jobTitle.trim()}" required>
+                        <label for="job_title" class="form-label">Job Title</label>
+                        <input type="text" class="form-control no-outline-green-focus" id="job_title" name="job_title" value="${jobTitle.trim()}" required>
+                        <div class="invalid-feedback">Provide a job title.</div>
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="company_name" value="${companyName.trim()}" required>
+                        <label for="company_name" class="form-label">Company Name</label>
+                        <input type="text" class="form-control no-outline-green-focus" id="company_name" name="company_name" value="${companyName.trim()}" required>
+                        <div class="invalid-feedback">Provide a company name.</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="number" class="form-control" name="start_year" value="${startYear.trim()}" min="1900" max="2099" required>
+                            <label for="start_year" class="form-label">Start Year</label>
+                            <input type="number" class="form-control no-outline-green-focus" id="start_year" name="start_year" value="${startYear.trim()}" min="1975" max="2025" required>
+                            <div class="invalid-feedback">Provide a valid start year (1975-2025).</div>
                         </div>
                         <div class="col">
-                            <input type="number" class="form-control" name="end_year" value="${endYear.trim()}" min="1900" max="2099" required>
+                            <label for="end_year" class="form-label">End Year</label>
+                            <input type="number" class="form-control no-outline-green-focus" id="end_year" name="end_year" value="${endYear.trim()}" min="1975" max="2025" required>
+                            <div class="invalid-feedback">Provide a valid end year (1975-2025).</div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success">Update</button>
@@ -194,17 +269,26 @@ $(document).ready(function() {
                 </form>
             </div>
         `;
-    
+
         jobCard.html(editForm);
     });
-    
-    // Handle edit form submission
-    $(document).on('submit', '.edit-job-form', function(e) {
+
+    // Handle edit form submission with validation
+    $(document).on('submit', '.edit-job-form', function (e) {
         e.preventDefault();
-        const formData = $(this).serializeArray();
-        const jobId = $(this).data('id');
+        const form = this;
+
+        // Bootstrap validation
+        if (!form.checkValidity()) {
+            e.stopPropagation();
+            $(form).addClass('was-validated');
+            return;
+        }
+
+        const formData = $(form).serializeArray();
+        const jobId = $(form).data('id');
         const duration = formData.find(f => f.name === 'start_year').value + '-' + formData.find(f => f.name === 'end_year').value;
-    
+
         $.ajax({
             url: '../../dist/php/process/proc_update_job_experience.php',
             type: 'POST',
@@ -214,13 +298,30 @@ $(document).ready(function() {
                 company_name: formData.find(f => f.name === 'company_name').value,
                 duration: duration
             },
-            success: function(response) {
+            success: function (response) {
                 loadJobExperiences();
                 updateSidebarJobs();
+
+                // Show success message using Swal
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Job Updated!',
+                    text: 'The job experience has been successfully updated.',
+                    confirmButtonText: 'OK'
+                });
+            },
+            error: function (xhr, status, error) {
+                // Show error message using Swal
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: 'Something went wrong while updating the job experience.',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
-    
+
     // Cancel edit
     $(document).on('click', '.cancel-edit', function() {
         loadJobExperiences();
@@ -236,28 +337,72 @@ function updateSidebarJobs() {
         }
     });
 }
-  // Handle personal information form submission
-  $(document).on('submit', '#personalInfoForm', function(e) {
-      e.preventDefault();
-    
-      $.ajax({
-          url: '../../dist/php/process/proc_update_personal_info.php',
-          type: 'POST',
-          data: $(this).serialize(),
-          dataType: 'json',
-          success: function(response) {
-              if(response.success) {
-                  updateSidebarInfo();
-                  // Update full name
-                  const fullName = $('#first_name').val() + ' ' + $('#last_name').val();
-                  $('.container.fs-5.text-center.mt-3').text(fullName);
-                  // Update job title using selected option text
-                  const jobTitle = $('#job_title option:selected').text();
-                  $('.container.fs-6.text-center.text-muted.mb-5').text(jobTitle);
-              }
-          }
-      });
-  });
+
+// Handle personal information form submission
+$(document).on('submit', '#personalInfoForm', function (e) {
+    e.preventDefault();
+
+    // Validate the form
+    const form = this;
+
+    if (!form.checkValidity()) {
+        // Apply Bootstrap's validation styling
+        form.classList.add('was-validated');
+        return;
+    }
+
+    // Proceed with AJAX if form is valid
+    $.ajax({
+        url: '../../dist/php/process/proc_update_personal_info.php',
+        type: 'POST',
+        data: $(form).serialize(),
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                // Update sidebar dynamically
+                updateSidebarInfo();
+
+                // Update displayed full name
+                const fullName = $('#first_name').val() + ' ' + $('#last_name').val();
+                $('.container.fs-5.text-center.mt-3').text(fullName);
+
+                // Update job title dynamically
+                const jobTitle = $('#job_title option:selected').text();
+                $('.container.fs-6.text-center.text-muted.mb-5').text(jobTitle);
+
+                // Success alert
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your personal information has been updated.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+
+                // Reset validation styling
+                form.classList.remove('was-validated');
+            } else {
+                // Handle failure response
+                Swal.fire({
+                    title: 'Error!',
+                    text: response.message || 'There was a problem updating your information.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        },
+        error: function () {
+            // Handle network or server error
+            Swal.fire({
+                title: 'Error!',
+                text: 'Unable to process your request. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+});
+
+
 function updateSidebarInfo() {
     $.ajax({        url: '../../dist/php/process/proc_get_sidebar_info.php',
         type: 'GET',
