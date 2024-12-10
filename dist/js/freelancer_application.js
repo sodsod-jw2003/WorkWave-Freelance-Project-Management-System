@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if(data.success) {
                 // Update submit button to show status
-                submitBtn.textContent = 'Status: Pending';
-                submitBtn.disabled = true;
+                submitBtn.remove();
                 
                 // Change cancel button to withdraw
                 cancelBtn.textContent = 'Withdraw Application';

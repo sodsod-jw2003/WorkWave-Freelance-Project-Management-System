@@ -1,41 +1,31 @@
 <?php
 session_start();
-$mysqli1 = require ('../../connection.php');
-$mysqli2 = require ('../../connection.php');
-$mysqli3 = require ('../../connection.php');
+$mysqli = require ('../../connection.php');
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
 //jobs query
-$query = "CALL sp_get_job";
-$result = mysqli_query($mysqli1, $query);
+$query = "SELECT * FROM v_available_job_titles;";
+$result = mysqli_query($mysqli, $query);
 
 //skills query
-$skills_query = "CALL sp_get_skills";
-$skills_result = mysqli_query($mysqli2, $skills_query);
+$skills_query = "SELECT * FROM v_skills_with_category ORDER BY category, skill";
+$skills_result = mysqli_query($mysqli, $skills_query);
 
 $skills_by_category = [];
 while ($row = mysqli_fetch_assoc($skills_result)) {
-    $skills_by_category[$row['skill_category']][] = $row;
+    $skills_by_category[$row['category']][] = $row;
 }
 
 //freelancers query
-$freelancers_query = "SELECT u.user_id, u.first_name, u.last_name, u.email, 
-                             u.mobile_number, u.profile_picture_url,
-                             j.job_title, cp.project_title 
-                      FROM users u
-                      JOIN freelancer_applications fa ON u.user_id = fa.user_id 
-                      JOIN client_projects cp ON fa.project_id = cp.project_id
-                      JOIN job_titles j ON u.job_title_id = j.job_title_id
-                      WHERE fa.application_status = 'accepted' 
-                      AND cp.user_id = ?";
+$freelancers_query = "SELECT * FROM v_accepted_freelancers
+                      WHERE project_owner = ?";
 
-$stmt = $mysqli3->prepare($freelancers_query);
+$stmt = $mysqli->prepare($freelancers_query);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +94,7 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             <!-- User Icon with Image Upload Trigger -->
                             <!-- temporary profile picture if none is uploaded -->
                             <div class="profile-pic-wrapper">
-                                <img src="<?php echo $user['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">
+                                <img src="<?php echo $user['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                                 <form id="profile-pic-form" style="display: none;">
                                     <!-- Hidden File Input -->
                                     <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*">
@@ -338,10 +328,12 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                                 </p>
                                                             </div>
                                                             <div class="profile">
-                                                                <img src="<?php echo htmlspecialchars($freelancer['profile_picture_url']); ?>" 
-                                                                    alt="" 
+                                                                <img 
+                                                                    src="<?php echo htmlspecialchars($freelancer['profile_picture_url'] ?? ''); ?>" 
+                                                                    alt="Profile picture" 
                                                                     class="rounded-circle border border-accent shadow-sm" 
-                                                                    style="width: 100px; height: 100px;">
+                                                                    style="width: 100px; height: 100px;"
+                                                                    onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -383,11 +375,11 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                         class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
                                                         <!-- Show the current selected job title as selected -->
                                                         <?php
-                                                        echo '<option value="' . $user['job_title_id'] . '" selected>' . $user['job_title'] . '</option>'; // Default selected
+                                                        echo '<option value="' . $jobtitle['id'] . '" selected>' . $user['job_title'] . '</option>'; // Default selected
                                                         // Populate dropdown with other job titles from the database
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            if ($row['job_title_id'] !== $user['job_title_id']) { // Skip the already selected job title
-                                                                echo '<option value="' . $row['job_title_id'] . '">' . $row['job_title'] . '</option>';
+                                                            if ($row['id'] !== $jobtitle['id']) { // Skip the already selected job title
+                                                                echo '<option value="' . $row['id'] . '">' . $row['job_title'] . '</option>';
                                                             }
                                                         }
                                                         ?>
@@ -399,9 +391,9 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     <div class="col-md-4 mb-1">
                                                         <label for="gender" class="text-muted small mb-2 ms-1">Gender</label>
                                                         <select name="gender" id="gender" class="form-select bg-white-100 no-outline-green-focus border-1">
-                                                            <option value="Male" <?php echo $user['gender'] == 'Male' ? 'selected' : ''; ?>>Male</option>
-                                                            <option value="Female" <?php echo $user['gender'] == 'Female' ? 'selected' : ''; ?>>Female</option>
-                                                            <option value="Prefer not to say" <?php echo $user['gender'] == 'Prefer not to say' ? 'selected' : ''; ?>>Prefer not to say</option>
+                                                            <option value="1" <?php echo $user['gender'] == 'Male' ? 'selected' : ''; ?>>Male</option>
+                                                            <option value="2" <?php echo $user['gender'] == 'Female' ? 'selected' : ''; ?>>Female</option>
+                                                            <option value="3" <?php echo $user['gender'] == 'Prefer not to say' ? 'selected' : ''; ?>>Prefer not to say</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-4 mb-1">

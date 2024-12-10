@@ -17,7 +17,7 @@ try {
     $project_id = $_POST['project_id'];
     
     // Get project connect cost
-    $cost_query = "SELECT project_connect_cost FROM client_projects WHERE project_id = ?";
+    $cost_query = "SELECT project_connect_cost FROM client_projects WHERE id = ?";
     $stmt = $mysqli->prepare($cost_query);
     $stmt->bind_param("i", $project_id);
     $stmt->execute();
@@ -35,7 +35,7 @@ try {
     }
 
     // Insert application
-    $insert_query = "INSERT INTO freelancer_applications (project_id, user_id, application_details, portfolio_url, application_status) VALUES (?, ?, ?, ?, 'Pending')";
+    $insert_query = "INSERT INTO freelancer_applications (project_id, user_id, application_details, portfolio_url, application_status_id) VALUES (?, ?, ?, ?, '1')";
     $stmt = $mysqli->prepare($insert_query);
     $stmt->bind_param("iiss", $project_id, $user_id, $_POST['application_details'], $_POST['portfolio_url']);
     $stmt->execute();

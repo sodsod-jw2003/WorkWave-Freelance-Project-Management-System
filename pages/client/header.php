@@ -79,9 +79,9 @@ include ('../../misc/modals.php');
                 <div class="nav-item dropdown">
                 <a href="#" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
                         <?php if (!empty($user['profile_picture_url'])): ?>
-                            <img src="<?php echo $user['profile_picture_url']; ?>" alt="Profile Picture" class="img-fluid" style="max-width: 25px; border-radius: 50%; max-height: 25px;">
+                            <img src="<?php echo $user['profile_picture_url']; ?>" alt="Profile Picture" class="img-fluid" style="max-width: 25px; border-radius: 50%; max-height: 25px;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                         <?php else: ?>
-                            <i class="fa-solid fa-circle-user text-green-60 fa-lg"></i>
+                            <img src="../../img/default-profile.png" alt="Profile Picture" class="img-fluid" style="max-width: 25px; border-radius: 50%; max-height: 25px;">
                         <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end p-2" style="width: 200px;">

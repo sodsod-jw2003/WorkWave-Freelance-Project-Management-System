@@ -12,33 +12,25 @@ include ('header.php');
 $application_id = $_GET['id'];
 
 // Query to get application, user and project details
-$query = "SELECT 
-                fa.*, 
-                u.*, 
-                cp.*, 
-                jt.*, 
-                fa.application_status AS app_status
-            FROM 
-                freelancer_applications fa
-            LEFT JOIN 
-                users u ON fa.user_id = u.user_id
-            LEFT JOIN 
-                client_projects cp ON fa.project_id = cp.project_id
-            LEFT JOIN 
-                job_titles jt ON u.job_title_id = jt.job_title_id
-            WHERE 
-                fa.application_id = ?";
+$query = "SELECT * FROM v_applications
+              JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
+              JOIN v_project_details ON v_applications_ids.project_id = v_project_details.id
+          WHERE v_applications.id = ?";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $application_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $application = $result->fetch_assoc();
 
-// Redirect if not found
-if (!$application) {
-    header("Location: applications.php");
-    exit;
-}
+$query = "SELECT * FROM v_applications
+                JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
+                JOIN v_user_profile ON v_applications_ids.user_id = v_user_profile.id
+          WHERE v_applications.id = ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $application_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$applyinguser = $result->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +122,7 @@ if (!$application) {
                             <a href="#" class="small no-deco text-muted"><?php echo htmlspecialchars($application['portfolio_url']); ?></a> 
                             <div class="mt-3">
                                 <button class="btn btn-success hire-btn" 
-                                        data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                        data-application-id="<?php echo htmlspecialchars($application['id']); ?>">
                                     Hire Freelancer
                                 </button>
                                 <a href="applications.php" class="btn btn-secondary">Back</a>
@@ -142,48 +134,48 @@ if (!$application) {
                     <div class="rounded shadow border p-4 mb-3 w-100">
                         <div class="container d-flex justify-content-center mt-2 position-relative">
                             <div class="profile-pic-wrapper">
-                                <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
+                                <img src="<?php echo htmlspecialchars($applyinguser['profile_picture_url']); ?>" 
                                     class="profile-pic rounded-circle" 
                                     style="width: 100px; height: 100px; object-fit: cover;">
                             </div>
                         </div>
-                        <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?></div>
-                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($application['job_title']); ?></div>
+                        <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($applyinguser['first_name'] . ' ' . $applyinguser['last_name']); ?></div>
+                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($applyinguser['job_title']); ?></div>
                         <div class="bg- mt-4">
                             <div class="mb-3">
                                 <span class="fas fa-phone me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($application['mobile_number']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['mobile_number']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-envelope me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Email</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($application['email']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['email']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Gender</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($application['gender']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['gender']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-location-dot me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Location</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($application['gender']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['city']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-flag me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($application['nationality']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['nationality']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($application['language']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['language']); ?></div>
                             </div>
                         </div>
                     </div>

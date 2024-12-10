@@ -30,7 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result && $row = $result->fetch_assoc()) {
             $response['success'] = true;
             $response['message'] = 'Project added successfully';
-            $response['project_id'] = $row['project_id'];
+            $response['project_id'] = $row['id'];
+            $response['project_status'] = $row['project_status'];
+            $response['project_category'] = $row['project_category'];
         } else {
             $response['success'] = false;
             $response['message'] = 'Failed to retrieve project ID';

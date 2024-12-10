@@ -4,7 +4,7 @@ $mysqli = require '../../../connection.php';
 
 $user_id = $_SESSION['user_id'];
 
-$query = "CALL sp_get_user_skills(?)";
+$query = "	SELECT skill_id FROM v_user_skills WHERE user_id = ?;";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();

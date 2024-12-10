@@ -4,8 +4,8 @@ $mysqli = require '../../../connection.php';
 
 $user_id = $_SESSION['user_id'];
 
-//get user's skills with categories
-$query = "CALL sp_get_distint_user_skills(?)";
+// Get user's skills with categories
+$query = "SELECT DISTINCT category_name, skill_name FROM v_user_skills WHERE user_id = ?;";
 
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $user_id);
@@ -14,10 +14,11 @@ $result = $stmt->get_result();
 
 $skills_by_category = [];
 while ($row = $result->fetch_assoc()) {
-    $skills_by_category[$row['skill_category']][] = $row['skill_name'];
+    // Corrected category key from 'skill_category' to 'category_name'
+    $skills_by_category[$row['category_name']][] = $row['skill_name'];
 }
 
-//icon mapping
+// Icon mapping
 $category_icons = [
     'Writing' => 'fa-solid fa-pen-nib',
     'Translation' => 'fa-solid fa-language',
@@ -52,7 +53,7 @@ $category_icons = [
     'Monetization & Coaching' => 'fa-solid fa-chalkboard-user'
 ];
 
-//icon generator
+// Icon generator
 $icons_html = '<div class="container d-flex justify-content-center"><div class="mb-1 text-secondary fa-2x d-inline">';
 foreach ($skills_by_category as $category => $skills) {
     if (isset($category_icons[$category])) {
@@ -61,7 +62,7 @@ foreach ($skills_by_category as $category => $skills) {
 }
 $icons_html .= '</div></div>';
 
-//generate skills list HTML
+// Generate skills list HTML
 $skills_html = '';
 foreach ($skills_by_category as $category => $skills) {
     $skills_html .= '<div class="mb-1">
@@ -73,7 +74,9 @@ foreach ($skills_by_category as $category => $skills) {
     $skills_html .= '</div>';
 }
 
+// Return the result as JSON
 echo json_encode([
     'icons' => $icons_html,
     'skills' => $skills_html
 ]);
+?>

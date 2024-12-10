@@ -18,7 +18,7 @@
     $mysqli->next_result();
 
     $stmt = $mysqli->prepare("CALL sp_update_activation_token(?)");
-    $stmt->bind_param("i", $user["user_id"]);
+    $stmt->bind_param("i", $user["id"]);
     $stmt->execute();
     ?>
     <!DOCTYPE html>

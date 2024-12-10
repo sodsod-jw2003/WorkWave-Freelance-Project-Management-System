@@ -43,12 +43,12 @@
                 <div class="container text-center mb-3">Continue as...</div>
                 <div class="d-flex justify-content-center align-items-center">
                     <label class="btn flex-grow-1 w-100 h-100 mx-1" id="clientBtn">
-                        <input type="radio" name="role" value="Client" id="client" required hidden>
+                        <input type="radio" name="role" value="1" id="client" required hidden>
                         <div class="fas fa-user-tie fa-2x me-2 mt-3 text-green-50"></div>
                         <div class="container mt-2 mb-3">Client</div>
                     </label>
                     <label class="btn flex-grow-1 w-100 h-100 mx-1" id="freelancerBtn">
-                        <input type="radio" name="role" value="Freelancer" id="freelancer" required hidden>
+                        <input type="radio" name="role" value="2" id="freelancer" required hidden>
                         <div class="fas fa-briefcase fa-2x me-2 mt-3 text-green-50"></div>
                         <div class="container mt-2 mb-3">Freelancer</div>
                     </label>
@@ -105,9 +105,9 @@
                     </div>
                     <select name="gender" id="gender" class="form-control rounded-end-5 border px-3 py-2 no-outline" required>
                         <option value="" disabled selected>Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Prefer not to say">Prefer not to say</option>
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                        <option value="3">Prefer not to say</option>
                     </select>
                 </div>
             </div>

@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $application_id = $_POST['application_id'];
 
     // retrieve the project_id for the given application_id
-    $projectQuery = "SELECT project_id FROM freelancer_applications WHERE application_id = ?";
+    $projectQuery = "SELECT project_id FROM freelancer_applications WHERE id = ?";
     $stmt = $mysqli->prepare($projectQuery);
     $stmt->bind_param("i", $application_id);
     $stmt->execute();
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check if there is already an accepted application for this project
-    $checkQuery = "SELECT COUNT(*) FROM freelancer_applications WHERE project_id = ? AND application_status = 'accepted'";
+    $checkQuery = "SELECT COUNT(*) FROM freelancer_applications WHERE project_id = ? AND application_status_id = '2'";
     $stmt = $mysqli->prepare($checkQuery);
     $stmt->bind_param("i", $project_id);
     $stmt->execute();
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Proceed with updating the application_status
-    $updateQuery = "UPDATE freelancer_applications SET application_status = 'accepted' WHERE application_id = ?";
+    $updateQuery = "UPDATE freelancer_applications SET application_status_id = '2' WHERE id = ?";
     $stmt = $mysqli->prepare($updateQuery);
     $stmt->bind_param("i", $application_id);
 

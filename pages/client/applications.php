@@ -9,13 +9,9 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-// After your includes
-$query = "SELECT fa.*, u.first_name, u.last_name, u.profile_picture_url, cp.project_title 
-          FROM freelancer_applications fa
-          LEFT JOIN users u ON fa.user_id = u.user_id
-          LEFT JOIN client_projects cp ON fa.project_id = cp.project_id
-          WHERE cp.user_id = ? AND fa.application_status = 'pending'
-          ORDER BY fa.application_date DESC";
+$query = "SELECT * FROM v_all_application
+          WHERE  project_owner = ? AND status = 'pending'
+          ORDER BY application_date DESC";
 
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $_SESSION['user_id']);
@@ -42,6 +38,9 @@ $applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
+
+    <!-- SWAL -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="../../dist/js/applications.js"></script>
 
@@ -84,23 +83,24 @@ $applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
                                                      alt="" 
                                                      class="rounded-circle" 
-                                                     style="width: 30px; height: 30px;">
+                                                     style="width: 30px; height: 30px;"
+                                                     onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                                                     <span class="fs-5 ms-3 fw-semibold">
                                                         <?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 d-flex justify-content-end m-0">
-                                                <a href="view_application.php?id=<?php echo htmlspecialchars($application['application_id']); ?>" 
+                                                <a href="view_application.php?id=<?php echo htmlspecialchars($application['id']); ?>" 
                                                 class="btn btn-outline-secondary me-2">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <button class="btn btn-success me-2 hire-btn" 
-                                                        data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                                        data-application-id="<?php echo htmlspecialchars($application['id']); ?>">
                                                     Hire Freelancer
                                                 </button>
                                                 <button class="btn btn-danger remove-btn"
-                                                        data-application-id="<?php echo htmlspecialchars($application['application_id']); ?>">
+                                                        data-application-id="<?php echo htmlspecialchars($application['id']); ?>">
                                                     Remove
                                                 </button>
                                             </div>

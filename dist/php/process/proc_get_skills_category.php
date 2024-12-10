@@ -1,7 +1,7 @@
 <?php
 require_once('../../../connection.php');
 
-$query = "CALL sp_get_skills_category()";
+$query = "SELECT * FROM v_available_skills_category;";
 $result = $mysqli->query($query);
 
 $categories = [];

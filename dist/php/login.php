@@ -6,28 +6,39 @@ $is_invalid = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mysqli = require "../../connection.php";
 
-    $stmt = $mysqli->prepare("CALL sp_get_user_by_email(?)");
+    // Query user credentials
+    $stmt = $mysqli->prepare("SELECT * FROM v_user_credentials WHERE email = ?");
     $stmt->bind_param("s", $_POST["email"]);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
+    // Check if email exists in v_not_verified_emails
+    $stmt = $mysqli->prepare("SELECT COUNT(*) AS count FROM v_not_verified_emails WHERE email = ?");
+    $stmt->bind_param("s", $_POST["email"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $not_verified = $result->fetch_assoc();
+
     if ($user) {
-        // First, check if password is correct
+        // Check password validity
         if (password_verify($_POST["password"], $user["password_hash"])) {
-            // If password is correct, then check if the account is activated
-            if ($user["activation_token_hash"] === null) {
-                //Last login
-                
-                // Start session and redirect based on role
+            // Check if account is activated
+            if ($not_verified['count'] == 0) {
+                $stmt = $mysqli->prepare("CALL sp_update_user_last_login_date(?)");
+                $stmt->bind_param("i", $user["id"]);
+                $stmt->execute();
+
+                // Account is verified, proceed to login
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
 
                 session_regenerate_id(); 
-                $_SESSION["user_id"] = $user["user_id"];
+                $_SESSION["user_id"] = $user["id"];
                 $_SESSION["role"] = $user["role"];
 
+                // Redirect based on role
                 if ($user["role"] === "Client") {
                     header("Location: ../../pages/client/dashboard.php");
                 } elseif ($user["role"] === "Freelancer") {
@@ -35,23 +46,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
                 exit;
             } else {
-                // Account not activated
+                // Account not verified
                 $is_invalid_status = true;
-                $error_message = "Account not activated";
+                $error_message = "Account not activated. Please verify your email.";
             }
         } else {
             // Incorrect password
             $is_invalid = true;
-            $error_message = "Wrong email or password";
+            $error_message = "Wrong email or password.";
         }
     } else {
         // User not found
         $is_invalid = true;
-        $error_message = "Wrong email or password";
+        $error_message = "Wrong email or password.";
     }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

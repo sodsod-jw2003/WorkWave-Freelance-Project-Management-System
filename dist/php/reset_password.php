@@ -5,7 +5,7 @@ $token = $_GET["token"];
 $mysqli = require "../../connection.php";
 
 //checking of token
-$stmt = $mysqli->prepare("CALL sp_get_user_by_reset_token_hash(?)");
+$stmt = $mysqli->prepare("SELECT * FROM v_users_with_reset_tokens WHERE reset_token_hash = ?");
 $stmt->bind_param("s", $token);
 
 $stmt->execute();

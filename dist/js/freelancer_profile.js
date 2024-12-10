@@ -466,7 +466,7 @@ $(document).on('submit', '#passwordChangeForm', function(e) {
               const userSkills = JSON.parse(response);
               // Check corresponding checkboxes
               userSkills.forEach(skill => {
-                  $(`#skill_${skill.skill_id}`).prop('checked', true);
+                  $(`#skill_${skill.id}`).prop('checked', true);
               });
           }
       });

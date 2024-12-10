@@ -7,16 +7,16 @@ include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
 //jobs query
-$query = "CALL sp_get_job";
-$result = mysqli_query($mysqli1, $query);
+$query = "SELECT * FROM v_available_job_titles;";
+$result = mysqli_query($mysqli, $query);
 
 //skills query
-$skills_query = "CALL sp_get_skills";
-$skills_result = mysqli_query($mysqli2, $skills_query);
+$skills_query = "SELECT * FROM v_skills_with_category ORDER BY category, skill";
+$skills_result = mysqli_query($mysqli, $skills_query);
 
 $skills_by_category = [];
 while ($row = mysqli_fetch_assoc($skills_result)) {
-    $skills_by_category[$row['skill_category']][] = $row;
+    $skills_by_category[$row['category']][] = $row;
 }
 
 ?>
@@ -330,12 +330,12 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                                 <div class="form-check d-flex align-items-center me-5">
                                                                     <input class="form-check-input custom-checkbox fs-5" 
                                                                         type="checkbox" 
-                                                                        id="skill_<?php echo $skill['skill_id']; ?>" 
+                                                                        id="skill_<?php echo $skill['id']; ?>" 
                                                                         name="skills[]" 
-                                                                        value="<?php echo $skill['skill_id']; ?>">
+                                                                        value="<?php echo $skill['id']; ?>">
                                                                     <label class="form-check-label ms-2 pt-1" 
-                                                                        for="skill_<?php echo $skill['skill_id']; ?>">
-                                                                        <?php echo htmlspecialchars($skill['skill_name']); ?>
+                                                                        for="skill_<?php echo $skill['id']; ?>">
+                                                                        <?php echo htmlspecialchars($skill['skill']); ?>
                                                                     </label>
                                                                 </div>
                                                             <?php endforeach; ?>
@@ -385,11 +385,11 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                         class="form-select bg-white-100 no-outline-green-focus border-1 w-100">
                                                         <!-- Show the current selected job title as selected -->
                                                         <?php
-                                                        echo '<option value="' . $user['job_title_id'] . '" selected>' . $user['job_title'] . '</option>'; // Default selected
+                                                        echo '<option value="' . $jobtitle['id'] . '" selected>' . $user['job_title'] . '</option>'; // Default selected
                                                         // Populate dropdown with other job titles from the database
                                                         while ($row = mysqli_fetch_assoc($result)) {
-                                                            if ($row['job_title_id'] !== $user['job_title_id']) { // Skip the already selected job title
-                                                                echo '<option value="' . $row['job_title_id'] . '">' . $row['job_title'] . '</option>';
+                                                            if ($row['id'] !== $jobtitle['id']) { // Skip the already selected job title
+                                                                echo '<option value="' . $row['id'] . '">' . $row['job_title'] . '</option>';
                                                             }
                                                         }
                                                         ?>
@@ -402,9 +402,9 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                     <div class="col-md-4 mb-1">
                                                         <label for="gender" class="text-muted small mb-2 ms-1">Gender</label>
                                                         <select name="gender" id="gender" class="form-select bg-white-100 no-outline-green-focus border-1">
-                                                            <option value="Male" <?php echo $user['gender'] == 'Male' ? 'selected' : ''; ?>>Male</option>
-                                                            <option value="Female" <?php echo $user['gender'] == 'Female' ? 'selected' : ''; ?>>Female</option>
-                                                            <option value="Prefer not to say" <?php echo $user['gender'] == 'Prefer not to say' ? 'selected' : ''; ?>>Prefer not to say</option>
+                                                            <option value="1" <?php echo $user['gender'] == 'Male' ? 'selected' : ''; ?>>Male</option>
+                                                            <option value="2" <?php echo $user['gender'] == 'Female' ? 'selected' : ''; ?>>Female</option>
+                                                            <option value="3" <?php echo $user['gender'] == 'Prefer not to say' ? 'selected' : ''; ?>>Prefer not to say</option>
                                                         </select>
                                                         <div class="invalid-feedback">Select your gender.</div>
                                                     </div>

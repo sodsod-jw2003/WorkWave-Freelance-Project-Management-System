@@ -9,17 +9,49 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-$query = "SELECT fa.*, u.first_name, u.last_name, u.profile_picture_url, cp.project_title 
-          FROM freelancer_applications fa
-          LEFT JOIN users u ON fa.user_id = u.user_id
-          LEFT JOIN client_projects cp ON fa.project_id = cp.project_id
-          WHERE cp.user_id = ? AND fa.application_status = 'pending'
-          ORDER BY fa.application_date DESC";
+$query = "SELECT * FROM v_project_details
+          WHERE v_project_details.project_owner = ?
+          ORDER BY created_at DESC;";
 
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
-$applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+$category_icons = [
+    'Writing' => 'fa-solid fa-pen-nib',
+    'Translation' => 'fa-solid fa-language',
+    'Graphic Design' => 'fa-solid fa-user-pen',
+    'Video and Animation' => 'fa-solid fa-video',
+    'UI/UX Design' => 'fa-brands fa-figma',
+    'Web Development' => 'fa-solid fa-globe',
+    'Mobile Development' => 'fa-solid fa-mobile',
+    'Software Development' => 'fa-solid fa-file-code',
+    'Digital Marketing' => 'fa-solid fa-store',
+    'Sales Support' => 'fa-solid fa-phone',
+    'Advertising' => 'fa-solid fa-megaphone',
+    'Virtual Assistance' => 'fa-solid fa-headset',
+    'Data Entry' => 'fa-solid fa-database',
+    'Customer Support' => 'fa-solid fa-phone',
+    'Financial Skills' => 'fa-solid fa-coins',
+    'Business Consulting' => 'fa-solid fa-briefcase',
+    'Human Resources' => 'fa-solid fa-users',
+    'IT Support' => 'fa-solid fa-screwdriver-wrench',
+    'Networking' => 'fa-solid fa-network-wired',
+    'DevOps' => 'fa-solid fa-gears',
+    'Engineering' => 'fa-solid fa-helmet-safety',
+    'Architecture' => 'fa-brands fa-unity',
+    'Manufacturing' => 'fa-solid fa-industry',
+    'Coaching & Development' => 'fa-solid fa-notes-medical',
+    'Health & Wellness' => 'fa-solid fa-shield-heart',
+    'Contract & Documentation' => 'fa-solid fa-file-contract',
+    'Compliance & Research' => 'fa-solid fa-book',
+    'Data Processing' => 'fa-solid fa-chart-simple',
+    'Advanced Analytics' => 'fa-solid fa-chart-line',
+    'Game Development Support' => 'fa-solid fa-gamepad',
+    'Monetization & Coaching' => 'fa-solid fa-chalkboard-user'
+];
+
 ?>
 
 <!DOCTYPE html>
@@ -73,8 +105,8 @@ $applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                 <h3>Your Projects</h3>
                             </div>
                             <div class="row px-4">
-                                <?php if ($applications): ?>
-                                    <?php foreach($applications as $application): ?>
+                                <?php if ($projects): ?>
+                                    <?php foreach($projects as $project): ?>
                                         <div class="col-12 d-flex justify-content-center align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
                                             <div class="col-12">
                                                 <!-- Project Title and Status -->
@@ -82,36 +114,40 @@ $applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     <!-- Project Title -->
                                                     <div class="col-md-6 d-flex align-items-center ps-0">
                                                         <h5 class="mb-0">
-                                                            <a href="#" class="text-muted text-decoration-none">Project Title</a>
+                                                            <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>"  class="text-muted text-decoration-none">
+                                                                <?php echo htmlspecialchars($project['project_title']); ?>
+                                                            </a>
                                                         </h5>
                                                     </div>
                                                     <!-- Project Status -->
                                                     <div class="col-md-6 d-flex justify-content-end pe-0">
-                                                        <span class="badge bg-success">Project Status</span>
+                                                        <span class="badge bg-success">
+                                                            <?php echo htmlspecialchars($project['project_status']); ?>
+                                                        </span>
                                                     </div>
                                                 </div>
-                                                <!-- Freelancer Info -->
+                                                <!-- Project Category -->
                                                 <div class="row align-items-center px-3 py-2 rounded-bottom">
-                                                    <!-- Freelancer -->
                                                     <div class="col-md-6 d-flex align-items-center ms-0 ps-0">
-                                                        <img src="<?php echo htmlspecialchars($application['profile_picture_url']); ?>" 
-                                                        alt="" 
-                                                        class="rounded-circle" 
-                                                        style="width: 30px; height: 30px;">
-                                                        <span class="fs-5 ms-3 fw-semibold">
-                                                            Freelancer Name
+                                                        <i class="<?php echo $category_icons[$project['project_category']] ?? 'fas fa-folder'; ?> me-2 text-green-50"></i>
+                                                        <span class="fs-6">
+                                                            <?php echo htmlspecialchars($project['project_category']); ?>
                                                         </span>
                                                     </div>
                                                     <div class="col-md-6 d-flex justify-content-end pe-0">
-                                                        <a href="view_application.php?id=<?php echo htmlspecialchars($application['application_id']); ?>" 
+                                                        <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" 
                                                         class="btn btn-outline-secondary me-0">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </div>
-                                                </div>
+                                                </div>  
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="col-12 text-center py-4">
+                                        <p>No projects found.</p>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>

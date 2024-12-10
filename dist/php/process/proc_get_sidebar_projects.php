@@ -2,7 +2,7 @@
 session_start();
 $mysqli = require '../../../connection.php';
 
-$query = "CALL sp_get_sidebar_projects(?)";
+$query = "SELECT project_title, project_category, project_status FROM v_project_details WHERE project_owner = ? ORDER BY created_at DESC;";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();

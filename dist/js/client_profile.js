@@ -244,7 +244,7 @@ function loadSkillCategories() {
                 const categories = JSON.parse(response);
 
                 savedCategories = categories
-                    .map(category => `<option value="${category.skill_category}">${category.skill_category}</option>`)
+                    .map(category => `<option value="${category.id}">${category.skills_category}</option>`)
                     .join('');
             } catch (error) {
                 console.error('JSON parse error:', error.message);
@@ -308,9 +308,9 @@ $('#addProject').click(function () {
                             class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
                             required>
                             <option value="" disabled selected>Select Status</option>
-                            <option value="Hiring">Hiring</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
+                            <option value="1">Hiring</option>
+                            <option value="2 Progress">In Progress</option>
+                            <option value="3">Completed</option>
                         </select>
                         <div class="invalid-feedback">Select a status.</div>
                     </div>
@@ -377,9 +377,7 @@ $(document).on('submit', '#addProjectForm', function (e) {
     // Gather project data
     const projectData = {
         project_title: $('#project_title').val(),
-        project_category: $('#project_category').val(),
         project_description: $('#project_description').val(),
-        status: $('#status').val(),
         connect_cost: $('#connect_cost').val(),
         merit_worth: $('#merit_worth').val()
     };
@@ -403,12 +401,12 @@ $(document).on('submit', '#addProjectForm', function (e) {
                     <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent" data-project-id="${response.project_id}">
                         <div class="container d-flex justify-content-between align-items-center my-2">
                             <h5><a href="project_details.php?id=${response.project_id}" class="text-dark fw-semibold">${projectData.project_title}</a></h5>
-                            <span class="badge bg-success mb-2">${projectData.status}</span>
+                            <span class="badge bg-success mb-2">${response.project_status}</span>
                         </div>
                         <div class="container mb-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h6>${projectData.project_category}</h6>
+                                    <h6>${response.project_category}</h6>
                                     <h6 class="text-muted small">${projectData.project_description.substring(0, 10)}...</h6>
                                 </div>
                                 <div>
@@ -478,9 +476,9 @@ $(document).on('click', '.edit-project', function () {
                             <div class="col-md-3 mb-1">
                                 <label class="text-muted small mb-2 ms-1">Status</label>
                                 <select name="status" class="form-select no-outline-green-focus" required>
-                                    <option value="Hiring" ${project.project_status === 'Hiring' ? 'selected' : ''}>Hiring</option>
-                                    <option value="In Progress" ${project.project_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                                    <option value="Completed" ${project.project_status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                    <option value="1" ${project.project_status === 'Hiring' ? 'selected' : ''}>Hiring</option>
+                                    <option value="2" ${project.project_status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="3" ${project.project_status === 'Completed' ? 'selected' : ''}>Completed</option>
                                 </select>
                                 <div class="invalid-feedback">Select a status.</div>
                             </div>
@@ -529,7 +527,7 @@ $(document).on('click', '.edit-project', function () {
             `;
 
             projectCard.replaceWith(editForm);
-            $('select[name="project_category"]').val(project.project_category);
+            $('select[name="project_category"]').val(project.category_id);
         }
     });
 });
@@ -691,9 +689,9 @@ $(document).on('click', '.delete-project', function () {
                 
                   projects.forEach(project => {
                       projectsHTML += `
-                          <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent" data-project-id="${project.project_id}">
+                          <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent" data-project-id="${project.id}">
                               <div class="container d-flex justify-content-between align-items-center my-2">
-                                  <h5><a href="project_details.php?id=${project.project_id}" class="text-dark fw-semibold">${project.project_title}</a></h5>
+                                  <h5><a href="project_details.php?id=${project.id}" class="text-dark fw-semibold">${project.project_title}</a></h5>
                                   <span class="badge bg-success mb-2">${project.project_status}</span>
                               </div>
                               <div class="container mb-2">

@@ -13,7 +13,7 @@ try {
     $mysqli->begin_transaction();
 
     // Get connect cost to refund
-    $cost_query = "SELECT project_connect_cost FROM client_projects WHERE project_id = ?";
+    $cost_query = "SELECT project_connect_cost FROM client_projects WHERE id = ?";
     $stmt = $mysqli->prepare($cost_query);
     $stmt->bind_param("i", $project_id);
     $stmt->execute();

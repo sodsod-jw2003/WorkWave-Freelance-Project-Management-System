@@ -4,7 +4,7 @@ $mysqli = require '../../../connection.php';
 
 $user_id = $_SESSION['user_id'];
 
-$query = "CALL sp_get_user_experience_order_by_duration(?)";
+$query = "SELECT * FROM v_freelancer_experiences WHERE user_id = ? ORDER BY duration DESC";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();

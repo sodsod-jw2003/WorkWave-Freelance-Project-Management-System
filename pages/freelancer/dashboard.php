@@ -1,7 +1,7 @@
 <?php 
 
 require ('../../connection.php');
-$mysqli2 = require ('../../connection.php');
+$mysqli = require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
     exit;
@@ -13,7 +13,7 @@ include ('header.php');
 $user_id = $_SESSION['user_id'];
 
 // Query to get connects and merits
-$query = "SELECT connects, merits FROM v_freelancer_connects_merits WHERE user_id = ?";
+$query = "SELECT connects, merits FROM v_freelancer_connects_and_merits WHERE id = ?";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -25,21 +25,22 @@ $connects = $stats['connects'] ?? 0;
 $merits = $stats['merits'] ?? 0;
 
 // Project
-$project_query = "SELECT cp.*, u.first_name AS client_name 
-                  FROM client_projects cp
-                  LEFT JOIN users u ON cp.user_id = u.user_id 
-                  WHERE cp.project_status = 'hiring'
-                  ORDER BY cp.created_at DESC";
+$project_query = "SELECT v_project_details.*, 
+                          CONCAT(v_user_profile.first_name, ' ', v_user_profile.last_name) AS client_name 
+                   FROM v_project_details
+                   JOIN v_user_profile ON v_project_details.project_owner = v_user_profile.id
+                   WHERE project_status = 'hiring'
+                   ORDER BY created_at DESC";
 $result = $mysqli->query($project_query);
 $projects = $result->fetch_all(MYSQLI_ASSOC);
 
 //skills query
-$skills_query = "CALL sp_get_skills";
-$skills_result = mysqli_query($mysqli2, $skills_query);
+$skills_query = "SELECT * FROM v_skills_with_category ORDER BY category, skill";
+$skills_result = mysqli_query($mysqli, $skills_query);
 
 $skills_by_category = [];
 while ($row = mysqli_fetch_assoc($skills_result)) {
-    $skills_by_category[$row['skill_category']][] = $row;
+    $skills_by_category[$row['category']][] = $row;
 }
 
 ?>
@@ -167,8 +168,8 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                         <option value="" selected disabled>Select Category</option>
                                         <?php
                                             foreach ($skills_by_category as $category => $skills) {
-                                                // Echo option for each category
-                                                echo "<option value=\"$category\">$category</option>";
+                                                // Add data attribute for debugging
+                                                echo "<option value=\"" . htmlspecialchars($category) . "\">" . htmlspecialchars($category) . "</option>";
                                             }
                                         ?>
                                     </select>
@@ -176,17 +177,17 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                 <!-- /filter -->
                                 <!-- sort -->
                                 <div class="col-md-5 d-flex align-items-center bg- p-2">
-                                    <select class="form-select no-outline-green-focus me-2 bg-light" aria-label="Sort Projects">
-                                        <option selected disabled>Sort Projects:</option>
-                                        <option value="">Project Name</option>
-                                        <option value="">Time Posted</option>
-                                    </select>
-                                    <button class="btn btn-light border me-1">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </button>
-                                    <button class="btn btn-light border me-1">
-                                        <i class="fas fa-arrow-down"></i>
-                                    </button>
+                                <select class="form-select no-outline-green-focus me-2 bg-light" id="sortSelect" aria-label="Sort Projects">
+                                    <option selected disabled>Sort Projects:</option>
+                                    <option value="title">Project Title</option>
+                                    <option value="date">Time Posted</option>
+                                </select>
+                                <button class="btn btn-light border me-1" id="sortAsc">
+                                    <i class="fas fa-arrow-up text-secondary"></i>
+                                </button>
+                                <button class="btn btn-light border me-1" id="sortDesc">
+                                    <i class="fas fa-arrow-down text-secondary"></i>
+                                </button>
                                 </div>
                                 <!-- /sort -->
                             </div>
@@ -195,7 +196,8 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                         <!-- search -->
                         <div class="col-lg-3 col-12">
                             <div class="input-group">
-                                <input type="text" name="search" class="form-control no-outline-green-focus border-end-0" placeholder="Search">
+                                <!-- Search input -->
+                                <input type="text" id="searchProjects" name="search" class="form-control no-outline-green-focus border-end-0" placeholder="Search">
                                 <span class="input-group-text bg-transparent border-start-0">
                                     <i class="fas fa-search"></i>
                                 </span>
@@ -217,7 +219,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                 <!-- title and cons -->
                                 <div class="col-12 col d-flex justify-content-between mb-2">
                                     <div class="col-md-6 pt-2 d-flex bg- align-items-center">
-                                        <a href="project_application.php?id=<?php echo htmlspecialchars($project['project_id']); ?>" 
+                                        <a href="project_application.php?id=<?php echo htmlspecialchars($project['id']); ?>" 
                                         class="text-green-40 fw-semibold ps-2 fs-3">
                                             <?php echo htmlspecialchars($project['project_title']); ?>
                                         </a>
@@ -246,14 +248,14 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                     <span class="d-flex align-items-center">
                                         <span class="d-flex align-items-center p-2 rounded-3">
                                             <div class="d-flex align-items-center">
-                                                <a href="project_application.php?id=<?php echo htmlspecialchars($project['project_id']); ?>" class="btn p-0" id="apply-btn">
+                                                <a href="project_application.php?id=<?php echo htmlspecialchars($project['id']); ?>" class="btn p-0" id="apply-btn">
                                                     <i class="fas fa-hand fs-4 text-green-40"></i>
                                                 </a>
                                             </div>
                                         </span>
                                         <span class="d-flex align-items-center p-2 me-2 rounded-3">
                                             <div class="d-flex align-items-center">
-                                            <button class="btn p-0 heart-btn" data-project-id="<?php echo htmlspecialchars($project['project_id']); ?>">
+                                            <button class="btn p-0 heart-btn" data-project-id="<?php echo htmlspecialchars($project['id']); ?>">
                                                 <i class="far fa-heart fs-4 text-danger heart-icon"></i>
                                             </button>
                                             </div>

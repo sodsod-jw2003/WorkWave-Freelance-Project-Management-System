@@ -12,7 +12,8 @@ include ('../../misc/accordion_values.php');
 $project_id = $_GET['id'];
 
 // Check existing application
-$check_query = "SELECT * FROM freelancer_applications 
+$check_query = "SELECT * FROM v_applications
+                JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
                 WHERE project_id = ? AND user_id = ?";
 $stmt = $mysqli->prepare($check_query);
 $stmt->bind_param("ii", $project_id, $_SESSION['user_id']);
@@ -20,10 +21,9 @@ $stmt->execute();
 $existing_application = $stmt->get_result()->fetch_assoc();
 
 
-$query1 = "SELECT cp.*, u.first_name AS client_name 
-          FROM client_projects cp
-          LEFT JOIN users u ON cp.user_id = u.user_id 
-          WHERE cp.project_id = ?";
+$query1 = "SELECT v_project_details.*,  v_user_profile.first_name AS client_name FROM v_project_details 
+           JOIN v_user_profile ON v_user_profile.id = v_project_details.project_owner
+          WHERE v_project_details.id = ?";
 $stmt = $mysqli->prepare($query1);
 $stmt->bind_param("i", $project_id);
 $stmt->execute();
@@ -177,9 +177,6 @@ $project = $result->fetch_assoc();
 
                         <div class="col-12">
                             <?php if ($existing_application): ?>
-                                <button type="submit" id="submitProposal" class="btn btn-dark-green" disabled>
-                                    Status: <?php echo htmlspecialchars(ucfirst($existing_application['application_status'])); ?>
-                                </button>
                                 <button type="button" id="cancelProposal" class="btn btn-danger">Withdraw Application</button>
                             <?php else: ?>
                                 <button type="submit" id="submitProposal" class="btn btn-dark-green">Submit Proposal</button>

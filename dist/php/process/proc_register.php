@@ -10,7 +10,7 @@
     $email = $_POST["email"];
     
     // Check if email is already registered
-    $stmt = $mysqli->prepare("CALL sp_get_user_by_email(?)");
+    $stmt = $mysqli->prepare("SELECT * FROM v_user_profile WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     
