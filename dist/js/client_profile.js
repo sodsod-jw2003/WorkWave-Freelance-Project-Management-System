@@ -378,8 +378,8 @@ $(document).on('submit', '#addProjectForm', function (e) {
     const projectData = {
         project_title: $('#project_title').val(),
         project_description: $('#project_description').val(),
-        project_category: $('#project_category').val(), // Add this
-        status: $('#status').val(), // Add this
+        project_category: $('#project_category').val(),
+        status: $('#status').val(),
         connect_cost: $('#connect_cost').val(),
         merit_worth: $('#merit_worth').val()
     };
