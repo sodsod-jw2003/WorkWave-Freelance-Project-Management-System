@@ -309,7 +309,7 @@ $('#addProject').click(function () {
                             required>
                             <option value="" disabled selected>Select Status</option>
                             <option value="1">Hiring</option>
-                            <option value="2 Progress">In Progress</option>
+                            <option value="2">In Progress</option>
                             <option value="3">Completed</option>
                         </select>
                         <div class="invalid-feedback">Select a status.</div>
@@ -378,6 +378,8 @@ $(document).on('submit', '#addProjectForm', function (e) {
     const projectData = {
         project_title: $('#project_title').val(),
         project_description: $('#project_description').val(),
+        project_category: $('#project_category').val(), // Add this
+        status: $('#status').val(), // Add this
         connect_cost: $('#connect_cost').val(),
         merit_worth: $('#merit_worth').val()
     };

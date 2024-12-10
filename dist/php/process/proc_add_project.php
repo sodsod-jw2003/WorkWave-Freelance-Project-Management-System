@@ -2,6 +2,8 @@
 session_start();
 $mysqli = require '../../../connection.php';
 
+error_log("Received POST data: " . print_r($_POST, true));
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'];
     $project_title = $_POST['project_title'];
