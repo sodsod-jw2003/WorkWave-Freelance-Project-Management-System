@@ -17,14 +17,14 @@ try {
     $project_id = $_POST['project_id'];
     
     // Get project connect cost
-    $cost_query = "SELECT project_connect_cost FROM client_projects WHERE id = ?";
+    $cost_query = "SELECT project_connect_cost FROM v_project_details WHERE id = ?";
     $stmt = $mysqli->prepare($cost_query);
     $stmt->bind_param("i", $project_id);
     $stmt->execute();
     $project = $stmt->get_result()->fetch_assoc();
     
     // Check connects balance
-    $connects_query = "SELECT connects FROM freelancer_connects WHERE user_id = ?";
+    $connects_query = "SELECT connects FROM v_freelancer_connects_and_merits WHERE id = ?";
     $stmt = $mysqli->prepare($connects_query);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -35,13 +35,13 @@ try {
     }
 
     // Insert application
-    $insert_query = "INSERT INTO freelancer_applications (project_id, user_id, application_details, portfolio_url, application_status_id) VALUES (?, ?, ?, ?, '1')";
+    $insert_query = "CALL sp_add_application(?,?,?,?)";
     $stmt = $mysqli->prepare($insert_query);
     $stmt->bind_param("iiss", $project_id, $user_id, $_POST['application_details'], $_POST['portfolio_url']);
     $stmt->execute();
 
     // Deduct connects
-    $update_query = "UPDATE freelancer_connects SET connects = connects - ? WHERE user_id = ?";
+    $update_query = "CALL sp_deduct_connects(?,?)";
     $stmt = $mysqli->prepare($update_query);
     $stmt->bind_param("ii", $project['project_connect_cost'], $user_id);
     $stmt->execute();

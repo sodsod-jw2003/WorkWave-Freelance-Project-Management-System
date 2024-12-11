@@ -122,7 +122,7 @@ $applyinguser = $result->fetch_assoc();
                             <a href="#" class="small no-deco text-muted"><?php echo htmlspecialchars($application['portfolio_url']); ?></a> 
                             <div class="mt-3">
                                 <button class="btn btn-success hire-btn" 
-                                        data-application-id="<?php echo htmlspecialchars($application['id']); ?>">
+                                        data-application-id="<?php echo htmlspecialchars($application_id); ?>">
                                     Hire Freelancer
                                 </button>
                                 <a href="applications.php" class="btn btn-secondary">Back</a>

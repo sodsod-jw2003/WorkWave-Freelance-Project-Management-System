@@ -9,9 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $application_id = $_POST['application_id'];
     $status = $_POST['status']; // Get status from POST data
 
-    $updateQuery = "UPDATE freelancer_applications 
-                   SET application_status_id = ? 
-                   WHERE id = ?";
+    $updateQuery = "CALL sp_update_application_status(?, ?)";
     
     $stmt = $mysqli->prepare($updateQuery);
     $stmt->bind_param("ii", $status, $application_id);
