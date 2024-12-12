@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2024 at 02:51 PM
+-- Generation Time: Dec 13, 2024 at 12:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -245,7 +245,9 @@ INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_catego
 (40, 31, 'Banana', 20, 'adaa', 1, 9, 11, '2024-12-09 23:52:52', '2024-12-10 11:12:23'),
 (47, 32, 'test hiring', 21, 'hirrrr', 2, 10, 10, '2024-12-11 10:52:31', '2024-12-11 10:54:29'),
 (50, 32, 'Test audit', 15, 'test', 2, 10, 10, '2024-12-11 13:07:20', '2024-12-11 13:50:06'),
-(52, 32, 'Capitalize test', 9, 'aaa', 2, 10, 10, '2024-12-11 13:43:47', '2024-12-11 13:49:21');
+(52, 32, 'Capitalize test', 9, 'aaa', 2, 10, 10, '2024-12-11 13:43:47', '2024-12-11 13:49:21'),
+(53, 41, 'Project alpha', 15, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 16:17:03', '2024-12-12 16:45:59'),
+(54, 41, 'Baby ikaw lang talaga', 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 19:32:27', '2024-12-12 20:50:11');
 
 --
 -- Triggers `client_projects`
@@ -358,7 +360,13 @@ INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`
 (7, 51, 32, 'DELETE', '2024-12-11 13:40:45', 'Capitalize test', NULL, 15, NULL, 'haha', NULL, 10, NULL, 10, NULL),
 (8, 52, 32, 'INSERT', '2024-12-11 13:43:47', NULL, 'Capitalize test', NULL, 9, NULL, 'aaa', NULL, 10, NULL, 10),
 (9, 52, 32, 'UPDATE', '2024-12-11 13:49:21', 'Capitalize test', 'Capitalize test', 9, 9, 'aaa', 'aaa', 10, 10, 10, 10),
-(10, 50, 32, 'UPDATE', '2024-12-11 13:50:06', 'test audit', 'Test audit', 15, 15, 'test', 'test', 10, 10, 10, 10);
+(10, 50, 32, 'UPDATE', '2024-12-11 13:50:06', 'test audit', 'Test audit', 15, 15, 'test', 'test', 10, 10, 10, 10),
+(11, 53, 41, 'INSERT', '2024-12-12 16:17:03', NULL, 'Project alpha', NULL, 15, NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, 5, NULL, 10),
+(12, 53, 41, 'UPDATE', '2024-12-12 16:45:59', 'Project alpha', 'Project alpha', 15, 15, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
+(13, 54, 41, 'INSERT', '2024-12-12 19:32:27', NULL, 'Baby ikaw lang talaga', NULL, 27, NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, 5, NULL, 10),
+(14, 54, 41, 'UPDATE', '2024-12-12 19:32:49', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
+(15, 54, 41, 'UPDATE', '2024-12-12 19:32:53', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
+(16, 54, 41, 'UPDATE', '2024-12-12 20:50:11', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10);
 
 -- --------------------------------------------------------
 
@@ -410,7 +418,9 @@ INSERT INTO `freelancer_applications` (`id`, `project_id`, `user_id`, `applicati
 (66, 40, 35, 'bannanananana', 'https://www.merriam-webster.com/dictionary/proposal', 1, '2024-12-11 16:19:46', '2024-12-11 08:19:46', '2024-12-11 08:19:46'),
 (78, 47, 35, 'kate apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 18:53:28', '2024-12-11 10:53:28', '2024-12-11 10:54:39'),
 (79, 47, 37, 'ronald apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 18:54:01', '2024-12-11 10:54:01', '2024-12-11 10:54:29'),
-(82, 50, 35, 'apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 21:49:53', '2024-12-11 13:49:53', '2024-12-11 13:50:06');
+(82, 50, 35, 'apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 21:49:53', '2024-12-11 13:49:53', '2024-12-11 13:50:06'),
+(83, 53, 42, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'https://www.google.com/', 2, '2024-12-13 00:19:32', '2024-12-12 16:19:32', '2024-12-12 16:45:59'),
+(84, 54, 42, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'https://www.google.com/', 2, '2024-12-13 03:34:07', '2024-12-12 19:34:07', '2024-12-12 20:50:11');
 
 --
 -- Triggers `freelancer_applications`
@@ -468,7 +478,8 @@ INSERT INTO `freelancer_connects` (`id`, `user_id`, `connects`, `created_at`, `u
 (1, 30, 20, '2024-12-09 12:13:10', '2024-12-10 11:58:50'),
 (4, 35, 11, '2024-12-09 12:13:10', '2024-12-11 13:49:53'),
 (5, 37, 70, '2024-12-10 14:26:07', '2024-12-11 10:54:01'),
-(7, 39, 100, '2024-12-11 13:21:56', '2024-12-11 13:21:56');
+(7, 39, 100, '2024-12-11 13:21:56', '2024-12-11 13:21:56'),
+(8, 42, 90, '2024-12-12 16:18:26', '2024-12-12 19:34:07');
 
 -- --------------------------------------------------------
 
@@ -503,7 +514,8 @@ INSERT INTO `freelancer_experiences` (`id`, `user_id`, `job_title`, `company_nam
 (56, 33, 'Software Engineer', 'Yahoo', '2020-Present', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
 (57, 35, 'Software Developer', 'Yahoo', '2020-Present', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
 (59, 30, 'dasd', 'sad', '2001-2003', '2024-12-10 11:24:10', '2024-12-10 11:24:10'),
-(60, 30, 'das', 'sad', '2020-2022', '2024-12-10 11:56:05', '2024-12-10 11:56:05');
+(60, 30, 'das', 'sad', '2020-2022', '2024-12-10 11:56:05', '2024-12-10 11:56:05'),
+(61, 42, 'Labeler', 'RYU', '1975-2025', '2024-12-12 19:15:44', '2024-12-12 19:15:44');
 
 -- --------------------------------------------------------
 
@@ -527,7 +539,8 @@ INSERT INTO `freelancer_merits` (`id`, `user_id`, `merits`, `created_at`, `updat
 (1, 30, 0, '2024-12-09 12:11:05', '2024-12-09 12:11:21'),
 (2, 35, 0, '2024-12-09 12:11:05', '2024-12-09 12:11:21'),
 (3, 37, 0, '2024-12-10 14:26:07', '2024-12-10 14:26:07'),
-(5, 39, 0, '2024-12-11 13:21:56', '2024-12-11 13:21:56');
+(5, 39, 0, '2024-12-11 13:21:56', '2024-12-11 13:21:56'),
+(6, 42, 0, '2024-12-12 16:18:26', '2024-12-12 16:18:26');
 
 -- --------------------------------------------------------
 
@@ -816,7 +829,9 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, 
 (32, 'Kate', 'Jensen', '2003-07-10', 2, 'Antipolo, Rizal, Philippines', 'ronaldsullano12345@gmail.com', '9515910702', 'Thai', 'Guaranir', 1, '../../dist/php/uploads/profile_pictures/6752d8cfd48d2_received_364139713153077.jpeg', 3, '$2y$10$sTftvqLPrrJnugSToi/2Ee7qHUqAU26S6RWhgIg5Rvari9KdxdAGa', NULL, NULL, NULL, '2024-12-11 20:27:53', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-11 12:27:53'),
 (35, 'Freelance Kate', 'Jensen', '2003-07-03', 2, 'Angeles, Pampanga, Philippines', 'ronaldsullano6666@gmail.com', '9515120708', 'Filipino', 'Tagalog', 2, '../../dist/php/uploads/profile_pictures/6752e0aaed0bc_received_364139713153077.jpeg', 1, '$2y$10$I3mN3hppEF20cswF8ty1L.euzn1caw0ZyBSahmbfINVIRaCAChHbe', NULL, NULL, NULL, '2024-12-11 21:49:02', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-11 13:49:02'),
 (37, 'Ronald', 'Sullano', '2003-06-10', 1, 'Angeles, Pampanga, Philippines', 'ronaldsullano76@gmail.com', '', '', '', 2, '', NULL, '$2y$10$J0HgpBTEQodobO7/uuhzvuLJaNeFuGrhrsQZlAq1ZG2sk4inX2/aW', NULL, NULL, NULL, '2024-12-11 17:47:23', NULL, NULL, 1, '2024-12-10 14:26:07', '2024-12-11 09:47:23'),
-(39, 'Pixie', 'Boo', '2003-09-08', 2, 'Angeles, Pampanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 2, '', NULL, '$2y$10$jBRLueeGykPq4DOJjEHMxuNpk2vYQETSCf.rSuzqIgtS8UtM5vow6', NULL, NULL, '$2y$10$zsnZlvGS3BmYVUUXk3WLdu.MQEr6nr0/LIoSJODwxRQ8Z38hOLed6', NULL, NULL, NULL, 1, '2024-12-11 13:21:56', '2024-12-11 13:21:56');
+(39, 'Pixie', 'Boo', '2003-09-08', 2, 'Angeles, Pampanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 2, '', NULL, '$2y$10$jBRLueeGykPq4DOJjEHMxuNpk2vYQETSCf.rSuzqIgtS8UtM5vow6', NULL, NULL, '$2y$10$zsnZlvGS3BmYVUUXk3WLdu.MQEr6nr0/LIoSJODwxRQ8Z38hOLed6', NULL, NULL, NULL, 1, '2024-12-11 13:21:56', '2024-12-11 13:21:56'),
+(41, 'Client jireh', 'Sodsod', '2003-09-07', 1, 'Caloocan City, Metro Manila, Philippines', 'sodsodwalter@gmail.com', '', '', '', 1, '', NULL, '$2y$10$uOyJUlaHc9uRf/9O2vhQK.wMEB1fWY.3WV2YkAWWjSUucef5O34ea', NULL, NULL, NULL, '2024-12-13 05:56:18', NULL, NULL, 1, '2024-12-12 16:16:16', '2024-12-12 21:56:18'),
+(42, 'Freelancer jireh', 'Sodsod', '2003-09-07', 1, 'Bayag, Apayao, Philippines', 'jirehwaltersodsod@gmail.com', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675b24b0f3ef2_20240812_123813_0004.png', NULL, '$2y$10$BuMI/.SWVBG8yWdyCaL.Lu1nfNsj2TIJAg3P.jLpldiyrNxf.PqsC', NULL, NULL, NULL, '2024-12-13 05:48:51', NULL, NULL, 1, '2024-12-12 16:18:26', '2024-12-12 21:48:51');
 
 --
 -- Triggers `users`
@@ -961,6 +976,7 @@ CREATE TABLE `v_all_application` (
 ,`project_title` varchar(255)
 ,`application_date` timestamp
 ,`status` varchar(255)
+,`merits` int(10)
 );
 
 -- --------------------------------------------------------
@@ -977,6 +993,7 @@ CREATE TABLE `v_applications` (
 ,`application_date` datetime
 ,`created_at` timestamp
 ,`updated_at` timestamp
+,`merits` int(10)
 );
 
 -- --------------------------------------------------------
@@ -1157,7 +1174,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_all_application`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_all_application`  AS SELECT `freelancer_applications`.`id` AS `id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`profile_picture_url` AS `profile_picture_url`, `users_job_titles`.`job_title` AS `job_title`, `client_projects`.`user_id` AS `project_owner`, `client_projects`.`project_title` AS `project_title`, `freelancer_applications`.`created_at` AS `application_date`, `freelancer_application_status`.`status` AS `status` FROM ((((`users` join `freelancer_applications` on(`users`.`id` = `freelancer_applications`.`user_id`)) join `client_projects` on(`freelancer_applications`.`project_id` = `client_projects`.`id`)) left join `users_job_titles` on(`users`.`job_title_id` = `users_job_titles`.`id`)) join `freelancer_application_status` on(`freelancer_applications`.`application_status_id` = `freelancer_application_status`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_all_application`  AS SELECT `freelancer_applications`.`id` AS `id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`profile_picture_url` AS `profile_picture_url`, `users_job_titles`.`job_title` AS `job_title`, `client_projects`.`user_id` AS `project_owner`, `client_projects`.`project_title` AS `project_title`, `freelancer_applications`.`created_at` AS `application_date`, `freelancer_application_status`.`status` AS `status`, `freelancer_merits`.`merits` AS `merits` FROM (((((`users` join `freelancer_applications` on(`users`.`id` = `freelancer_applications`.`user_id`)) join `client_projects` on(`freelancer_applications`.`project_id` = `client_projects`.`id`)) left join `users_job_titles` on(`users`.`job_title_id` = `users_job_titles`.`id`)) join `freelancer_application_status` on(`freelancer_applications`.`application_status_id` = `freelancer_application_status`.`id`)) left join `freelancer_merits` on(`users`.`id` = `freelancer_merits`.`user_id`)) ;
 
 -- --------------------------------------------------------
 
@@ -1166,7 +1183,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_applications`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_applications`  AS SELECT `freelancer_applications`.`id` AS `id`, `freelancer_applications`.`application_details` AS `application_details`, `freelancer_applications`.`portfolio_url` AS `portfolio_url`, `freelancer_application_status`.`status` AS `status`, `freelancer_applications`.`application_date` AS `application_date`, `freelancer_applications`.`created_at` AS `created_at`, `freelancer_applications`.`updated_at` AS `updated_at` FROM (`freelancer_applications` join `freelancer_application_status` on(`freelancer_applications`.`application_status_id` = `freelancer_application_status`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_applications`  AS SELECT `freelancer_applications`.`id` AS `id`, `freelancer_applications`.`application_details` AS `application_details`, `freelancer_applications`.`portfolio_url` AS `portfolio_url`, `freelancer_application_status`.`status` AS `status`, `freelancer_applications`.`application_date` AS `application_date`, `freelancer_applications`.`created_at` AS `created_at`, `freelancer_applications`.`updated_at` AS `updated_at`, `freelancer_merits`.`merits` AS `merits` FROM ((`freelancer_applications` join `freelancer_application_status` on(`freelancer_applications`.`application_status_id` = `freelancer_application_status`.`id`)) left join `freelancer_merits` on(`freelancer_applications`.`user_id` = `freelancer_merits`.`user_id`)) ;
 
 -- --------------------------------------------------------
 
@@ -1410,13 +1427,13 @@ ALTER TABLE `users_status`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `client_project_audit`
 --
 ALTER TABLE `client_project_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `client_project_status`
@@ -1428,7 +1445,7 @@ ALTER TABLE `client_project_status`
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `freelancer_application_status`
@@ -1440,19 +1457,19 @@ ALTER TABLE `freelancer_application_status`
 -- AUTO_INCREMENT for table `freelancer_connects`
 --
 ALTER TABLE `freelancer_connects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `freelancer_experiences`
 --
 ALTER TABLE `freelancer_experiences`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `freelancer_merits`
 --
 ALTER TABLE `freelancer_merits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `freelancer_skills`
@@ -1482,7 +1499,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `users_gender`

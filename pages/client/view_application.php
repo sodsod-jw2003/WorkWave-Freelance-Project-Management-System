@@ -140,12 +140,18 @@ $applyinguser = $result->fetch_assoc();
                             </div>
                         </div>
                         <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($applyinguser['first_name'] . ' ' . $applyinguser['last_name']); ?></div>
-                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($applyinguser['job_title']); ?></div>
-                        <div class="bg- mt-4">
+                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($applyinguser['job_title']); ?> hayst</div>
+                        <div class="mt-3">
+                            <div class="mb-3">
+                                <span class="fas fa-star me-1 text-green-60"></span>
+                                <span class="text-muted fw-semibold text-green-60">Merits</span>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['merits']); ?></div>
+                            </div>
+                            <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-phone me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['mobile_number']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['mobile_number']); ?>TITE</div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">

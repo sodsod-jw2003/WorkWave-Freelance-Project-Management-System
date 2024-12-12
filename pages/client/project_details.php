@@ -21,7 +21,7 @@ $project = $project_result->fetch_assoc();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkWave | Client Profile</title>
+    <title>WorkWave | Project Details</title>
     <link rel="icon" type="image/png" sizes="64x64" href="../../img/WorkWaveLogo.png">
 
 
@@ -69,47 +69,35 @@ $project = $project_result->fetch_assoc();
             </div>
             <!-- /profile header -->
 
-            <!-- task content -->
+            <!-- objective content -->
             <div class="row">
-                <!-- sidebar task card and freelancer card -->
+                <!-- sidebar objective card and freelancer card -->
                 <div class="col-12 col-md-4 col-lg-3 p-3">
-                    <div class="card card-primary card-outline border-top-accent shadow border-0 mb-4 position-relative">
-                        <div class="container fs-5 text-center mt-3 fw-semibold"><?php echo htmlspecialchars($project['project_title']); ?></div>
-                        <div class="container fs-6 text-center text-muted mb-4"><?php echo htmlspecialchars($project['project_category']); ?></div>
-                    </div>
                     <div class="card card-primary card-outline shadow border-0 mb-4">
-                        <!-- task header -->
+                        <!-- objective header -->
                         <div class="card-header bg-green-30 p-3">
                             <div class="d-flex align-items-center text-white">
                                 <i class="fa-solid fa-list-check text-white mx-1"></i>
-                                <div class="text-white p-1 d-inline">Tasks</div>
+                                <div class="text-white p-1 d-inline">Completion History</div>
                             </div>
                         </div>
-                        <!-- /task header -->
-                        <!-- task sidebar content -->
+                        <!-- /objective header -->
+                        <!-- objective sidebar content -->
                         <div class="card-body">
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <!-- dynamic task details depending on tak_id -->
-                                    <div class="text-muted fw-semibold text-green-60">Task Title</div>
-                                    <div class="badge bg-success text-white py-1 px-2">Task Status</div>
-                                </div>
-                                <div class="text-muted small mt-2">Assigned Freelancer</div>
-                            </div>
-                            <hr class="divider">
+
                         </div>
-                        <!-- /task sidebar content -->
+                        <!-- /objective sidebar content -->
                     </div>
                 </div>
-                <!-- /sidebar task card and freelancer card -->
+                <!-- /sidebar objective card and freelancer card -->
 
-                <!-- main task card -->
+                <!-- main objective card -->
                 <div class="col-12 col-md-8 col-lg-9 p-3">
                     <div class="card shadow border-0">
                         <div class="card-body">
                             <!-- project title & status -->
                             <div class="container d-flex justify-content-between align-items-center px-4 pt-4 pb-0 mb-0 me-2">
-                                <h4 class="text-green-50"><?php echo htmlspecialchars($project['project_title']); ?></h4>
+                                <h4 class="text-green-50 fw-semibold"><?php echo htmlspecialchars($project['project_title']); ?></h4>
                                 <span class="badge bg-success mb-2"><?php echo htmlspecialchars($project['project_status']); ?></span>
                             </div>
                             <!-- /project title & status -->
@@ -119,29 +107,34 @@ $project = $project_result->fetch_assoc();
                                 <h6 class="text-muted small mt-3 text-justify"><?php echo nl2br(htmlspecialchars($project['project_description'])); ?></h6>
                             </div>
                             <!-- /project category & description -->
-                            <!-- task main card -->
+                            <!-- objective main card -->
                             <div class="card mx-4 my-4 shadow-sm">
-                                <!-- task header & add task button -->
-                                <div class="container d-flex justify-content-between align-items-center px-4 pt-4 pb-0 mb-3 me-2">
-                                    <h5>Tasks</h5>
-                                    <button id="addTask" class="btn btn-dark-green">
-                                        <i class="fas fa-plus me-2"></i>Add Task
-                                    </button>
+                                <h5 class="container px-4 pt-4 m-0">Project Objective</h5>
+                                <div class="px-4 py-2 bg-">
+                                    <label for="objective" class="text-muted small mb-2">Write the project's objective.</label>
+                                    <textarea name="objective" id="objective" class="form-control bg-light no-outline-green-focus border-1" rows="2" required></textarea>
                                 </div>
-                                <!-- task header & add task button -->
-                                <!-- task sub card -->
-                                <div class="container px-4 py-2" id="taskContainer">
-                                    <!-- Tasks will be loaded dynamically here -->
+                                <div class="mt-2 px-4 mb-4">
+                                    <button class="btn btn-dark-green">Submit</button>
                                 </div>
-                                <!-- /task sub card -->
                             </div>
-                            <!-- /task main card -->
+                            <!-- /objective main card -->
+                            <!-- objective main card -->
+                            <div class="card mx-4 my-4 shadow-sm bg-light">
+                                <h5 class="container px-4 pt-4 m-0">Project Objective</h5>
+                                <h6 class="text-muted small mb-2 mt-2 px-4 py-2">asdasdasdasdasdasd</h6>
+                                <div class="mt-2 px-4 mb-4">
+                                    <button class="btn btn-dark-green">Edit</button>
+                                </div>
+                            </div>
+                            <!-- /objective main card -->
+                        
                         </div>
                     </div>                
                 </div>
-                <!-- /main task card -->
+                <!-- /main objective card -->
             </div>
-            <!-- /task content -->
+            <!-- /objective content -->
         </div>
     </section>
 </body>

@@ -137,7 +137,7 @@ $category_icons = [
                 </div>
             </div>
             <!-- contracts, projects, freelancers, and applications -->
-            <div class="row mt-4">
+            <div class="row">
                 <!-- projects, tasks, and clients -->
                 <div class="row mx-0 my-3 g-4">
                     <div class="col-12 col-md-4 p-2">
@@ -152,15 +152,15 @@ $category_icons = [
                         </a>
                     </div>
                     <div class="col-12 col-md-4 p-2">
-                        <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                        <a href="freelancers.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center no-deco">
                             <div class="col-7 d-flex flex-column align-items-start mt-1">
-                                <div class="fw-bold fs-2 ps-2"><?php echo htmlspecialchars($freelancer_count ?? 0); ?></div>
-                                <div class="fs-6 ps-2">Freelancers</div>
+                                <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($freelancer_count ?? 0); ?></div>
+                                <div class="fs-6 ps-2 text-green-50 fw-semibold">Freelancers</div>
                             </div>
                             <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                                 <i class="fas fa-briefcase fa-4x text-green-50"></i>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-12 col-md-4 p-2">
                         <a href="applications.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center no-deco">
@@ -233,7 +233,8 @@ $category_icons = [
                 <div class="container px-3">
                     <div class="card mb-4 shadow border-0 rounded-3">
                         <div class="card-body">
-                            <div class="row px-4">
+                            <h4 class="m-2">Your Projects</h4>
+                            <div class="row px-4 py-2">
                                 <?php if ($projects): ?>
                                     <?php foreach($projects as $project): ?>
                                         <div class="col-12 d-flex justify-content-center align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
@@ -242,12 +243,12 @@ $category_icons = [
                                                 <div class="row align-items-center px-3 py-2 rounded-top">
                                                     <div class="col-md-6 d-flex align-items-center ps-0">
                                                         <h5 class="mb-0">
-                                                            <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" class="text-muted text-decoration-none">
+                                                            <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" class="text-green-50 fs-4 text-decoration-none fw-semibold">
                                                                 <?php echo htmlspecialchars($project['project_title']); ?>
                                                             </a>
-                                                            <small class="text-muted ms-2">
-                                                                • Posted <?php echo date('M j, Y', strtotime($project['created_at'])); ?>
-                                                            </small>
+                                                            <span class="badge text-white bg-secondary ms-2">
+                                                                Posted <?php echo date('M j, Y', strtotime($project['created_at'])); ?>
+                                                            </span>
                                                         </h5>
                                                     </div>
                                                     <div class="col-md-6 d-flex justify-content-end pe-0">
@@ -259,15 +260,15 @@ $category_icons = [
                                                 <!-- Project Category -->
                                                 <div class="row align-items-center px-3 py-2 rounded-bottom">
                                                     <div class="col-md-6 d-flex align-items-center ms-0 ps-0">
-                                                        <i class="<?php echo $category_icons[$project['project_category']] ?? 'fas fa-folder'; ?> me-2 text-green-50"></i>
-                                                        <span class="fs-6">
+                                                        <i class="<?php echo $category_icons[$project['project_category']] ?? 'fas fa-folder'; ?> me-3 text-green-50 fa-2x"></i>
+                                                        <span class="fs-5">
                                                             <?php echo htmlspecialchars($project['project_category']); ?>
                                                         </span>
                                                     </div>
                                                     <div class="col-md-6 d-flex justify-content-end pe-0">
                                                         <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" 
                                                         class="btn btn-outline-secondary me-0">
-                                                            <i class="fas fa-eye"></i>
+                                                            View Project
                                                         </a>
                                                     </div>
                                                 </div>

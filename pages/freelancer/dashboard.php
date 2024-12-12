@@ -124,7 +124,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                     <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
                             <div class="fw-bold fs-2 ps-2">4</div>
-                            <div class="fs-6 ps-2">Ongoing Projects</div>
+                            <div class="fs-6 ps-2">Your Projects</div>
                         </div>
                         <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                             <i class="fas fa-diagram-project fa-4x text-green-50"></i>
@@ -135,7 +135,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                     <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
                             <div class="fw-bold fs-2 ps-2">13</div>
-                            <div class="fs-6 ps-2">Ongoing Tasks</div>
+                            <div class="fs-6 ps-2">Project Objectives</div>
                         </div>
                         <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                             <i class="fas fa-list-check fa-4x text-green-50"></i>
@@ -146,7 +146,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                     <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
                             <div class="fw-bold fs-2 ps-2">2</div>
-                            <div class="fs-6 ps-2">Active Clients</div>
+                            <div class="fs-6 ps-2">Clients</div>
                         </div>
                         <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                             <i class="fas fa-user-tie fa-4x text-green-50"></i>

@@ -88,16 +88,17 @@ $applications = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     <span class="fs-5 ms-3 fw-semibold">
                                                         <?php echo htmlspecialchars($application['first_name'] . ' ' . $application['last_name']); ?>
                                                     </span>
+                                                    <span class="badge bg-secondary ms-2"><?php echo htmlspecialchars($application['merits']); ?> Merits</span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 d-flex justify-content-end m-0">
                                                 <a href="view_application.php?id=<?php echo htmlspecialchars($application['id']); ?>" 
                                                 class="btn btn-outline-secondary me-2">
-                                                    <i class="fas fa-eye"></i>
+                                                    View 
                                                 </a>
                                                 <button class="btn btn-success me-2 hire-btn" 
                                                         data-application-id="<?php echo htmlspecialchars($application['id']); ?>">
-                                                    Hire Freelancer
+                                                    Hire 
                                                 </button>
                                                 <button class="btn btn-danger remove-btn"
                                                         data-application-id="<?php echo htmlspecialchars($application['id']); ?>">
