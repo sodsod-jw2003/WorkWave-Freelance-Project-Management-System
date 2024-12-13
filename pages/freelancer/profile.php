@@ -292,70 +292,52 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                     </div>
                                     <div class="card p-3 mx-2 bg-light border-start-accent card-outline">
                                         <form id="skillsForm">
-                                        <!-- Category Navigation -->
-                                        <ul class="nav nav-pills mb-3" role="tablist">
-                                            <?php 
-                                            $first = true;
-                                            foreach ($skills_by_category as $category => $skills): 
-                                                $categoryId = str_replace(' ', '_', $category);
-                                            ?>
-                                                <li class="nav-item" role="presentation">
-                                                    <button class="nav-link <?php echo $first ? 'active' : ''; ?>" 
-                                                            data-bs-toggle="tab" 
-                                                            data-bs-target="#skill_tab_<?php echo $categoryId; ?>" 
-                                                            type="button" 
-                                                            role="tab">
-                                                        <?php echo htmlspecialchars($category); ?>
-                                                    </button>
-                                                </li>
-                                            <?php 
-                                                $first = false;
-                                            endforeach; 
-                                            ?>
-                                        </ul>
+                                            <!-- Category Dropdown -->
+                                            <div class="form-group mb-3">
+                                                <label for="skillCategory" class="form-label">Select Skill Category</label>
+                                                <select class="form-select" id="skillCategory">
+                                                    <option value="">Select a category</option>
+                                                    <?php foreach ($skills_by_category as $category => $skills): ?>
+                                                        <option value="<?php echo htmlspecialchars($category); ?>">
+                                                            <?php echo htmlspecialchars($category); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
 
-                                        <!-- Skills Content -->
-                                        <div class="tab-content">
-                                            <?php 
-                                            $first = true;
-                                            foreach ($skills_by_category as $category => $skills): 
-                                                $categoryId = str_replace(' ', '_', $category);
-                                            ?>
-                                                <div class="tab-pane fade px-4 <?php echo $first ? 'show active' : ''; ?>" 
-                                                    id="skill_tab_<?php echo $categoryId; ?>" 
-                                                    role="tabpanel">
-                                                    <hr class="divider">
-                                                    <div class="form-group">
-                                                        <div id="skills" class="d-flex flex-wrap">
-                                                            <?php foreach ($skills as $skill): ?>
-                                                                <div class="form-check d-flex align-items-center me-5">
-                                                                    <input class="form-check-input custom-checkbox fs-5" 
-                                                                        type="checkbox" 
-                                                                        id="skill_<?php echo $skill['id']; ?>" 
-                                                                        name="skills[]" 
-                                                                        value="<?php echo $skill['id']; ?>">
-                                                                    <label class="form-check-label ms-2 pt-1" 
-                                                                        for="skill_<?php echo $skill['id']; ?>">
-                                                                        <?php echo htmlspecialchars($skill['skill']); ?>
-                                                                    </label>
-                                                                </div>
-                                                            <?php endforeach; ?>
+                                            <!-- Skills Container -->
+                                            <div id="skillsContainer" class="mt-4">
+                                                <?php foreach ($skills_by_category as $category => $skills): ?>
+                                                    <div class="skill-group" data-category="<?php echo htmlspecialchars($category); ?>" style="display: none;">
+                                                        <div class="form-group">
+                                                            <div class="d-flex flex-wrap gap-3">
+                                                                <?php foreach ($skills as $skill): ?>
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input custom-checkbox" 
+                                                                            type="checkbox" 
+                                                                            id="skill_<?php echo $skill['id']; ?>" 
+                                                                            name="skills[]" 
+                                                                            value="<?php echo $skill['id']; ?>">
+                                                                        <label class="form-check-label" for="skill_<?php echo $skill['id']; ?>">
+                                                                            <?php echo htmlspecialchars($skill['skill']); ?>
+                                                                        </label>
+                                                                    </div>
+                                                                <?php endforeach; ?>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            <?php 
-                                                $first = false;
-                                            endforeach; 
-                                            ?>
-                                        </div>
+                                                <?php endforeach; ?>
+                                            </div>
+
+                                            <div class="mt-3">
+                                                <button type="submit" class="btn btn-dark-green">
+                                                    <i class="fas fa-floppy-disk text-white me-2"></i>Save
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="mt-3 ms-2 mb-3">
-                                        <button type="submit" class="btn btn-dark-green">
-                                            <i class="fas fa-floppy-disk text-white me-2"></i>Save
-                                        </button>
-                                    </div>
-                                    </form>
                                 </div>
+
                                 <!-- personal information: tab pane -->
                                 <div class="tab-pane slide" id="pills-personal" role="tabpanel" aria-labelledby="pills-personal-tab">
                                     <div class="container pt-4 pb-2 mb-3">

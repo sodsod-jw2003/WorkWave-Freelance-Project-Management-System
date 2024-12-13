@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
 $(document).ready(function() {
     // Load existing job experiences
     loadJobExperiences();
-
+    loadUserSkills();
     function loadJobExperiences() {
         $.ajax({
             url: '../../dist/php/process/proc_get_job_experiences.php',
@@ -586,3 +586,31 @@ document.addEventListener('DOMContentLoaded', function() {
         cityInput.value = city + ', ' + country;
     });
 });
+// Skills category dropdown handler
+document.getElementById('skillCategory').addEventListener('change', function() {
+    const selectedCategory = this.value;
+    const skillGroups = document.querySelectorAll('.skill-group');
+    
+    skillGroups.forEach(group => {
+        if (group.dataset.category === selectedCategory) {
+            group.style.display = 'block';
+        } else {
+            group.style.display = 'none';
+        }
+    });
+});
+
+function loadUserSkills() {
+    $.ajax({
+        url: '../../dist/php/process/proc_get_user_skills.php',
+        type: 'GET',
+        success: function(response) {
+            const userSkills = JSON.parse(response);
+            console.log('User Skills:', userSkills);
+            // Check corresponding checkboxes
+            userSkills.forEach(skill => {
+                $(`#skill_${skill.skill_id}`).prop('checked', true);
+            });
+        }
+    });
+}
