@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2024 at 12:08 AM
+-- Generation Time: Dec 13, 2024 at 09:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -212,6 +212,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_profile_picture` (IN
 		users.id = p_user_id;
 END$$
 
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_capitalize_each_word` (`input` TEXT) RETURNS TEXT CHARSET utf8mb4 COLLATE utf8mb4_general_ci  BEGIN
+    DECLARE output TEXT;
+    DECLARE i INT DEFAULT 1;
+
+    SET output = LOWER(input);
+
+    WHILE i <= CHAR_LENGTH(output) DO
+        IF i = 1 OR SUBSTRING(output, i - 1, 1) = ' ' THEN
+            SET output = INSERT(output, i, 1, UPPER(SUBSTRING(output, i, 1)));
+        END IF;
+        SET i = i + 1;
+    END WHILE;
+
+    RETURN output;
+END$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -245,9 +264,9 @@ INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_catego
 (40, 31, 'Banana', 20, 'adaa', 1, 9, 11, '2024-12-09 23:52:52', '2024-12-10 11:12:23'),
 (47, 32, 'test hiring', 21, 'hirrrr', 2, 10, 10, '2024-12-11 10:52:31', '2024-12-11 10:54:29'),
 (50, 32, 'Test audit', 15, 'test', 2, 10, 10, '2024-12-11 13:07:20', '2024-12-11 13:50:06'),
-(52, 32, 'Capitalize test', 9, 'aaa', 2, 10, 10, '2024-12-11 13:43:47', '2024-12-11 13:49:21'),
 (53, 41, 'Project alpha', 15, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 16:17:03', '2024-12-12 16:45:59'),
-(54, 41, 'Baby ikaw lang talaga', 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 19:32:27', '2024-12-12 20:50:11');
+(54, 41, 'Baby ikaw lang talaga', 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 19:32:27', '2024-12-12 20:50:11'),
+(55, 32, 'Test Capitalize', 15, 'aaa', 1, 10, 10, '2024-12-13 06:27:29', '2024-12-13 06:27:29');
 
 --
 -- Triggers `client_projects`
@@ -305,19 +324,13 @@ $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_capitalize_project_title_before_insert` BEFORE INSERT ON `client_projects` FOR EACH ROW BEGIN
-    SET NEW.project_title = CONCAT(
-        UPPER(LEFT(NEW.project_title, 1)),
-        LOWER(SUBSTRING(NEW.project_title, 2))
-    );
+    SET NEW.project_title = f_capitalize_each_word(NEW.project_title);
 END
 $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_capitalize_project_title_before_update` BEFORE UPDATE ON `client_projects` FOR EACH ROW BEGIN
-    SET NEW.project_title = CONCAT(
-        UPPER(LEFT(NEW.project_title, 1)),
-        LOWER(SUBSTRING(NEW.project_title, 2))
-    );
+    SET NEW.project_title = f_capitalize_each_word(NEW.project_title);
 END
 $$
 DELIMITER ;
@@ -366,7 +379,9 @@ INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`
 (13, 54, 41, 'INSERT', '2024-12-12 19:32:27', NULL, 'Baby ikaw lang talaga', NULL, 27, NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, 5, NULL, 10),
 (14, 54, 41, 'UPDATE', '2024-12-12 19:32:49', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
 (15, 54, 41, 'UPDATE', '2024-12-12 19:32:53', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
-(16, 54, 41, 'UPDATE', '2024-12-12 20:50:11', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10);
+(16, 54, 41, 'UPDATE', '2024-12-12 20:50:11', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
+(17, 52, 32, 'DELETE', '2024-12-13 06:27:08', 'Capitalize test', NULL, 9, NULL, 'aaa', NULL, 10, NULL, 10, NULL),
+(18, 55, 32, 'INSERT', '2024-12-13 06:27:29', NULL, 'Test Capitalize', NULL, 15, NULL, 'aaa', NULL, 10, NULL, 10);
 
 -- --------------------------------------------------------
 
@@ -416,8 +431,6 @@ INSERT INTO `freelancer_applications` (`id`, `project_id`, `user_id`, `applicati
 (16, 25, 35, 'asdas', 'https://github.com/', 2, '2024-12-06 19:31:45', '2024-12-09 12:13:47', '2024-12-10 13:32:02'),
 (18, 28, 35, 'fd', '', 1, '2024-12-06 19:41:32', '2024-12-09 12:13:47', '2024-12-10 11:06:34'),
 (66, 40, 35, 'bannanananana', 'https://www.merriam-webster.com/dictionary/proposal', 1, '2024-12-11 16:19:46', '2024-12-11 08:19:46', '2024-12-11 08:19:46'),
-(78, 47, 35, 'kate apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 18:53:28', '2024-12-11 10:53:28', '2024-12-11 10:54:39'),
-(79, 47, 37, 'ronald apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 18:54:01', '2024-12-11 10:54:01', '2024-12-11 10:54:29'),
 (82, 50, 35, 'apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 21:49:53', '2024-12-11 13:49:53', '2024-12-11 13:50:06'),
 (83, 53, 42, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'https://www.google.com/', 2, '2024-12-13 00:19:32', '2024-12-12 16:19:32', '2024-12-12 16:45:59'),
 (84, 54, 42, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'https://www.google.com/', 2, '2024-12-13 03:34:07', '2024-12-12 19:34:07', '2024-12-12 20:50:11');
@@ -433,6 +446,143 @@ CREATE TRIGGER `tr_after_application_status_update` AFTER UPDATE ON `freelancer_
  END IF
 $$
 DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_freelancer_applications_delete` BEFORE DELETE ON `freelancer_applications` FOR EACH ROW INSERT INTO freelancer_applications_audit (
+        application_id,
+        project_id,
+        user_id,
+        old_application_details,
+        new_application_details,
+        old_portfolio_url,
+        new_portfolio_url,
+        old_application_status_id,
+        new_application_status_id,
+        old_application_date,
+        new_application_date,
+        action_timestamp,
+        action_type
+    )
+    VALUES (
+        OLD.id,
+        OLD.project_id,
+        OLD.user_id,
+        OLD.application_details,
+        NULL,
+        OLD.portfolio_url,
+        NULL,
+        OLD.application_status_id,
+        NULL,
+        OLD.application_date,
+        NULL,
+        NOW(), 
+        'DELETE'
+    )
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_freelancer_applications_insert` AFTER INSERT ON `freelancer_applications` FOR EACH ROW BEGIN
+    INSERT INTO freelancer_applications_audit (
+        application_id,
+        project_id,
+        user_id,
+        old_application_details,
+        new_application_details,
+        old_portfolio_url,
+        new_portfolio_url,
+        old_application_status_id,
+        new_application_status_id,
+        old_application_date,
+        new_application_date,
+        action_timestamp,
+        action_type
+    )
+    VALUES (
+        NEW.id,
+        NEW.project_id,
+        NEW.user_id,
+        NULL, 
+        NEW.application_details,
+        NULL,
+        NEW.portfolio_url,
+        NULL,
+        NEW.application_status_id,
+        NULL,
+        NEW.application_date,
+        NOW(),
+        'INSERT'
+    );
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_freelancer_applications_update` AFTER UPDATE ON `freelancer_applications` FOR EACH ROW BEGIN
+    INSERT INTO freelancer_applications_audit (
+        application_id,
+        project_id,
+        user_id,
+        old_application_details,
+        new_application_details,
+        old_portfolio_url,
+        new_portfolio_url,
+        old_application_status_id,
+        new_application_status_id,
+        old_application_date,
+        new_application_date,
+        action_timestamp,
+        action_type
+    )
+    VALUES (
+        OLD.id,
+        NEW.project_id,
+        NEW.user_id,
+        OLD.application_details,
+        NEW.application_details,
+        OLD.portfolio_url,
+        NEW.portfolio_url,
+        OLD.application_status_id,
+        NEW.application_status_id,
+        OLD.application_date,
+        NEW.application_date,
+        NOW(),
+        'UPDATE'
+    );
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_applications_audit`
+--
+
+CREATE TABLE `freelancer_applications_audit` (
+  `id` int(11) NOT NULL,
+  `application_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `old_application_details` text DEFAULT NULL,
+  `new_application_details` text DEFAULT NULL,
+  `old_portfolio_url` varchar(255) DEFAULT NULL,
+  `new_portfolio_url` varchar(255) DEFAULT NULL,
+  `old_application_status_id` int(11) DEFAULT NULL,
+  `new_application_status_id` int(11) DEFAULT NULL,
+  `old_application_date` datetime DEFAULT NULL,
+  `new_application_date` datetime DEFAULT NULL,
+  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_applications_audit`
+--
+
+INSERT INTO `freelancer_applications_audit` (`id`, `application_id`, `project_id`, `user_id`, `old_application_details`, `new_application_details`, `old_portfolio_url`, `new_portfolio_url`, `old_application_status_id`, `new_application_status_id`, `old_application_date`, `new_application_date`, `action_timestamp`, `action_type`) VALUES
+(1, 89, 40, 43, NULL, 'sample ', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 1, NULL, '2024-12-13 16:45:55', '2024-12-13 08:45:55', 'INSERT'),
+(2, 89, 40, 43, 'sample ', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 1, NULL, '2024-12-13 16:45:55', NULL, '2024-12-13 08:46:15', 'DELETE'),
+(3, 90, 55, 43, NULL, 'sample again', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 1, NULL, '2024-12-13 16:46:53', '2024-12-13 08:46:53', 'INSERT'),
+(4, 90, 55, 43, 'sample again', 'sample again', 'https://www.merriam-webster.com/dictionary/proposal', 'https://www.merriam-webster.com/dictionary/proposal', 1, 3, '2024-12-13 16:46:53', '2024-12-13 16:46:53', '2024-12-13 08:47:21', 'UPDATE'),
+(5, 90, 55, 43, 'sample again', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 3, NULL, '2024-12-13 16:46:53', NULL, '2024-12-13 08:49:36', 'DELETE');
 
 -- --------------------------------------------------------
 
@@ -478,8 +628,8 @@ INSERT INTO `freelancer_connects` (`id`, `user_id`, `connects`, `created_at`, `u
 (1, 30, 20, '2024-12-09 12:13:10', '2024-12-10 11:58:50'),
 (4, 35, 11, '2024-12-09 12:13:10', '2024-12-11 13:49:53'),
 (5, 37, 70, '2024-12-10 14:26:07', '2024-12-11 10:54:01'),
-(7, 39, 100, '2024-12-11 13:21:56', '2024-12-11 13:21:56'),
-(8, 42, 90, '2024-12-12 16:18:26', '2024-12-12 19:34:07');
+(8, 42, 90, '2024-12-12 16:18:26', '2024-12-12 19:34:07'),
+(9, 43, 90, '2024-12-13 06:40:37', '2024-12-13 08:46:53');
 
 -- --------------------------------------------------------
 
@@ -539,8 +689,8 @@ INSERT INTO `freelancer_merits` (`id`, `user_id`, `merits`, `created_at`, `updat
 (1, 30, 0, '2024-12-09 12:11:05', '2024-12-09 12:11:21'),
 (2, 35, 0, '2024-12-09 12:11:05', '2024-12-09 12:11:21'),
 (3, 37, 0, '2024-12-10 14:26:07', '2024-12-10 14:26:07'),
-(5, 39, 0, '2024-12-11 13:21:56', '2024-12-11 13:21:56'),
-(6, 42, 0, '2024-12-12 16:18:26', '2024-12-12 16:18:26');
+(6, 42, 0, '2024-12-12 16:18:26', '2024-12-12 16:18:26'),
+(7, 43, 0, '2024-12-13 06:40:37', '2024-12-13 06:40:37');
 
 -- --------------------------------------------------------
 
@@ -826,20 +976,49 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
 (30, 'Freelance Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910708', 'Filipino', 'Tagalog', 2, '../../dist/php/uploads/profile_pictures/675246781cbb9_IMG_20230104_162006.png', 3, '$2y$10$Q3m0sXMrqggmcrhuC12vIOF.6X3JBBgrD0P/83W02T67CyUwneq12', NULL, '2024-12-10 20:07:53', NULL, '2024-12-10 22:43:21', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-10 14:43:21'),
 (31, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'American', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/67578ddc5763e_vlcsnap-2024-03-24-13h58m13s661.png', 1, '$2y$10$vHM7B/FJH.ob3aWWSVs9Sup1AWms7CAZne0HxsmAiQCbSxfnRjFZi', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-10 11:12:10'),
-(32, 'Kate', 'Jensen', '2003-07-10', 2, 'Antipolo, Rizal, Philippines', 'ronaldsullano12345@gmail.com', '9515910702', 'Thai', 'Guaranir', 1, '../../dist/php/uploads/profile_pictures/6752d8cfd48d2_received_364139713153077.jpeg', 3, '$2y$10$sTftvqLPrrJnugSToi/2Ee7qHUqAU26S6RWhgIg5Rvari9KdxdAGa', NULL, NULL, NULL, '2024-12-11 20:27:53', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-11 12:27:53'),
+(32, 'Kate', 'Jensen', '2003-07-10', 2, 'Antipolo, Rizal, Philippines', 'ronaldsullano12345@gmail.com', '9515910702', 'Thai', 'Guaranir', 1, '../../dist/php/uploads/profile_pictures/6752d8cfd48d2_received_364139713153077.jpeg', 3, '$2y$10$sTftvqLPrrJnugSToi/2Ee7qHUqAU26S6RWhgIg5Rvari9KdxdAGa', NULL, NULL, NULL, '2024-12-13 16:47:07', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-13 08:47:07'),
 (35, 'Freelance Kate', 'Jensen', '2003-07-03', 2, 'Angeles, Pampanga, Philippines', 'ronaldsullano6666@gmail.com', '9515120708', 'Filipino', 'Tagalog', 2, '../../dist/php/uploads/profile_pictures/6752e0aaed0bc_received_364139713153077.jpeg', 1, '$2y$10$I3mN3hppEF20cswF8ty1L.euzn1caw0ZyBSahmbfINVIRaCAChHbe', NULL, NULL, NULL, '2024-12-11 21:49:02', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-11 13:49:02'),
 (37, 'Ronald', 'Sullano', '2003-06-10', 1, 'Angeles, Pampanga, Philippines', 'ronaldsullano76@gmail.com', '', '', '', 2, '', NULL, '$2y$10$J0HgpBTEQodobO7/uuhzvuLJaNeFuGrhrsQZlAq1ZG2sk4inX2/aW', NULL, NULL, NULL, '2024-12-11 17:47:23', NULL, NULL, 1, '2024-12-10 14:26:07', '2024-12-11 09:47:23'),
-(39, 'Pixie', 'Boo', '2003-09-08', 2, 'Angeles, Pampanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 2, '', NULL, '$2y$10$jBRLueeGykPq4DOJjEHMxuNpk2vYQETSCf.rSuzqIgtS8UtM5vow6', NULL, NULL, '$2y$10$zsnZlvGS3BmYVUUXk3WLdu.MQEr6nr0/LIoSJODwxRQ8Z38hOLed6', NULL, NULL, NULL, 1, '2024-12-11 13:21:56', '2024-12-11 13:21:56'),
 (41, 'Client jireh', 'Sodsod', '2003-09-07', 1, 'Caloocan City, Metro Manila, Philippines', 'sodsodwalter@gmail.com', '', '', '', 1, '', NULL, '$2y$10$uOyJUlaHc9uRf/9O2vhQK.wMEB1fWY.3WV2YkAWWjSUucef5O34ea', NULL, NULL, NULL, '2024-12-13 05:56:18', NULL, NULL, 1, '2024-12-12 16:16:16', '2024-12-12 21:56:18'),
-(42, 'Freelancer jireh', 'Sodsod', '2003-09-07', 1, 'Bayag, Apayao, Philippines', 'jirehwaltersodsod@gmail.com', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675b24b0f3ef2_20240812_123813_0004.png', NULL, '$2y$10$BuMI/.SWVBG8yWdyCaL.Lu1nfNsj2TIJAg3P.jLpldiyrNxf.PqsC', NULL, NULL, NULL, '2024-12-13 05:48:51', NULL, NULL, 1, '2024-12-12 16:18:26', '2024-12-12 21:48:51');
+(42, 'Freelancer jireh', 'Sodsod', '2003-09-07', 1, 'Bayag, Apayao, Philippines', 'jirehwaltersodsod@gmail.com', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675b24b0f3ef2_20240812_123813_0004.png', NULL, '$2y$10$BuMI/.SWVBG8yWdyCaL.Lu1nfNsj2TIJAg3P.jLpldiyrNxf.PqsC', NULL, NULL, NULL, '2024-12-13 05:48:51', NULL, NULL, 1, '2024-12-12 16:18:26', '2024-12-12 21:48:51'),
+(43, 'Jensen', 'Kate', '2003-08-11', 2, 'Zamboanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 2, '', NULL, '$2y$10$9yL8y2ni1Lw4JYawKGO9JO5bXPDh792IH5KiAwdttn1FTegY9GsYe', NULL, NULL, NULL, '2024-12-13 14:41:54', NULL, NULL, 1, '2024-12-13 06:40:37', '2024-12-13 06:42:37');
 
 --
 -- Triggers `users`
 --
 DELIMITER $$
-CREATE TRIGGER `tr_capitalize_names_before_insert` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
-    SET NEW.first_name = CONCAT(UPPER(LEFT(NEW.first_name, 1)), LOWER(SUBSTRING(NEW.first_name, 2)));
-    SET NEW.last_name = CONCAT(UPPER(LEFT(NEW.last_name, 1)), LOWER(SUBSTRING(NEW.last_name, 2)));
+CREATE TRIGGER `tr_capitalize_first_name_before_insert` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
+    SET NEW.first_name = CONCAT(
+        UPPER(LEFT(NEW.first_name, 1)),
+        LOWER(SUBSTRING(NEW.first_name, 2))
+    );
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_capitalize_first_name_before_update` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
+    SET NEW.first_name = CONCAT(
+        UPPER(LEFT(NEW.first_name, 1)),
+        LOWER(SUBSTRING(NEW.first_name, 2))
+    );
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_capitalize_last_name_before_insert` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
+    SET NEW.last_name = CONCAT(
+        UPPER(LEFT(NEW.last_name, 1)),
+        LOWER(SUBSTRING(NEW.last_name, 2))
+    );
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_capitalize_last_name_before_update` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
+    SET NEW.last_name = CONCAT(
+        UPPER(LEFT(NEW.last_name, 1)),
+        LOWER(SUBSTRING(NEW.last_name, 2))
+    );
 END
 $$
 DELIMITER ;
@@ -1328,6 +1507,12 @@ ALTER TABLE `freelancer_applications`
   ADD KEY `freelancer_applications_ibfk_3` (`application_status_id`);
 
 --
+-- Indexes for table `freelancer_applications_audit`
+--
+ALTER TABLE `freelancer_applications_audit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `freelancer_application_status`
 --
 ALTER TABLE `freelancer_application_status`
@@ -1427,13 +1612,13 @@ ALTER TABLE `users_status`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `client_project_audit`
 --
 ALTER TABLE `client_project_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `client_project_status`
@@ -1445,7 +1630,13 @@ ALTER TABLE `client_project_status`
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+
+--
+-- AUTO_INCREMENT for table `freelancer_applications_audit`
+--
+ALTER TABLE `freelancer_applications_audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `freelancer_application_status`
@@ -1457,7 +1648,7 @@ ALTER TABLE `freelancer_application_status`
 -- AUTO_INCREMENT for table `freelancer_connects`
 --
 ALTER TABLE `freelancer_connects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `freelancer_experiences`
@@ -1469,7 +1660,7 @@ ALTER TABLE `freelancer_experiences`
 -- AUTO_INCREMENT for table `freelancer_merits`
 --
 ALTER TABLE `freelancer_merits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `freelancer_skills`
@@ -1499,7 +1690,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `users_gender`
@@ -1594,6 +1785,11 @@ SET deactivation_duration = NULL,
     status_id = '1'
 WHERE deactivation_duration IS NOT NULL
   AND deactivation_duration <= NOW()$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `e_delete_rejected_applications` ON SCHEDULE EVERY 1 WEEK STARTS '2024-12-13 15:34:39' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    DELETE FROM freelancer_applications
+    WHERE application_status_id = 3;
+END$$
 
 DELIMITER ;
 COMMIT;
