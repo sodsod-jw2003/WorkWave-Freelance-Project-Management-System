@@ -11,26 +11,35 @@ include ('header.php');
 
 $freelancer_id = $_GET['id'];
 
-// Query to get application, user and project details
-// $query = "SELECT * FROM v_applications
-//               JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
-//               JOIN v_project_details ON v_applications_ids.project_id = v_project_details.id
-//           WHERE v_applications.id = ?";
-// $stmt = $mysqli->prepare($query);
-// $stmt->bind_param("i", $application_id);
-// $stmt->execute();
-// $result = $stmt->get_result();
-// $application = $result->fetch_assoc();
+// Query for freelancer details
+$details_query = "SELECT * FROM v_user_profile 
+                 JOIN v_freelancer_connects_and_merits ON v_user_profile.id = v_freelancer_connects_and_merits.id
+                 WHERE v_user_profile.id = ?";
+$stmt = $mysqli->prepare($details_query);
+$stmt->bind_param("i", $freelancer_id);
+$stmt->execute();
+$freelancer = $stmt->get_result()->fetch_assoc();
 
-// $query = "SELECT * FROM v_applications
-//                 JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
-//                 JOIN v_user_profile ON v_applications_ids.user_id = v_user_profile.id
-//           WHERE v_applications.id = ?";
-// $stmt = $mysqli->prepare($query);
-// $stmt->bind_param("i", $application_id);
-// $stmt->execute();
-// $result = $stmt->get_result();
-// $applyinguser = $result->fetch_assoc();
+// Query for job experience
+$experience_query = "SELECT * FROM freelancer_experiences 
+                    WHERE user_id = ? 
+                    ORDER BY duration DESC";
+$stmt = $mysqli->prepare($experience_query);
+$stmt->bind_param("i", $freelancer_id);
+$stmt->execute();
+$experiences = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Query for project history
+$projects_query = "SELECT * FROM v_applications
+                  JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
+                  JOIN v_project_details ON v_applications_ids.project_id = v_project_details.id
+                  JOIN v_user_profile ON v_project_details.project_owner = v_user_profile.id
+                  WHERE v_applications_ids.user_id = ? 
+                  ORDER BY v_applications.created_at DESC";
+$stmt = $mysqli->prepare($projects_query);
+$stmt->bind_param("i", $freelancer_id);
+$stmt->execute();
+$projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -63,15 +72,15 @@ $freelancer_id = $_GET['id'];
             <div class="row mt-4 d-flex align-items-center">
                 <!-- profile title -->
                 <div class="col-12 col-md-6">
-                    <h2 class="text-start">(dynamic name)</h2>
+                    <h2 class="text-start"><?php echo htmlspecialchars($freelancer['first_name'] . ' ' . $freelancer['last_name']); ?></h2>
                 </div>
                 <!-- breadcrumb navigation -->
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="dashboard.php"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="applications.php">All Freelancers</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">(dynamic name) </li>
+                            <li class="breadcrumb-item"><a href="freelancers.php">All Freelancers</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($freelancer['first_name'] . ' ' . $freelancer['last_name']); ?></li>
                         </ol>
                     </nav>
                 </div>
@@ -84,11 +93,11 @@ $freelancer_id = $_GET['id'];
                     <div class="card card-primary card-outline border-top-accent shadow border-0 mb-4 position-relative">
                         <div class="container d-flex justify-content-center mt-5 position-relative">
                             <div class="profile-pic-wrapper">
-                                <img src="<?php echo $user['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                <img src="<?php echo $freelancer['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                             </div>
                         </div>
-                        <div class="container fs-5 text-center mt-3">freelancer name</div>
-                        <div class="container fs-6 text-center text-muted mb-5">job title</div>
+                        <div class="container fs-5 text-center mt-3"><?php echo $freelancer['first_name'] . ' ' . $freelancer['last_name'] ?></div>
+                        <div class="container fs-6 text-center text-muted mb-5"><?php echo $freelancer['job_title'] ?></div>
                     </div>
                     <!-- sidebar: personal information -->
                     <div class="card card-primary card-outline shadow border-0 mb-4">
@@ -104,37 +113,37 @@ $freelancer_id = $_GET['id'];
                             <div class="mb-3">
                                 <span class="fas fa-envelope me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Email</span>
-                                <div class="text-muted small"><?php echo $user['email'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['email'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-phone me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                <div class="text-muted small"><?php echo $user['first_name'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['first_name'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Gender</span>
-                                <div class="text-muted small"><?php echo $user['gender'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['gender'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-location-dot me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Location</span>
-                                <div class="text-muted small"><?php echo $user['city'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['city'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-flag me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo $user['nationality'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['nationality'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>
-                                <div class="text-muted small"><?php echo $user['language'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['language'] ?></div>
                             </div>
                         </div>
                     </div>                        
@@ -161,70 +170,83 @@ $freelancer_id = $_GET['id'];
                             <!-- tab content -->
                             <div class="tab-content m-2" id="pills-tabContent">
                                 <!-- project history: tab pane -->
+                            <!-- project history: tab pane -->
                                 <div class="tab-pane slide show active" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">
-                                    <!-- dynamic project card -->
-                                    <div class="card my-4 shadow-sm bg-light border rounded-3">
-                                        <div class="card-body">
-                                            <!-- title and cons -->
-                                            <div class="col-12 col d-flex justify-content-between mb-2">
-                                                <div class="col-md-6 pt-2 d-flex bg- align-items-center">
-                                                    <a href="project_application.php?id=" 
-                                                    class="text-green-40 fw-semibold ps-2 fs-3">
-                                                        proj title
-                                                    </a>
+                                    <?php foreach ($projects as $project): ?>
+                                        <!-- dynamic project card -->
+                                        <div class="card my-4 shadow-sm bg-light border rounded-3">
+                                            <div class="card-body">
+                                                <!-- title and cons -->
+                                                <div class="col-12 col d-flex justify-content-between mb-2">
+                                                    <div class="col-md-6 pt-2 d-flex bg- align-items-center">
+                                                        <div
+                                                        class="text-green-40 fw-semibold ps-2 fs-3">
+                                                            <?php echo htmlspecialchars($project['project_title']); ?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 d-flex align-items-center justify-content-end pe-2">
+                                                        <span class="">
+                                                            <span class="text-muted">Worth:</span>
+                                                            <span class="fw-semibold text-green-40"><?php echo htmlspecialchars($project['project_merit_worth']); ?></span>
+                                                            <span class="fw-semibold text-green-40">Merits</span>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6 d-flex align-items-center justify-content-end pe-2">
-                                                    <span class="">
-                                                        <span class="text-muted">Worth:</span>
-                                                        <span class="fw-semibold text-green-40"></span>
-                                                        <span class="fw-semibold text-green-40">Merits</span>
+                                                <hr class="divider mx-2">
+                                                <!-- project category -->
+                                                <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
+                                                    <span class="d-flex align-items-center p-2 rounded-3 text-green-40">
+                                                        <span class="fas fa-diagram-project fs-5"></span>
+                                                        <span class="px-2 fs-5 fw-semibold"><?php echo htmlspecialchars($project['project_category']); ?></span>
                                                     </span>
                                                 </div>
-                                            </div>
-                                            <hr class="divider mx-2">
-                                            <!-- project category -->
-                                            <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
-                                                <span class="d-flex align-items-center p-2 rounded-3 text-green-40">
-                                                    <span class="fas fa-diagram-project fs-5"></span>
-                                                    <span class="px-2 fs-5 fw-semibold">proj categ</span>
-                                                </span>
-                                            </div>
-                                            <!-- project description -->
-                                            <div class="col-12 col d-flex align-items-center mt-2">
-                                                <div class="px-2 text-muted small text-justify">
-                                                    description
+                                                <!-- project description -->
+                                                <div class="col-12 col d-flex align-items-center mt-2">
+                                                    <div class="px-2 text-muted small text-justify">
+                                                        <?php 
+                                                        $description = htmlspecialchars($project['project_description']);
+                                                        echo strlen($description) > 20 ? substr($description, 0, 20) . '...' : $description;
+                                                        ?>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <hr class="divider mx-2 mt-3">
-                                            <!-- client name and posted time -->
-                                            <div class="col-12 col d-flex align-items-center px-2 pt-0 mt-0">
-                                                <div class="col-md-6 d-flex bg- align-items-center">
-                                                    <span>
-                                                        <span class="text-muted me-1">Posted by:</span>
-                                                        <span class="fw-semibold text-green-40">client name</span>
-                                                    </span>
-                                                </div>
-                                                <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                                    <span class="text-muted small">time posted</span>
+                                                <hr class="divider mx-2 mt-3">
+                                                <!-- client name and posted time -->
+                                                <div class="col-12 col d-flex align-items-center px-2 pt-0 mt-0">
+                                                    <div class="col-md-6 d-flex bg- align-items-center">
+                                                        <span>
+                                                            <span class="text-muted me-1">Posted by:</span>
+                                                            <span class="fw-semibold text-green-40">
+                                                                <?php 
+                                                                    echo htmlspecialchars($project['first_name'] . ' ' . $project['last_name']); 
+                                                                ?>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                                        <span class="text-muted small">
+                                                            <?php 
+                                                                echo htmlspecialchars(date('M j, Y', strtotime($project['created_at'])));
+                                                            ?>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /dynamic project card -->
+                                    <?php endforeach; ?>
                                 </div>
                                 <!-- /project history: tab pane -->
                                 <!-- job experience: tab pane -->
                                 <div class="tab-pane slide show" id="pills-experience" role="tabpanel" aria-labelledby="pills-experience-tab">
-                                    <!-- dynamic experience card -->
-                                    <div class="card my-4 shadow-sm bg-light border rounded-3">
-                                        <div class="card-body p-4">
-                                            <div class="fs-3 text-green-40 fw-semibold">job title</div>
-                                            <hr class="divider">
-                                            <div class="fs-5 fs-semibold">company name</div>
-                                            <div class="text-muted small">duration</div>
+                                    <?php foreach ($experiences as $experience): ?>
+                                        <div class="card my-4 shadow-sm bg-light border rounded-3">
+                                            <div class="card-body p-4">
+                                                <div class="fs-3 text-green-40 fw-semibold"><?php echo htmlspecialchars($experience['job_title']); ?></div>
+                                                <hr class="divider">
+                                                <div class="fs-5 fs-semibold"><?php echo htmlspecialchars($experience['company_name']); ?></div>
+                                                <div class="text-muted small"><?php echo htmlspecialchars($experience['duration']); ?></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- /dynamic experience card -->
+                                    <?php endforeach; ?>
                                 </div>
                                 <!-- /job experience: tab pane -->
                             </div>

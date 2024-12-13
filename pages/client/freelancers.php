@@ -10,9 +10,13 @@ include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
 //freelancers query
-$freelancers_query = "SELECT * FROM v_accepted_freelancers
-                      WHERE project_owner = ?";
-
+$freelancers_query = "SELECT * FROM v_applications
+                      JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
+                      LEFT JOIN v_project_details ON v_project_details.id = v_applications_ids.project_id
+                      LEFT JOIN v_user_profile ON v_user_profile.id = v_applications_ids.user_id
+                      LEFT JOIN v_freelancer_connects_and_merits ON v_applications_ids.user_id = v_freelancer_connects_and_merits.id
+                      WHERE v_project_details.project_owner = ? AND v_applications.status = 'accepted'";
+                     
 $stmt = $mysqli->prepare($freelancers_query);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
@@ -42,7 +46,8 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- SWAL -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="../../dist/js/applications.js"></script>
+    <!-- freelancer.js JS -->
+    <script src="../../dist/js/freelancers.js"></script>
 
 </head>
 <body>
@@ -74,49 +79,57 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                 <h3>Your Freelancers</h3>
                             </div>
                             <div class="row px-4">
-                                <!-- freelancer card -->
-                                <div class="col-12 p-4 rounded shadow-sm border mb-3 bg-light">
-                                    <div class="col-12 d-flex">
-                                        <div class="col-md-1">
-                                            <img src="" 
-                                                alt="" 
-                                                class="rounded-circle" 
-                                                style="width: 80px; height: 80px;"
-                                                onerror="this.onerror=null; this.src='../../img/chillguy.jpg';">
-                                        </div>
-                                        <div class="col-md-4 ">
-                                            <h6 class="text-muted">Job Title</h6>
-                                            <h5 class="fw-semibold">Freelancer Name</h5>
-                                            <h6 class="small text-muted">Project Working on</h6>
-                                        </div>
-                                        <div class="col-md-3 d-flex flex-column ">
-                                            <p class="mb-2 text-muted d-flex align-items-center">
-                                                <i class="fas fa-star me-2"></i>
-                                                <span class="small">__ Merits</span>
-                                            </p>
-                                            <p class="mb-2 text-muted d-flex align-items-center">
-                                                <i class="fas fa-envelope me-2"></i>
-                                                <span class="small">test@gmail.com</span>
-                                            </p>
-                                            <p class="mb-2 text-muted d-flex align-items-center">
-                                                <i class="fas fa-phone me-2"></i>
-                                                <span class="small">xxxx-xxx-xxxx</span>
-                                            </p>
-                                        </div>
-                                        <div class="col-md-4 d-flex justify-content-end align-items-center" bg-danger"">
-                                             <!-- change to view_freelancer -->
-                                            <a href="view_freelancer.php?id="
-                                                class="btn btn-outline-secondary me-2">
-                                                View Freelancer
-                                            </a>
-                                            <button class="btn btn-danger remove-btn"
-                                                data-freelancer-id="#">
-                                                Terminate
-                                            </button>
-                                        </div>
+                                <?php if (empty($freelancers)): ?>
+                                    <div class="col-12 text-center py-4">
+                                        <h5 class="text-muted">No freelancers found</h5>
                                     </div>
-                                </div>
-                                <!-- /freelancer card -->
+                                <?php else: ?>
+                                    <?php foreach ($freelancers as $freelancer): ?>
+                                        <!-- freelancer card -->
+                                        <div class="col-12 p-4 rounded shadow-sm border mb-3 bg-light">
+                                            <div class="col-12 d-flex">
+                                                <div class="col-md-1">
+                                                    <img src="<?php echo !empty($freelancer['profile_picture_url']) ? $freelancer['profile_picture_url'] : '../../img/default-profile.png'; ?>" 
+                                                        alt="<?php echo htmlspecialchars($freelancer['first_name']); ?>'s profile picture" 
+                                                        class="rounded-circle" 
+                                                        style="width: 80px; height: 80px;"
+                                                        onerror="this.onerror=null; this.src='../../img/default-profile.png';">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <h6 class="text-muted"><?php echo htmlspecialchars($freelancer['job_title']); ?></h6>
+                                                    <h5 class="fw-semibold"><?php echo htmlspecialchars($freelancer['first_name'] . ' ' . $freelancer['last_name']); ?></h5>
+                                                    <h6 class="small text-muted"><?php echo htmlspecialchars($freelancer['project_title']); ?></h6>
+                                                </div>
+                                                <div class="col-md-3 d-flex flex-column">
+                                                    <p class="mb-2 text-muted d-flex align-items-center">
+                                                        <i class="fas fa-star me-2"></i>
+                                                        <span class="small"><?php echo htmlspecialchars($freelancer['merits']); ?> Merits</span>
+                                                    </p>
+                                                    <p class="mb-2 text-muted d-flex align-items-center">
+                                                        <i class="fas fa-envelope me-2"></i>
+                                                        <span class="small"><?php echo htmlspecialchars($freelancer['email']); ?></span>
+                                                    </p>
+                                                    <p class="mb-2 text-muted d-flex align-items-center">
+                                                        <i class="fas fa-phone me-2"></i>
+                                                        <span class="small"><?php echo htmlspecialchars($freelancer['mobile_number']); ?></span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-4 d-flex justify-content-end align-items-center">
+                                                    <a href="view_freelancer.php?id=<?php echo $freelancer['user_id']; ?>" 
+                                                        class="btn btn-outline-secondary me-2">
+                                                        View Freelancer
+                                                    </a>
+                                                    <button class="btn btn-danger remove-btn"
+                                                        data-freelancer-id="<?php echo $freelancer['user_id']; ?>"
+                                                        data-project-id="<?php echo $freelancer['project_id']; ?>">
+                                                        Terminate
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /freelancer card -->
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
