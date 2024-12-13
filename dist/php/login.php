@@ -152,6 +152,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </section>
 
     <!-- eye toggle -->
+
+    
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
+    
+    
+    
     <script src="../js/login.js"></script>
 </body>
 </html>

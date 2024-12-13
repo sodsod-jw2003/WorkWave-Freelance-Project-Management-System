@@ -42,6 +42,8 @@ $project = $project_result->fetch_assoc();
 
     <!-- freelancer_profile.js -->
     <script src="../../dist/js/project_details.js" defer></script>
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
 
 </head>
 <body>

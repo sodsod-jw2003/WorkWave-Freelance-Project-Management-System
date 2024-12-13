@@ -29,6 +29,8 @@ include ('header.php');
     <!-- freelancer_profile.js -->
     <script src="../../dist/js/freelancer_profile.js" defer></script>
 
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
 </head>
 <body>
     <!-- modify ko pa to into something more useful like survey as to bakit sha maga leave or take ng break si freelancer

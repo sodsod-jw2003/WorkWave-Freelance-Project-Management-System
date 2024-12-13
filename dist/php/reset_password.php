@@ -43,6 +43,10 @@ if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
 
     <!-- register.js -->
     <script src="../js/register.js" defer></script>
+
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
+    
 </head>
 <body>
     <section class="container-fluid poppins vh-100 p-5 d-flex justify-content-center align-items-center">

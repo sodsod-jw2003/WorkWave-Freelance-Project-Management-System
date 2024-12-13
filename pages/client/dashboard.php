@@ -117,6 +117,9 @@ $category_icons = [
     <!-- dashboard JS -->
     <script src="../../dist/js/client_dashboard.js" defer></script>
 
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
+
 </head>
 <body>
     <section class="container-fluid poppins">
