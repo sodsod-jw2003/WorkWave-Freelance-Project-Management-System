@@ -85,7 +85,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
             <!-- creds and cons -->
             <div class="row mx-0 my-3">
                 <div class="col-10 col-lg-6 d-flex align-items-center mb-3 mb-lg-0">
-                    <h2 class="m-0">Dashboard</h2>
+                    <h2 class="m-0">Freelancer Dashboard</h2>
                 </div>
                 <div class="col-12 col-lg-6 pe-lg-3">
                     <div class="row d-flex justify-content-lg-end g-2">
@@ -122,37 +122,37 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
             <!-- projects, tasks, and clients -->
             <div class="row mx-0 my-3 g-4">
                 <div class="col-12 col-md-4 p-2">
-                    <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                    <a href="projects.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center text-decoration-none">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
-                            <div class="fw-bold fs-2 ps-2">4</div>
-                            <div class="fs-6 ps-2">Your Projects</div>
+                            <div class="fw-bold fs-2 ps-2 text-dark">4</div>
+                            <div class="fs-6 ps-2 text-green-50 fw-semibold">Your Projects</div>
                         </div>
                         <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                             <i class="fas fa-diagram-project fa-4x text-green-50"></i>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-12 col-md-4 p-2">
-                    <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                    <a href="projects_objectives.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center text-decoration-none">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
-                            <div class="fw-bold fs-2 ps-2">13</div>
-                            <div class="fs-6 ps-2">Project Objectives</div>
+                            <div class="fw-bold fs-2 ps-2 text-dark">13</div>
+                            <div class="fs-6 ps-2 text-green-50 fw-semibold">Project Objectives</div>
                         </div>
                         <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                             <i class="fas fa-list-check fa-4x text-green-50"></i>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-12 col-md-4 p-2">
-                    <div class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center">
+                    <a href="clients.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center text-decoration-none">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
-                            <div class="fw-bold fs-2 ps-2">2</div>
-                            <div class="fs-6 ps-2">Clients</div>
+                            <div class="fw-bold fs-2 ps-2 text-dark">2</div>
+                            <div class="fs-6 ps-2 text-green-50 fw-semibold">Clients</div>
                         </div>
                         <div class="col-5 d-flex justify-content-center align-items-center mt-2">
                             <i class="fas fa-user-tie fa-4x text-green-50"></i>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <!-- /projects, tasks, and clients -->

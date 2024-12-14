@@ -98,6 +98,109 @@ $category_icons = [
                     </nav>
                 </div>
             </div>
+            <!-- add project -->
+            <div class="col-12 my-3">
+                <button class="btn btn-dark-green">
+                    <i class="fas fa-plus me-2"></i>New Project
+                </button>
+                <div class="col-12 mt-3">
+                    <form id="addProjectForm" class="needs-validation" novalidate>
+                        <div class="card p-4 pb-3 mb-3 bg-light shadow-sm">
+                            <div class="row">
+                                <div class="col-md-5 mb-1">
+                                    <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
+                                    <input type="text" 
+                                        name="project_title" 
+                                        id="project_title" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                        required>
+                                    <div class="invalid-feedback">Enter a project title.</div>
+                                </div>
+                                <div class="col-md-4 mb-1">
+                                    <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
+                                    <select 
+                                        name="project_category" 
+                                        id="project_category" 
+                                        class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category"
+                                        required>
+                                        <option value="" disabled selected>Select Category</option>
+                                    </select>
+                                    <div class="invalid-feedback">Select a category.</div>
+                                </div>
+                                <div class="col-md-3 mb-1">
+                                    <label for="status" class="text-muted small mb-2 ms-1">Status</label>
+                                    <select 
+                                        name="status" 
+                                        id="status" 
+                                        class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
+                                        required>
+                                        <option value="" disabled selected>Select Status</option>
+                                        <option value="1">Hiring</option>
+                                        <option value="2">In Progress</option>
+                                        <option value="3">Completed</option>
+                                    </select>
+                                    <div class="invalid-feedback">Select a status.</div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-12 mb-1">
+                                    <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
+                                    <textarea 
+                                        name="project_description" 
+                                        id="project_description" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1"
+                                        required></textarea>
+                                    <div class="invalid-feedback">Enter a project description.</div>
+                                </div>
+                            </div>
+                            <!-- newly added project objective -->
+                            <div class="row mt-1">
+                                <div class="col-md-12 mb-1">
+                                    <label for="project_objective" class="text-muted small mb-2 ms-1">Project Objective</label>
+                                    <textarea 
+                                        name="project_objective" 
+                                        id="project_objective" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1"
+                                        required></textarea>
+                                    <div class="invalid-feedback">Enter a project objective.</div>
+                                </div>
+                            </div>
+                            <!-- /newly added project objective -->
+                            <div class="row mt-1">
+                                <div class="col-md-6 mb-1">
+                                    <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
+                                    <input type="number" 
+                                        name="connect_cost" 
+                                        id="connect_cost" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                        min="5"
+                                        max="10" 
+                                        required>
+                                    <div class="invalid-feedback">Enter a connect cost between 5 and 10.</div>
+                                </div>
+                                <div class="col-md-6 mb-1">
+                                    <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
+                                    <input type="number" 
+                                        name="merit_worth" 
+                                        id="merit_worth" 
+                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
+                                        min="10"
+                                        max="50" 
+                                        required>
+                                    <div class="invalid-feedback">Enter a merit worth between 10 and 50.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="container pt-3 mb-3">
+                                    <button type="submit" class="btn btn-dark-green">Save Project</button>
+                                    <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- add project -->
             <!-- projects -->
             <div class="row mt-4">
                 <div class="container px-3">
@@ -135,11 +238,17 @@ $category_icons = [
                                                             <?php echo htmlspecialchars($project['project_category']); ?>
                                                         </span>
                                                     </div>
-                                                    <div class="col-md-6 d-flex justify-content-end pe-0">
+                                                    <div class="col-md-6 d-flex justify-content-end pe-0 ">
                                                         <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" 
-                                                        class="btn btn-outline-secondary me-0">
-                                                            View Project
+                                                            class="btn btn-secondary me-2">
+                                                            <i class="fas fa-eye"></i>
                                                         </a>
+                                                        <button class="btn btn-primary me-2">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -295,7 +295,7 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                             <!-- Category Dropdown -->
                                             <div class="form-group mb-3">
                                                 <label for="skillCategory" class="form-label">Select Skill Category</label>
-                                                <select class="form-select" id="skillCategory">
+                                                <select class="form-select no-outline-green-focus" id="skillCategory">
                                                     <option value="">Select a category</option>
                                                     <?php foreach ($skills_by_category as $category => $skills): ?>
                                                         <option value="<?php echo htmlspecialchars($category); ?>">

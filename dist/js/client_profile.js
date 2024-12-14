@@ -327,6 +327,17 @@ $('#addProject').click(function () {
                     </div>
                 </div>
                 <div class="row mt-1">
+                    <div class="col-md-12 mb-1">
+                        <label for="project_objective" class="text-muted small mb-2 ms-1">Project Objective</label>
+                        <textarea 
+                            name="project_objective" 
+                            id="project_objective" 
+                            class="form-control bg-white-100 no-outline-green-focus border-1"
+                            required></textarea>
+                        <div class="invalid-feedback">Enter a project objective.</div>
+                    </div>
+                </div>
+                <div class="row mt-1">
                     <div class="col-md-6 mb-1">
                         <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
                         <input type="number" 
@@ -490,6 +501,17 @@ $(document).on('click', '.edit-project', function () {
                                 <label class="text-muted small mb-2 ms-1">Project Description</label>
                                 <textarea name="project_description" class="form-control no-outline-green-focus" required>${project.project_description}</textarea>
                                 <div class="invalid-feedback">Provide a project description.</div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-12 mb-1">
+                                <label for="project_objective" class="text-muted small mb-2 ms-1">Project Objective</label>
+                                <textarea 
+                                    name="project_objective" 
+                                    id="project_objective" 
+                                    class="form-control bg-white-100 no-outline-green-focus border-1"
+                                    required></textarea>
+                                <div class="invalid-feedback">Enter a project objective.</div>
                             </div>
                         </div>
                         <div class="row mt-2">

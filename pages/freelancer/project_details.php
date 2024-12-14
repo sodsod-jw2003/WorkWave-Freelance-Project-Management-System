@@ -53,7 +53,7 @@ $project = $project_result->fetch_assoc();
             <div class="row mt-4 align-items-center">
                 <!-- project title -->
                 <div class="col-12 col-md-6">
-                    <h2 class="text-start fw-semibold"><?php echo htmlspecialchars($project['project_title']); ?></h2>
+                    <h2 class="text-start fw-semibold">proj title</h2>
                 </div>
                 <!-- /end project title -->
 
@@ -61,9 +61,9 @@ $project = $project_result->fetch_assoc();
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="dashboard.php"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="profile.php" >Projects</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($project['project_title']); ?></li>
+                            <li class="breadcrumb-item"><a href="dashboard.php">'s Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="projects.php" >Projects</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">proj title</li>
                         </ol>
                     </nav>
                 </div>
@@ -92,8 +92,6 @@ $project = $project_result->fetch_assoc();
                     </div>
                 </div>
                 <!-- /sidebar objective card and freelancer card -->
-
-                <!-- main objective card -->
                 <div class="col-12 col-md-8 col-lg-9 p-3">
                     <div class="card shadow border-0">
                         <div class="card-body">
@@ -112,12 +110,11 @@ $project = $project_result->fetch_assoc();
                             <!-- /project category & description -->
                         </div>
                     </div> 
-                    <!-- file input (client's view of the submission will reflect here) -->
+                    <!-- file input (freelancers submission will reflect here) -->
                     <div class="card shadow border-0 mt-3">
                         .
                     </div>
                 </div>
-                <!-- /main objective card -->
             </div>
             <!-- /objective content -->
         </div>

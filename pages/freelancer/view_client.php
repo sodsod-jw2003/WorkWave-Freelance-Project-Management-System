@@ -72,15 +72,15 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             <div class="row mt-4 d-flex align-items-center">
                 <!-- profile title -->
                 <div class="col-12 col-md-6">
-                    <h2 class="text-start"><?php echo htmlspecialchars($freelancer['first_name'] . ' ' . $freelancer['last_name']); ?></h2>
+                    <h2 class="text-start">Dynamic Client Name</h2>
                 </div>
                 <!-- breadcrumb navigation -->
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="dashboard.php"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="freelancers.php">All Freelancers</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($freelancer['first_name'] . ' ' . $freelancer['last_name']); ?></li>
+                            <li class="breadcrumb-item"><a href="dashboard.php">'s Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="clients.php">All Clients</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">dynamic client name</li>
                         </ol>
                     </nav>
                 </div>
@@ -93,11 +93,12 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     <div class="card card-primary card-outline border-top-accent shadow border-0 mb-4 position-relative">
                         <div class="container d-flex justify-content-center mt-5 position-relative">
                             <div class="profile-pic-wrapper">
-                                <img src="<?php echo $freelancer['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
+                                <!-- client pfp -->
+                                <img src="" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                             </div>
                         </div>
-                        <div class="container fs-5 text-center mt-3"><?php echo $freelancer['first_name'] . ' ' . $freelancer['last_name'] ?></div>
-                        <div class="container fs-6 text-center text-muted mb-5"><?php echo $freelancer['job_title'] ?></div>
+                        <div class="container fs-5 text-center mt-3">client name</div>
+                        <div class="container fs-6 text-center text-muted mb-5">job title</div>
                     </div>
                     <!-- sidebar: personal information -->
                     <div class="card card-primary card-outline shadow border-0 mb-4">
@@ -158,11 +159,6 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="pills-project-tab" data-bs-toggle="pill" data-bs-target="#pills-project" type="button" role="tab" aria-controls="pills-project" aria-selected="true">
                                         Project History
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-experience-tab" data-bs-toggle="pill" data-bs-target="#pills-experience" type="button" role="tab" aria-controls="pills-experience" aria-selected="false">
-                                        Job Experience
                                     </button>
                                 </li>
                             </ul>
@@ -235,20 +231,6 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                     <?php endforeach; ?>
                                 </div>
                                 <!-- /project history: tab pane -->
-                                <!-- job experience: tab pane -->
-                                <div class="tab-pane slide show" id="pills-experience" role="tabpanel" aria-labelledby="pills-experience-tab">
-                                    <?php foreach ($experiences as $experience): ?>
-                                        <div class="card my-4 shadow-sm bg-light border rounded-3">
-                                            <div class="card-body p-4">
-                                                <div class="fs-3 text-green-40 fw-semibold"><?php echo htmlspecialchars($experience['job_title']); ?></div>
-                                                <hr class="divider">
-                                                <div class="fs-5 fs-semibold"><?php echo htmlspecialchars($experience['company_name']); ?></div>
-                                                <div class="text-muted small"><?php echo htmlspecialchars($experience['duration']); ?></div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <!-- /job experience: tab pane -->
                             </div>
                             <!-- /tab content -->
                         </div>
