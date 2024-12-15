@@ -1,6 +1,7 @@
 <?php 
 $mysqli = require ('../../connection.php');
 include ('../../misc/modals.php');
+date_default_timezone_set('Asia/Manila');
 ?>
 
 <!DOCTYPE html>
@@ -20,9 +21,14 @@ include ('../../misc/modals.php');
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
 
+    <!-- header.js -->
+    <script src="../../dist/js/freelancer_header.js" defer></script>
+
     <!-- freelancer_profile.js -->
     <script src="../../dist/js/freelancer_profile.js" defer></script>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header class="container-fluid bg-white poppins shadow-sm sticky-top">
@@ -35,16 +41,17 @@ include ('../../misc/modals.php');
             </a>
 
             <!-- Search Bar -->
-            <span class="ms-auto me-3 w-25">
+            <span class="ms-auto me-3 w-25 position-relative">
                 <div class="input-group me-lg-4 mb-2 mb-lg-0" style="max-width: 600px; flex-grow: 1;">
                     <span class="input-group-text bg-green-10 rounded-start border-0">
                         <i class="fas fa-search text-green-50"></i>
                     </span>
-                    <input type="text" name="search" class="form-control no-outline ps-0 border-0 rounded-end bg-green-10"
-                        placeholder="Search Projects, Skills, or Clients..." aria-label="Search">
+                    <input type="text" name="search" id="headerSearchProjects" class="form-control no-outline ps-0 border-0 rounded-end bg-green-10"
+                        placeholder="Search Projects or Clients..." aria-label="Search" data-bs-toggle="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-end p-2" id="headerSearchResults" style="width: 100%; max-height: 300px; overflow-y: auto;">
+                    </ul>
                 </div>                
             </span>
-
 
             <!-- Right Section: Notifications and Profile -->
             <span class="d-flex align-items-center flex-wrap">
@@ -52,28 +59,68 @@ include ('../../misc/modals.php');
                 <div class="nav-item dropdown me-3">
                     <a href="#" class="nav-link position-relative" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-bell text-green-60 fa-lg"></i>
-                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1 small">1</span>
+                        <?php
+                        // Get unread notifications count
+                        $count_query = "SELECT COUNT(*) as count FROM v_notifications WHERE user_id = ? AND is_read = 0";
+                        $stmt = $mysqli->prepare($count_query);
+                        $stmt->bind_param("i", $_SESSION['user_id']);
+                        $stmt->execute();
+                        $count = $stmt->get_result()->fetch_assoc()['count'];
+                        
+                        if($count > 0): ?>
+                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1 small"><?php echo $count; ?></span>
+                        <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end p-2" style="width: 300px;">
                         <li class="dropdown-header">Notifications</li>
-                        <li>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-comment me-2"></i> New comment on project
-                                <span class="text-muted small d-block">2 min ago</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-list-check me-2"></i> New task assigned
-                                <span class="text-muted small d-block">30 min ago</span>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a href="#" class="dropdown-item text-center">View All</a>
-                        </li>
+                        <?php
+                        // Get notifications
+                        $notif_query = "SELECT * FROM notifications WHERE user_id = ? AND is_read = 0 ORDER BY created_at DESC LIMIT 5";
+                        $stmt = $mysqli->prepare($notif_query);
+                        $stmt->bind_param("i", $_SESSION['user_id']);
+                        $stmt->execute();
+                        $notifications = $stmt->get_result();
+
+                        while($notif = $notifications->fetch_assoc()):
+                            $link = $notif['type'] == 1 ? 
+                                    "project_application.php?id=" . $notif['project_id'] : 
+                                    "project_details.php?id=" . $notif['project_id'];
+                            $time_ago = time_elapsed_string($notif['created_at']);
+                        ?>
+                            <li>
+                            <a href="<?php echo $link; ?>" 
+                                    class="dropdown-item py-2" 
+                                    data-notification-id="<?php echo $notif['id']; ?>">
+                                    <i class="fas fa-bell me-2"></i>
+                                    <span class="text-truncate d-inline-block" style="max-width: 85%;">
+                                        <?php echo htmlspecialchars($notif['message']); ?>
+                                    </span>
+                                    <span class="text-muted small d-block"><?php echo $time_ago; ?></span>
+                                </a>
+                            </li>
+                        <?php endwhile; ?>
                     </ul>
                 </div>
+
+                <?php
+                function time_elapsed_string($datetime) {
+                    $now = new DateTime;
+                    $ago = new DateTime($datetime);
+                    $diff = $now->diff($ago);
+
+                    if ($diff->d > 0) {
+                        return $diff->d . " days ago";
+                    }
+                    if ($diff->h > 0) {
+                        return $diff->h . " hours ago";
+                    }
+                    if ($diff->i > 0) {
+                        return $diff->i . " minutes ago";
+                    }
+                    return "Just now";
+                }
+                ?>
+
 
                 <!-- Profile -->
                 <div class="nav-item dropdown">

@@ -1,3 +1,39 @@
+<?php
+$category_icons = [
+    'Writing' => 'fa-solid fa-pen-nib',
+    'Translation' => 'fa-solid fa-language',
+    'Graphic Design' => 'fa-solid fa-user-pen',
+    'Video and Animation' => 'fa-solid fa-video',
+    'UI/UX Design' => 'fa-brands fa-figma',
+    'Web Development' => 'fa-solid fa-globe',
+    'Mobile Development' => 'fa-solid fa-mobile',
+    'Software Development' => 'fa-solid fa-file-code',
+    'Digital Marketing' => 'fa-solid fa-store',
+    'Sales Support' => 'fa-solid fa-phone',
+    'Advertising' => 'fa-solid fa-phone',
+    'Virtual Assistance' => 'fa-solid fa-headset',
+    'Data Entry' => 'fa-solid fa-database',
+    'Customer Support' => 'fa-solid fa-phone',
+    'Financial Skills' => 'fa-solid fa-coins',
+    'Business Consulting' => 'fa-solid fa-briefcase',
+    'Human Resources' => 'fa-solid fa-users',
+    'IT Support' => 'fa-solid fa-screwdriver-wrench',
+    'Networking' => 'fa-solid fa-network-wired',
+    'DevOps' => 'fa-solid fa-gears',
+    'Engineering' => 'fa-solid fa-helmet-safety',
+    'Architecture' => 'fa-brands fa-unity',
+    'Manufacturing' => 'fa-solid fa-industry',
+    'Coaching & Development' => 'fa-solid fa-notes-medical',
+    'Health & Wellness' => 'fa-solid fa-shield-heart',
+    'Contract & Documentation' => 'fa-solid fa-file-contract',
+    'Compliance & Research' => 'fa-solid fa-book',
+    'Data Processing' => 'fa-solid fa-chart-simple',
+    'Advanced Analytics' => 'fa-solid fa-chart-line',
+    'Game Development Support' => 'fa-solid fa-gamepad',
+    'Monetization & Coaching' => 'fa-solid fa-chalkboard-user',
+];
+?>
+
 <?php if ($projects): ?>
     <?php foreach($projects as $project): ?>
         <!-- project card -->
@@ -30,8 +66,12 @@
                 <!-- project category -->
                 <div class="col-12 col d-flex align-items-center justify-content-between mb-2">
                     <span class="d-flex align-items-center p-2 rounded-3 text-green-40">
-                        <span class="fas fa-diagram-project fs-5"></span>
-                        <span class="px-2 fs-5 fw-semibold"><?php echo htmlspecialchars($project['project_category']); ?></span>
+                        <?php 
+                            $category = htmlspecialchars($project['project_category']);
+                            $icon = $category_icons[$category] ?? 'fa-solid fa-folder';
+                        ?>
+                        <i class="<?php echo $icon; ?> fs-5"></i>
+                        <span class="px-2 fs-5 fw-semibold"><?php echo $category; ?></span>
                     </span>
                     <!-- buttons -->
                     <span class="d-flex align-items-center">

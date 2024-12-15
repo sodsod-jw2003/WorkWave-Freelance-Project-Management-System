@@ -129,3 +129,48 @@ header a {
 .accordion-button:not(.collapsed):hover {
     background-color: var(--green-10);
 }
+
+.dropdown-item {
+    white-space: nowrap;     
+    overflow: hidden;           
+    text-overflow: ellipsis;    
+    display: block;           
+    max-width: 100%;       
+}
+
+.dropdown-item span {
+    display: block;      
+    white-space: normal;    
+    font-size: 0.85rem;         
+    color: #6c757d;       
+}
+
+.timeline {
+    position: relative;
+    padding: 10px 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #198754;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 45px;
+    margin-bottom: 20px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #198754;
+}

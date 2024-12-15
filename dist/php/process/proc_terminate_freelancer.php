@@ -8,9 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['freelancer_id']) && i
     $freelancer_id = $_POST['freelancer_id'];
     $project_id = $_POST['project_id'];
     
-    $query = "UPDATE freelancer_applications 
-              SET application_status_id = 3 
-              WHERE user_id = ? AND project_id = ?";
+    $query = "CALL sp_terminate_freelancer(?, ?)";
               
     $stmt = $mysqli->prepare($query);
     $stmt->bind_param("ii", $freelancer_id, $project_id);

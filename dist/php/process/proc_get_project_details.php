@@ -3,7 +3,7 @@ session_start();
 $mysqli = require '../../../connection.php';
 
 if (isset($_GET['project_id'])) {
-    $query = "SELECT p.*, sc.id as category_id 
+    $query = "SELECT p.*, sc.id as category_id, p.project_objective
           FROM v_project_details p
           LEFT JOIN v_available_skills_category sc 
           ON p.project_category = sc.skills_category 

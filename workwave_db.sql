@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2024 at 09:57 AM
+-- Generation Time: Dec 15, 2024 at 04:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,24 +50,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_application` (IN `p_project_
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50), IN `p_connect_cost` INT(11), IN `p_merit_worth` INT(11))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_objective` TEXT, IN `p_project_status` VARCHAR(50))   BEGIN
     INSERT INTO client_projects (
         user_id,
         project_title,
         project_category_id,
         project_description,
-        project_status_id,
-        project_connect_cost,
-        project_merit_worth
+		project_objective,
+        project_status_id
     )
     VALUES (
         p_user_id,
         p_project_title,
         p_project_category,
         p_project_description,
-        p_project_status,
-        p_connect_cost,
-        p_merit_worth
+		p_project_objective,
+        p_project_status
     );
 	SELECT * FROM v_project_details WHERE id = LAST_INSERT_ID();
 END$$
@@ -102,6 +100,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_user_experience` (IN `p_u
 	DELETE FROM freelancer_experiences WHERE id = p_user_experience_id AND user_id = p_user_id;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_project_comments` (IN `p_project_id` INT(11), IN `p_user_id` INT(11), IN `p_comment` TEXT)   INSERT INTO project_comments (project_id, user_id, comment) VALUES (p_project_id, p_user_id, p_comment)$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_user_skills` (IN `p_user_id` INT(11), IN `P_skill_id` INT(11))   BEGIN
 	INSERT INTO freelancer_skills (user_id, skill_id) VALUES (p_user_id, P_skill_id);
 END$$
@@ -122,6 +122,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_signup_users` (IN `p_first_name`
 	END IF;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_submit_project_file` (IN `p_submission_url` VARCHAR(255), IN `p_submission_status_id` INT(11), IN `p_project_id` INT(11), IN `p_user_id` INT(11))   UPDATE freelancer_project_submissions 
+  SET 
+  submission_url = p_submission_url, 
+  submission_status_id = p_submission_status_id
+  WHERE project_id = p_project_id 
+  AND user_id = p_user_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_terminate_freelancer` (IN `p_user_id` INT(11), IN `p_project_id` INT(11))   UPDATE freelancer_applications 
+              SET application_status_id = 3 
+              WHERE user_id = p_user_id 
+              AND project_id = p_user_id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_activation_token` (IN `p_user_id` INT(11))   BEGIN
 	UPDATE users
 	SET
@@ -136,15 +148,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_application_status` (IN `
     WHERE id = p_application_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_client_projects` (IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_status` VARCHAR(50), IN `p_project_id` INT(11), IN `p_user_id` INT(11), IN `p_connect_cost` INT(11), IN `p_merit_worth` INT(11))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_client_projects` (IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_objective` TEXT, IN `p_project_status` VARCHAR(50), IN `p_project_id` INT(11), IN `p_user_id` INT(11))   BEGIN
     UPDATE client_projects
     SET 
         project_title = p_project_title,
         project_category_id = p_project_category,
         project_description = p_project_description,
-        project_status_id = p_project_status,
-        project_connect_cost = p_connect_cost,
-        project_merit_worth = p_merit_worth
+	    project_objective = p_project_objective,
+        project_status_id = p_project_status
     WHERE 
         id = p_project_id
         AND user_id = p_user_id;
@@ -163,6 +174,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_freelancer_application_st
     SET application_status_id = '2'
     WHERE id = p_application_id;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_freelancer_project_submissions` (IN `p_submission_status_id` INT(11), IN `p_id` INT(11))   UPDATE freelancer_project_submissions SET submission_status_id = p_submission_status_id  WHERE id = p_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_notification` (IN `p_notification_id` INT(11))   UPDATE notifications SET is_read = 1 WHERE id = p_notification_id$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_reset_token` (IN `p_reset_token_hash` VARCHAR(255), IN `p_email` VARCHAR(255))   BEGIN
 	UPDATE users 
@@ -245,9 +260,10 @@ CREATE TABLE `client_projects` (
   `project_title` varchar(255) NOT NULL,
   `project_category_id` int(11) NOT NULL,
   `project_description` text DEFAULT NULL,
+  `project_objective` text DEFAULT NULL,
   `project_status_id` int(11) NOT NULL DEFAULT 1,
-  `project_connect_cost` int(11) DEFAULT NULL,
-  `project_merit_worth` int(11) DEFAULT NULL,
+  `project_connect_cost` int(11) DEFAULT 10,
+  `project_merit_worth` int(11) DEFAULT 10,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -256,17 +272,8 @@ CREATE TABLE `client_projects` (
 -- Dumping data for table `client_projects`
 --
 
-INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_category_id`, `project_description`, `project_status_id`, `project_connect_cost`, `project_merit_worth`, `created_at`, `updated_at`) VALUES
-(25, 31, 'Dev Ops', 1, 'Create something', 2, 10, 25, '2024-12-06 01:25:14', '2024-12-10 13:32:02'),
-(26, 31, 'Game Development', 2, 'DSA\nDA\nSD\nAS\nDAS\nDAS\nD\nsad\nasd', 1, 5, 10, '2024-12-06 01:41:09', '2024-12-10 02:54:53'),
-(27, 32, 'Jensen Project', 23, 'Testing \n', 3, 10, 10, '2024-12-06 10:59:05', '2024-12-09 14:13:01'),
-(28, 31, 'Banana Game', 31, 'Saging to the max', 1, 5, 10, '2024-12-06 11:40:08', '2024-12-09 14:13:05'),
-(40, 31, 'Banana', 20, 'adaa', 1, 9, 11, '2024-12-09 23:52:52', '2024-12-10 11:12:23'),
-(47, 32, 'test hiring', 21, 'hirrrr', 2, 10, 10, '2024-12-11 10:52:31', '2024-12-11 10:54:29'),
-(50, 32, 'Test audit', 15, 'test', 2, 10, 10, '2024-12-11 13:07:20', '2024-12-11 13:50:06'),
-(53, 41, 'Project alpha', 15, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 16:17:03', '2024-12-12 16:45:59'),
-(54, 41, 'Baby ikaw lang talaga', 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 2, 5, 10, '2024-12-12 19:32:27', '2024-12-12 20:50:11'),
-(55, 32, 'Test Capitalize', 15, 'aaa', 1, 10, 10, '2024-12-13 06:27:29', '2024-12-13 06:27:29');
+INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_category_id`, `project_description`, `project_objective`, `project_status_id`, `project_connect_cost`, `project_merit_worth`, `created_at`, `updated_at`) VALUES
+(69, 44, 'Networking Sample Project', 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 2, 10, 10, '2024-12-15 14:53:57', '2024-12-15 14:59:32');
 
 --
 -- Triggers `client_projects`
@@ -276,12 +283,12 @@ CREATE TRIGGER `tr_after_delete_client_project` AFTER DELETE ON `client_projects
     INSERT INTO client_project_audit (
         project_id, user_id, action_type,
         old_project_title, old_project_category_id,
-        old_project_description, old_project_connect_cost, old_project_merit_worth
+        old_project_description, old_project_objective, old_project_connect_cost, old_project_merit_worth
     )
     VALUES (
         OLD.id, OLD.user_id, 'DELETE',
         OLD.project_title, OLD.project_category_id,
-        OLD.project_description, OLD.project_connect_cost, OLD.project_merit_worth
+        OLD.project_description, OLD.project_objective, OLD.project_connect_cost, OLD.project_merit_worth
     );
 END
 $$
@@ -289,13 +296,21 @@ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_after_insert_client_project` AFTER INSERT ON `client_projects` FOR EACH ROW BEGIN
     INSERT INTO client_project_audit (
-        project_id, user_id, action_type,
-        new_project_title, new_project_category_id, new_project_description,
-        new_project_connect_cost, new_project_merit_worth
+        project_id, 
+        user_id, 
+        action_type,
+        new_project_title, 
+        new_project_category_id, 
+        new_project_description,
+        new_project_objective,
+        new_project_connect_cost, 
+        new_project_merit_worth
     )
     VALUES (
         NEW.id, NEW.user_id, 'INSERT',
-        NEW.project_title, NEW.project_category_id, NEW.project_description,
+        NEW.project_title, 
+        NEW.project_category_id, 	NEW.project_description,
+        NEW.project_objective,
         NEW.project_connect_cost, NEW.project_merit_worth
     );
 END
@@ -304,20 +319,36 @@ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_after_update_client_project` AFTER UPDATE ON `client_projects` FOR EACH ROW BEGIN
     INSERT INTO client_project_audit (
-        project_id, user_id, action_type,
-        old_project_title, new_project_title,
-        old_project_category_id, new_project_category_id,
-        old_project_description, new_project_description,
-        old_project_connect_cost, new_project_connect_cost,
-        old_project_merit_worth, new_project_merit_worth
+        project_id, 
+        user_id, 
+        action_type,
+        old_project_title, 
+        new_project_title,
+        old_project_category_id,
+        new_project_category_id,
+        old_project_description,
+        new_project_description,
+        old_project_objective, 
+        new_project_objective,
+        old_project_connect_cost,
+        new_project_connect_cost,
+        old_project_merit_worth, 
+        new_project_merit_worth
     )
     VALUES (
         OLD.id, OLD.user_id, 'UPDATE',
-        OLD.project_title, NEW.project_title,
-        OLD.project_category_id, NEW.project_category_id,
-        OLD.project_description, NEW.project_description,
-        OLD.project_connect_cost, NEW.project_connect_cost,
-        OLD.project_merit_worth, NEW.project_merit_worth
+        OLD.project_title, 
+        NEW.project_title,
+        OLD.project_category_id,
+        NEW.project_category_id,
+        OLD.project_description,
+        NEW.project_description,
+        OLD.project_objective,
+        NEW.project_objective,
+        OLD.project_connect_cost,
+        NEW.project_connect_cost,
+        OLD.project_merit_worth, 
+        NEW.project_merit_worth
     );
 END
 $$
@@ -353,6 +384,8 @@ CREATE TABLE `client_project_audit` (
   `new_project_category_id` int(11) DEFAULT NULL,
   `old_project_description` text DEFAULT NULL,
   `new_project_description` text DEFAULT NULL,
+  `old_project_objective` text DEFAULT NULL,
+  `new_project_objective` text DEFAULT NULL,
   `old_project_connect_cost` int(11) DEFAULT NULL,
   `new_project_connect_cost` int(11) DEFAULT NULL,
   `old_project_merit_worth` int(11) DEFAULT NULL,
@@ -363,25 +396,9 @@ CREATE TABLE `client_project_audit` (
 -- Dumping data for table `client_project_audit`
 --
 
-INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_project_title`, `new_project_title`, `old_project_category_id`, `new_project_category_id`, `old_project_description`, `new_project_description`, `old_project_connect_cost`, `new_project_connect_cost`, `old_project_merit_worth`, `new_project_merit_worth`) VALUES
-(1, 48, 32, 'UPDATE', '2024-12-11 13:06:38', 'try', 'test audit', 30, 30, 'qaa', 'qaa', 10, 10, 10, 10),
-(2, 48, 32, 'DELETE', '2024-12-11 13:06:48', 'test audit', NULL, 30, NULL, 'qaa', NULL, 10, NULL, 10, NULL),
-(3, 50, 32, 'INSERT', '2024-12-11 13:07:20', NULL, 'test audit', NULL, 15, NULL, 'test', NULL, 10, NULL, 10),
-(4, 51, 32, 'INSERT', '2024-12-11 13:29:30', NULL, 'Capitalize', NULL, 15, NULL, 'haha', NULL, 10, NULL, 10),
-(5, 51, 32, 'UPDATE', '2024-12-11 13:31:09', 'Capitalize', 'Capitalize', 15, 15, 'haha', 'haha', 10, 10, 10, 10),
-(6, 51, 32, 'UPDATE', '2024-12-11 13:31:26', 'Capitalize', 'Capitalize test', 15, 15, 'haha', 'haha', 10, 10, 10, 10),
-(7, 51, 32, 'DELETE', '2024-12-11 13:40:45', 'Capitalize test', NULL, 15, NULL, 'haha', NULL, 10, NULL, 10, NULL),
-(8, 52, 32, 'INSERT', '2024-12-11 13:43:47', NULL, 'Capitalize test', NULL, 9, NULL, 'aaa', NULL, 10, NULL, 10),
-(9, 52, 32, 'UPDATE', '2024-12-11 13:49:21', 'Capitalize test', 'Capitalize test', 9, 9, 'aaa', 'aaa', 10, 10, 10, 10),
-(10, 50, 32, 'UPDATE', '2024-12-11 13:50:06', 'test audit', 'Test audit', 15, 15, 'test', 'test', 10, 10, 10, 10),
-(11, 53, 41, 'INSERT', '2024-12-12 16:17:03', NULL, 'Project alpha', NULL, 15, NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, 5, NULL, 10),
-(12, 53, 41, 'UPDATE', '2024-12-12 16:45:59', 'Project alpha', 'Project alpha', 15, 15, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
-(13, 54, 41, 'INSERT', '2024-12-12 19:32:27', NULL, 'Baby ikaw lang talaga', NULL, 27, NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, 5, NULL, 10),
-(14, 54, 41, 'UPDATE', '2024-12-12 19:32:49', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
-(15, 54, 41, 'UPDATE', '2024-12-12 19:32:53', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
-(16, 54, 41, 'UPDATE', '2024-12-12 20:50:11', 'Baby ikaw lang talaga', 'Baby ikaw lang talaga', 27, 27, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5, 5, 10, 10),
-(17, 52, 32, 'DELETE', '2024-12-13 06:27:08', 'Capitalize test', NULL, 9, NULL, 'aaa', NULL, 10, NULL, 10, NULL),
-(18, 55, 32, 'INSERT', '2024-12-13 06:27:29', NULL, 'Test Capitalize', NULL, 15, NULL, 'aaa', NULL, 10, NULL, 10);
+INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_project_title`, `new_project_title`, `old_project_category_id`, `new_project_category_id`, `old_project_description`, `new_project_description`, `old_project_objective`, `new_project_objective`, `old_project_connect_cost`, `new_project_connect_cost`, `old_project_merit_worth`, `new_project_merit_worth`) VALUES
+(1, 69, 44, 'INSERT', '2024-12-15 14:53:57', NULL, 'Networking Sample Project', NULL, 19, NULL, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', NULL, 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', NULL, 10, NULL, 10),
+(2, 69, 44, 'UPDATE', '2024-12-15 14:59:32', 'Networking Sample Project', 'Networking Sample Project', 19, 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 10, 10, 10, 10);
 
 -- --------------------------------------------------------
 
@@ -391,17 +408,41 @@ INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`
 
 CREATE TABLE `client_project_status` (
   `id` int(11) NOT NULL,
-  `status` varchar(255) NOT NULL
+  `status` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `client_project_status`
 --
 
-INSERT INTO `client_project_status` (`id`, `status`) VALUES
-(1, 'Hiring'),
-(2, 'In Progress'),
-(3, 'Completed');
+INSERT INTO `client_project_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Hiring', '2024-12-15 14:45:07', '2024-12-15 14:45:25'),
+(2, 'In Progress', '2024-12-15 14:45:07', '2024-12-15 14:45:25'),
+(3, 'Completed', '2024-12-15 14:45:07', '2024-12-15 14:45:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `completed_projects_audit`
+--
+
+CREATE TABLE `completed_projects_audit` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `project_title` varchar(255) DEFAULT NULL,
+  `project_category_id` int(11) DEFAULT NULL,
+  `project_description` text DEFAULT NULL,
+  `project_objective` text DEFAULT NULL,
+  `project_status_id` int(11) DEFAULT NULL,
+  `project_connect_cost` int(11) DEFAULT NULL,
+  `project_merit_worth` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `month_collected` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -426,14 +467,7 @@ CREATE TABLE `freelancer_applications` (
 --
 
 INSERT INTO `freelancer_applications` (`id`, `project_id`, `user_id`, `application_details`, `portfolio_url`, `application_status_id`, `application_date`, `created_at`, `updated_at`) VALUES
-(14, 26, 30, 'sadasdasd\r\nASDAS\r\nDASD', 'https://chatgpt.com/c/6752cf26-842c-800d-b682-1fff3c29335c', 2, '2024-12-06 18:18:32', '2024-12-09 12:13:47', '2024-12-10 03:04:38'),
-(15, 25, 30, 'adas\r\nAD\r\nAS\r\nDA\r\n    aaaaaaa', 'https://chatgpt.com/c/6752cf26-842c-800d-b682-1fff3c29335c', 1, '2024-12-06 18:57:35', '2024-12-09 12:13:47', '2024-12-10 12:38:45'),
-(16, 25, 35, 'asdas', 'https://github.com/', 2, '2024-12-06 19:31:45', '2024-12-09 12:13:47', '2024-12-10 13:32:02'),
-(18, 28, 35, 'fd', '', 1, '2024-12-06 19:41:32', '2024-12-09 12:13:47', '2024-12-10 11:06:34'),
-(66, 40, 35, 'bannanananana', 'https://www.merriam-webster.com/dictionary/proposal', 1, '2024-12-11 16:19:46', '2024-12-11 08:19:46', '2024-12-11 08:19:46'),
-(82, 50, 35, 'apply', 'https://www.merriam-webster.com/dictionary/proposal', 2, '2024-12-11 21:49:53', '2024-12-11 13:49:53', '2024-12-11 13:50:06'),
-(83, 53, 42, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'https://www.google.com/', 2, '2024-12-13 00:19:32', '2024-12-12 16:19:32', '2024-12-12 16:45:59'),
-(84, 54, 42, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'https://www.google.com/', 2, '2024-12-13 03:34:07', '2024-12-12 19:34:07', '2024-12-12 20:50:11');
+(99, 69, 45, 'I want to apply for this job', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 2, '2024-12-15 22:57:30', '2024-12-15 14:57:30', '2024-12-15 14:59:32');
 
 --
 -- Triggers `freelancer_applications`
@@ -444,6 +478,73 @@ CREATE TRIGGER `tr_after_application_status_update` AFTER UPDATE ON `freelancer_
         SET project_status_id = '2'
         WHERE id = NEW.project_id;
  END IF
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_application_status_update_notification` AFTER UPDATE ON `freelancer_applications` FOR EACH ROW BEGIN
+    DECLARE project_name VARCHAR(255);
+    DECLARE notification_message VARCHAR(255);
+
+    IF NEW.application_status_id IN (2, 3) THEN
+
+        SELECT project_title INTO project_name
+        FROM v_project_details
+        WHERE id = NEW.project_id;
+
+        IF NEW.application_status_id = 2 THEN
+            SET notification_message = CONCAT('Your application for ', project_name, ' has been accepted.');
+        ELSEIF NEW.application_status_id = 3 THEN
+            SET notification_message = CONCAT('Your application for ', project_name, ' has been rejected.');
+        END IF;
+
+
+        INSERT INTO notifications (project_id, user_id, type, message, is_read, created_at, updated_at)
+        VALUES (NEW.project_id, NEW.user_id, 1, notification_message, 0, NOW(), NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_application_status_update_submission_creation` AFTER UPDATE ON `freelancer_applications` FOR EACH ROW BEGIN
+    IF NEW.application_status_id = 2 AND OLD.application_status_id != 2 THEN
+        
+
+        INSERT INTO freelancer_project_submissions (
+            project_id,
+            user_id,
+            submission_url,
+            submission_status_id,
+            created_at,
+            updated_at
+        ) VALUES (
+            NEW.project_id,  
+            NEW.user_id,          
+            NULL,     
+            '1',   
+            NOW(),      
+            NOW()     
+        );
+
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_freelancer_application_insert_notification` AFTER INSERT ON `freelancer_applications` FOR EACH ROW BEGIN
+
+    DECLARE project_name VARCHAR(255);
+    DECLARE notification_message VARCHAR(255);
+    DECLARE project_owner_id INT;
+
+    SELECT project_title, user_id INTO project_name, project_owner_id
+    FROM client_projects
+    WHERE id = NEW.project_id;
+
+    SET notification_message = CONCAT('A new application has been submitted for your project: ', project_name);
+
+    INSERT INTO notifications (project_id, application_id, user_id, type, message, is_read, created_at, updated_at)
+    VALUES (NEW.project_id, NEW.id, project_owner_id, 1, notification_message, 0, NOW(), NOW());
+END
 $$
 DELIMITER ;
 DELIMITER $$
@@ -561,6 +662,8 @@ CREATE TABLE `freelancer_applications_audit` (
   `application_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL,
+  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `old_application_details` text DEFAULT NULL,
   `new_application_details` text DEFAULT NULL,
   `old_portfolio_url` varchar(255) DEFAULT NULL,
@@ -568,21 +671,16 @@ CREATE TABLE `freelancer_applications_audit` (
   `old_application_status_id` int(11) DEFAULT NULL,
   `new_application_status_id` int(11) DEFAULT NULL,
   `old_application_date` datetime DEFAULT NULL,
-  `new_application_date` datetime DEFAULT NULL,
-  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
-  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL
+  `new_application_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `freelancer_applications_audit`
 --
 
-INSERT INTO `freelancer_applications_audit` (`id`, `application_id`, `project_id`, `user_id`, `old_application_details`, `new_application_details`, `old_portfolio_url`, `new_portfolio_url`, `old_application_status_id`, `new_application_status_id`, `old_application_date`, `new_application_date`, `action_timestamp`, `action_type`) VALUES
-(1, 89, 40, 43, NULL, 'sample ', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 1, NULL, '2024-12-13 16:45:55', '2024-12-13 08:45:55', 'INSERT'),
-(2, 89, 40, 43, 'sample ', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 1, NULL, '2024-12-13 16:45:55', NULL, '2024-12-13 08:46:15', 'DELETE'),
-(3, 90, 55, 43, NULL, 'sample again', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 1, NULL, '2024-12-13 16:46:53', '2024-12-13 08:46:53', 'INSERT'),
-(4, 90, 55, 43, 'sample again', 'sample again', 'https://www.merriam-webster.com/dictionary/proposal', 'https://www.merriam-webster.com/dictionary/proposal', 1, 3, '2024-12-13 16:46:53', '2024-12-13 16:46:53', '2024-12-13 08:47:21', 'UPDATE'),
-(5, 90, 55, 43, 'sample again', NULL, 'https://www.merriam-webster.com/dictionary/proposal', NULL, 3, NULL, '2024-12-13 16:46:53', NULL, '2024-12-13 08:49:36', 'DELETE');
+INSERT INTO `freelancer_applications_audit` (`id`, `application_id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_application_details`, `new_application_details`, `old_portfolio_url`, `new_portfolio_url`, `old_application_status_id`, `new_application_status_id`, `old_application_date`, `new_application_date`) VALUES
+(1, 99, 69, 45, 'INSERT', '2024-12-15 14:57:30', NULL, 'I want to apply for this job', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', NULL, 1, NULL, '2024-12-15 22:57:30'),
+(2, 99, 69, 45, 'UPDATE', '2024-12-15 14:59:32', 'I want to apply for this job', 'I want to apply for this job', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 1, 2, '2024-12-15 22:57:30', '2024-12-15 22:57:30');
 
 -- --------------------------------------------------------
 
@@ -625,11 +723,7 @@ CREATE TABLE `freelancer_connects` (
 --
 
 INSERT INTO `freelancer_connects` (`id`, `user_id`, `connects`, `created_at`, `updated_at`) VALUES
-(1, 30, 20, '2024-12-09 12:13:10', '2024-12-10 11:58:50'),
-(4, 35, 11, '2024-12-09 12:13:10', '2024-12-11 13:49:53'),
-(5, 37, 70, '2024-12-10 14:26:07', '2024-12-11 10:54:01'),
-(8, 42, 90, '2024-12-12 16:18:26', '2024-12-12 19:34:07'),
-(9, 43, 90, '2024-12-13 06:40:37', '2024-12-13 08:46:53');
+(10, 45, 90, '2024-12-15 14:54:46', '2024-12-15 14:57:30');
 
 -- --------------------------------------------------------
 
@@ -652,20 +746,7 @@ CREATE TABLE `freelancer_experiences` (
 --
 
 INSERT INTO `freelancer_experiences` (`id`, `user_id`, `job_title`, `company_name`, `duration`, `created_at`, `updated_at`) VALUES
-(16, 19, 'Bamama', 'ASDaaa', '2003-2321', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(17, 19, 'asadasdaa', 'asd', '2003-1212', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(25, 19, 'sad', 'asd', '2003-1212', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(26, 22, 'Software Developer', 'Internet Org', '2021-2024', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(33, 22, 'Taga hugas ng pinggan sa bahay', 'ICOR Inc.', '2012-2024', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(35, 22, 'Software Engineer', 'ICOR Inc.aa', '2001-2002', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(47, 23, 'Software Engineer', 'ICOR Inc.', '2005-2012', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(53, 28, 'test', 'aaa', '2023-2024', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(55, 30, 'Software Developer', 'Google', '2020-2021', '2024-12-09 12:12:26', '2024-12-10 09:46:37'),
-(56, 33, 'Software Engineer', 'Yahoo', '2020-Present', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(57, 35, 'Software Developer', 'Yahoo', '2020-Present', '2024-12-09 12:12:26', '2024-12-09 12:12:52'),
-(59, 30, 'dasd', 'sad', '2001-2003', '2024-12-10 11:24:10', '2024-12-10 11:24:10'),
-(60, 30, 'das', 'sad', '2020-2022', '2024-12-10 11:56:05', '2024-12-10 11:56:05'),
-(61, 42, 'Labeler', 'RYU', '1975-2025', '2024-12-12 19:15:44', '2024-12-12 19:15:44');
+(1, 45, 'Software Developer', 'Apple Inc.', '2019-2024', '2024-12-15 14:56:49', '2024-12-15 14:56:49');
 
 -- --------------------------------------------------------
 
@@ -686,11 +767,201 @@ CREATE TABLE `freelancer_merits` (
 --
 
 INSERT INTO `freelancer_merits` (`id`, `user_id`, `merits`, `created_at`, `updated_at`) VALUES
-(1, 30, 0, '2024-12-09 12:11:05', '2024-12-09 12:11:21'),
-(2, 35, 0, '2024-12-09 12:11:05', '2024-12-09 12:11:21'),
-(3, 37, 0, '2024-12-10 14:26:07', '2024-12-10 14:26:07'),
-(6, 42, 0, '2024-12-12 16:18:26', '2024-12-12 16:18:26'),
-(7, 43, 0, '2024-12-13 06:40:37', '2024-12-13 06:40:37');
+(9, 45, 0, '2024-12-15 14:54:46', '2024-12-15 14:54:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_project_submissions`
+--
+
+CREATE TABLE `freelancer_project_submissions` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `submission_url` varchar(255) DEFAULT NULL,
+  `submission_status_id` int(11) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_project_submissions`
+--
+
+INSERT INTO `freelancer_project_submissions` (`id`, `project_id`, `user_id`, `submission_url`, `submission_status_id`, `created_at`, `updated_at`) VALUES
+(35, 69, 45, NULL, 1, '2024-12-15 14:59:32', '2024-12-15 14:59:32');
+
+--
+-- Triggers `freelancer_project_submissions`
+--
+DELIMITER $$
+CREATE TRIGGER `tr_after_delete_freelancer_project_submissions` AFTER DELETE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    INSERT INTO freelancer_project_submissions_audit  (
+        application_id, project_id, user_id,
+        old_submission_url, old_submission_status_id, old_created_at, old_updated_at,
+        action_type
+    )
+    VALUES (
+        OLD.id, OLD.project_id, OLD.user_id,
+        OLD.submission_url, OLD.submission_status_id, OLD.created_at, OLD.updated_at,
+        'DELETE'
+    );
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_insert_freelancer_project_submissions` AFTER INSERT ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    INSERT INTO freelancer_project_submissions_audit (
+        application_id, project_id, user_id,
+        new_submission_url, new_submission_status_id, new_created_at, new_updated_at,
+        action_type
+    )
+    VALUES (
+        NEW.id, NEW.project_id, NEW.user_id,
+        NEW.submission_url, NEW.submission_status_id, NEW.created_at, NEW.updated_at,
+        'INSERT'
+    );
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_status_update_merit` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    IF NEW.submission_status_id = 3 AND OLD.submission_status_id != 3 THEN  
+        UPDATE `freelancer_merits`
+        SET `merits` = `merits` + 10
+        WHERE `user_id` = (SELECT `user_id` FROM `v_freelancer_submissions` WHERE `id` = NEW.id);
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_status_update_project_status` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    IF NEW.submission_status_id = 3 AND OLD.submission_status_id != 3 THEN
+        UPDATE `client_projects`
+        SET `project_status_id` = 3
+        WHERE `id` = NEW.project_id;
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_submission_status_update_notification` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    DECLARE project_name VARCHAR(255);
+    DECLARE notification_message VARCHAR(255);
+
+    IF NEW.submission_status_id IN (3, 4) THEN
+
+        SELECT project_title INTO project_name
+        FROM v_project_details
+        WHERE id = NEW.project_id;
+
+        IF NEW.submission_status_id = 3 THEN
+            SET notification_message = 'Submission Accepted';
+        ELSEIF NEW.submission_status_id = 4 THEN
+            SET notification_message = 'Submission Rejected';
+        END IF;
+
+        INSERT INTO notifications (project_id, user_id, type, message, is_read, created_at, updated_at)
+        VALUES (NEW.project_id, NEW.user_id, 2, notification_message, 0, NOW(), NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_submission_url_update_notification` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    DECLARE project_name VARCHAR(255);
+    DECLARE project_owner_id INT(11);
+    DECLARE notification_message VARCHAR(255);
+
+    IF OLD.submission_url <> NEW.submission_url THEN
+
+        SELECT project_owner, project_title INTO project_owner_id, project_name
+        FROM v_project_details
+        WHERE id = NEW.project_id;
+
+
+        SET notification_message = CONCAT('New submission for your project "', project_name, '" has been submitted.');
+
+
+        INSERT INTO notifications (project_id, user_id, type, message, is_read, created_at, updated_at)
+        VALUES (NEW.project_id, project_owner_id, 2, notification_message, 0, NOW(), NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_after_update_freelancer_project_submissions` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
+    INSERT INTO freelancer_project_submissions_audit  (
+        application_id, project_id, user_id,
+        old_submission_url, new_submission_url,
+        old_submission_status_id, new_submission_status_id,
+        old_updated_at, new_updated_at,
+        action_type
+    )
+    VALUES (
+        OLD.id, OLD.project_id, OLD.user_id,
+        OLD.submission_url, NEW.submission_url,
+        OLD.submission_status_id, NEW.submission_status_id,
+        OLD.updated_at, NEW.updated_at,
+        'UPDATE'
+    );
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_project_submissions_audit`
+--
+
+CREATE TABLE `freelancer_project_submissions_audit` (
+  `id` int(11) NOT NULL,
+  `application_id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `action_type` enum('INSERT','UPDATE','DELETE') NOT NULL,
+  `action_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `old_submission_url` varchar(255) DEFAULT NULL,
+  `new_submission_url` varchar(255) DEFAULT NULL,
+  `old_submission_status_id` int(11) DEFAULT NULL,
+  `new_submission_status_id` int(11) DEFAULT NULL,
+  `old_created_at` timestamp NULL DEFAULT NULL,
+  `new_created_at` timestamp NULL DEFAULT NULL,
+  `old_updated_at` timestamp NULL DEFAULT NULL,
+  `new_updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_project_submissions_audit`
+--
+
+INSERT INTO `freelancer_project_submissions_audit` (`id`, `application_id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_submission_url`, `new_submission_url`, `old_submission_status_id`, `new_submission_status_id`, `old_created_at`, `new_created_at`, `old_updated_at`, `new_updated_at`) VALUES
+(1, 35, 69, 45, 'INSERT', '2024-12-15 14:59:32', NULL, NULL, NULL, 1, NULL, '2024-12-15 14:59:32', NULL, '2024-12-15 14:59:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `freelancer_project_submissions_status`
+--
+
+CREATE TABLE `freelancer_project_submissions_status` (
+  `id` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `freelancer_project_submissions_status`
+--
+
+INSERT INTO `freelancer_project_submissions_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'pending', '2024-12-14 06:05:20', '2024-12-14 06:05:20'),
+(2, 'for review', '2024-12-14 06:05:20', '2024-12-14 06:05:52'),
+(3, 'accepted', '2024-12-14 06:05:20', '2024-12-14 06:05:20'),
+(4, 'rejected', '2024-12-14 06:05:20', '2024-12-14 06:05:20');
 
 -- --------------------------------------------------------
 
@@ -711,9 +982,50 @@ CREATE TABLE `freelancer_skills` (
 --
 
 INSERT INTO `freelancer_skills` (`id`, `user_id`, `skill_id`, `created_at`, `updated_at`) VALUES
-(193, 35, 57, '2024-12-09 12:09:16', '2024-12-09 12:09:48'),
-(194, 35, 56, '2024-12-09 12:09:16', '2024-12-09 12:09:48'),
-(242, 30, 131, '2024-12-10 11:25:27', '2024-12-10 11:25:27');
+(255, 45, 71, '2024-12-15 14:55:33', '2024-12-15 14:55:33'),
+(256, 45, 75, '2024-12-15 14:55:33', '2024-12-15 14:55:33'),
+(257, 45, 73, '2024-12-15 14:55:33', '2024-12-15 14:55:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `application_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `type` int(1) NOT NULL,
+  `message` text DEFAULT NULL,
+  `is_read` int(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `application_id`, `project_id`, `user_id`, `type`, `message`, `is_read`, `created_at`, `updated_at`) VALUES
+(49, 99, 69, 44, 1, 'A new application has been submitted for your project: Networking Sample Project', 1, '2024-12-15 14:57:30', '2024-12-15 14:59:26'),
+(50, NULL, 69, 45, 1, 'Your application for Networking Sample Project has been accepted.', 0, '2024-12-15 14:59:32', '2024-12-15 14:59:32');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `project_comments`
+--
+
+CREATE TABLE `project_comments` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `comment` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -724,151 +1036,153 @@ INSERT INTO `freelancer_skills` (`id`, `user_id`, `skill_id`, `created_at`, `upd
 CREATE TABLE `skills` (
   `id` int(11) NOT NULL,
   `skill_name` varchar(255) NOT NULL,
-  `skill_category_id` int(11) NOT NULL
+  `skill_category_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `skills`
 --
 
-INSERT INTO `skills` (`id`, `skill_name`, `skill_category_id`) VALUES
-(1, 'Content Writing', 1),
-(2, 'Copywriting', 1),
-(3, 'Technical Writing', 1),
-(4, 'Blog Writing', 1),
-(5, 'Creative', 1),
-(6, 'Multilingual Translation', 2),
-(7, 'Subtitling', 2),
-(8, 'Transcription', 2),
-(9, 'Proofreading', 2),
-(10, 'Editing', 2),
-(11, 'Logo Design', 3),
-(12, 'Branding Design', 3),
-(13, 'Infographic Design', 3),
-(14, 'Social Media Graphics', 3),
-(15, 'Print Design', 3),
-(16, 'Video Editing', 4),
-(17, 'Motion Graphics', 4),
-(18, '2D Animation', 4),
-(19, '3D Animation', 4),
-(20, 'Explainer Videos', 4),
-(21, 'Wireframing', 5),
-(22, 'Prototyping', 5),
-(23, 'Mobile App Design', 5),
-(24, 'Website Design', 5),
-(25, 'User Testing', 5),
-(26, 'Front-End Development', 6),
-(27, 'Back-End Development', 6),
-(28, 'Full-Stack Development', 6),
-(29, 'CMS Development (WordPress, Joomla)', 6),
-(30, 'E-Commerce Development', 6),
-(31, 'iOS Development', 7),
-(32, 'Android Development', 7),
-(33, 'Flutter Development', 7),
-(34, 'React Native Development', 7),
-(35, 'Game App Development', 7),
-(36, 'Python Development', 8),
-(37, 'Java Development', 8),
-(38, '.NET Development', 8),
-(39, 'C++ Development', 8),
-(40, 'API Development', 8),
-(41, 'Social Media Marketing', 9),
-(42, 'SEO (Search Engine Optimization)', 9),
-(43, 'Content Marketing', 9),
-(44, 'Email Marketing', 9),
-(45, 'Affiliate Marketing', 9),
-(46, 'Lead Generation', 10),
-(47, 'CRM Management', 10),
-(48, 'Cold Calling', 10),
-(49, 'Sales Funnel Design', 10),
-(50, 'Prospect Research', 10),
-(51, 'PPC Campaigns', 11),
-(52, 'Google Ads', 11),
-(53, 'Facebook Ads', 11),
-(54, 'LinkedIn Ads', 11),
-(55, 'Display Advertising', 11),
-(56, 'Email Management', 12),
-(57, 'Calendar Management', 12),
-(58, 'Travel Booking', 12),
-(59, 'Social Media Assistance', 12),
-(60, 'File Organization', 12),
-(61, 'Typing', 13),
-(62, 'Data Cleaning', 13),
-(63, 'Online Research', 13),
-(64, 'Spreadsheet Management', 13),
-(65, 'CRM Data Input', 13),
-(66, 'Chat Support', 14),
-(67, 'Phone Support', 14),
-(68, 'Ticket Management', 14),
-(69, 'Complaint Resolution', 14),
-(70, 'Technical Support', 14),
-(71, 'Bookkeeping', 15),
-(72, 'Payroll Management', 15),
-(73, 'Financial Analysis', 15),
-(74, 'Tax Preparation', 15),
-(75, 'Budget Planning', 15),
-(76, 'Business Strategy', 16),
-(77, 'Market Research', 16),
-(78, 'SWOT Analysis', 16),
-(79, 'Operations Management', 16),
-(80, 'Process Improvement', 16),
-(81, 'Recruitment', 17),
-(82, 'Onboarding', 17),
-(83, 'Employee Training', 17),
-(84, 'Performance Reviews', 17),
-(85, 'HR Policies', 17),
-(86, 'Hardware Troubleshooting', 18),
-(87, 'Software Installation', 18),
-(88, 'IT Helpdesk Support', 18),
-(89, 'Network Setup', 18),
-(90, 'Remote Assistance', 18),
-(91, 'System Administration', 19),
-(92, 'Cloud Computing', 19),
-(93, 'VPN Setup', 19),
-(94, 'Server Maintenance', 19),
-(95, 'Cybersecurity', 19),
-(96, 'CI/CD Pipelines', 20),
-(97, 'Docker', 20),
-(98, 'Kubernetes', 20),
-(99, 'Automation Scripting', 20),
-(100, 'Infrastructure as Code', 20),
-(101, 'Civil Engineering', 21),
-(102, 'Mechanical Engineering', 21),
-(103, 'Electrical Engineering', 21),
-(104, 'Structural Analysis', 21),
-(105, 'Robotics Design', 21),
-(106, 'Building Design', 22),
-(107, 'CAD Drafting', 22),
-(108, '3D Modeling', 22),
-(109, 'Interior Design', 22),
-(110, 'Landscape Architecture', 22),
-(111, 'Product Design', 23),
-(112, 'CNC Programming', 23),
-(113, '3D Printing', 23),
-(114, 'Materials Engineering', 23),
-(115, 'Prototyping', 23),
-(116, 'Life Coaching', 24),
-(117, 'Career Counseling', 24),
-(118, 'Parenting Advice', 24),
-(119, 'Fitness Planning', 25),
-(120, 'Nutrition Consulting', 25),
-(121, 'Meditation Training', 25),
-(122, 'Contract Drafting', 26),
-(123, 'Intellectual Property Consulting', 26),
-(124, 'Immigration Support', 26),
-(125, 'Business Compliance Assistance', 27),
-(126, 'Legal Research', 27),
-(127, 'Data Cleaning', 28),
-(128, 'Data Wrangling', 28),
-(129, 'Big Data Analytics', 28),
-(130, 'Predictive Analytics', 29),
-(131, 'Machine Learning Model Development', 29),
-(132, 'Data Visualization', 29),
-(133, 'Game Testing', 30),
-(134, 'Level Design', 30),
-(135, 'Narrative Writing', 30),
-(136, 'Game Monetization Strategy', 31),
-(137, 'Esports Coaching', 31);
+INSERT INTO `skills` (`id`, `skill_name`, `skill_category_id`, `created_at`, `updated_at`) VALUES
+(1, 'Content Writing', 1, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(2, 'Copywriting', 1, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(3, 'Technical Writing', 1, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(4, 'Blog Writing', 1, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(5, 'Creative', 1, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(6, 'Multilingual Translation', 2, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(7, 'Subtitling', 2, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(8, 'Transcription', 2, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(9, 'Proofreading', 2, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(10, 'Editing', 2, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(11, 'Logo Design', 3, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(12, 'Branding Design', 3, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(13, 'Infographic Design', 3, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(14, 'Social Media Graphics', 3, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(15, 'Print Design', 3, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(16, 'Video Editing', 4, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(17, 'Motion Graphics', 4, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(18, '2D Animation', 4, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(19, '3D Animation', 4, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(20, 'Explainer Videos', 4, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(21, 'Wireframing', 5, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(22, 'Prototyping', 5, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(23, 'Mobile App Design', 5, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(24, 'Website Design', 5, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(25, 'User Testing', 5, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(26, 'Front-End Development', 6, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(27, 'Back-End Development', 6, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(28, 'Full-Stack Development', 6, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(29, 'CMS Development (WordPress, Joomla)', 6, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(30, 'E-Commerce Development', 6, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(31, 'iOS Development', 7, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(32, 'Android Development', 7, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(33, 'Flutter Development', 7, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(34, 'React Native Development', 7, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(35, 'Game App Development', 7, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(36, 'Python Development', 8, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(37, 'Java Development', 8, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(38, '.NET Development', 8, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(39, 'C++ Development', 8, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(40, 'API Development', 8, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(41, 'Social Media Marketing', 9, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(42, 'SEO (Search Engine Optimization)', 9, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(43, 'Content Marketing', 9, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(44, 'Email Marketing', 9, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(45, 'Affiliate Marketing', 9, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(46, 'Lead Generation', 10, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(47, 'CRM Management', 10, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(48, 'Cold Calling', 10, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(49, 'Sales Funnel Design', 10, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(50, 'Prospect Research', 10, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(51, 'PPC Campaigns', 11, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(52, 'Google Ads', 11, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(53, 'Facebook Ads', 11, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(54, 'LinkedIn Ads', 11, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(55, 'Display Advertising', 11, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(56, 'Email Management', 12, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(57, 'Calendar Management', 12, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(58, 'Travel Booking', 12, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(59, 'Social Media Assistance', 12, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(60, 'File Organization', 12, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(61, 'Typing', 13, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(62, 'Data Cleaning', 13, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(63, 'Online Research', 13, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(64, 'Spreadsheet Management', 13, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(65, 'CRM Data Input', 13, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(66, 'Chat Support', 14, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(67, 'Phone Support', 14, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(68, 'Ticket Management', 14, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(69, 'Complaint Resolution', 14, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(70, 'Technical Support', 14, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(71, 'Bookkeeping', 15, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(72, 'Payroll Management', 15, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(73, 'Financial Analysis', 15, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(74, 'Tax Preparation', 15, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(75, 'Budget Planning', 15, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(76, 'Business Strategy', 16, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(77, 'Market Research', 16, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(78, 'SWOT Analysis', 16, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(79, 'Operations Management', 16, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(80, 'Process Improvement', 16, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(81, 'Recruitment', 17, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(82, 'Onboarding', 17, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(83, 'Employee Training', 17, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(84, 'Performance Reviews', 17, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(85, 'HR Policies', 17, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(86, 'Hardware Troubleshooting', 18, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(87, 'Software Installation', 18, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(88, 'IT Helpdesk Support', 18, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(89, 'Network Setup', 18, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(90, 'Remote Assistance', 18, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(91, 'System Administration', 19, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(92, 'Cloud Computing', 19, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(93, 'VPN Setup', 19, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(94, 'Server Maintenance', 19, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(95, 'Cybersecurity', 19, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(96, 'CI/CD Pipelines', 20, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(97, 'Docker', 20, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(98, 'Kubernetes', 20, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(99, 'Automation Scripting', 20, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(100, 'Infrastructure as Code', 20, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(101, 'Civil Engineering', 21, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(102, 'Mechanical Engineering', 21, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(103, 'Electrical Engineering', 21, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(104, 'Structural Analysis', 21, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(105, 'Robotics Design', 21, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(106, 'Building Design', 22, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(107, 'CAD Drafting', 22, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(108, '3D Modeling', 22, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(109, 'Interior Design', 22, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(110, 'Landscape Architecture', 22, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(111, 'Product Design', 23, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(112, 'CNC Programming', 23, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(113, '3D Printing', 23, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(114, 'Materials Engineering', 23, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(115, 'Prototyping', 23, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(116, 'Life Coaching', 24, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(117, 'Career Counseling', 24, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(118, 'Parenting Advice', 24, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(119, 'Fitness Planning', 25, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(120, 'Nutrition Consulting', 25, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(121, 'Meditation Training', 25, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(122, 'Contract Drafting', 26, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(123, 'Intellectual Property Consulting', 26, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(124, 'Immigration Support', 26, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(125, 'Business Compliance Assistance', 27, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(126, 'Legal Research', 27, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(127, 'Data Cleaning', 28, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(128, 'Data Wrangling', 28, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(129, 'Big Data Analytics', 28, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(130, 'Predictive Analytics', 29, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(131, 'Machine Learning Model Development', 29, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(132, 'Data Visualization', 29, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(133, 'Game Testing', 30, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(134, 'Level Design', 30, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(135, 'Narrative Writing', 30, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(136, 'Game Monetization Strategy', 31, '2024-12-14 15:44:28', '2024-12-14 15:44:50'),
+(137, 'Esports Coaching', 31, '2024-12-14 15:44:28', '2024-12-14 15:44:50');
 
 -- --------------------------------------------------------
 
@@ -923,18 +1237,15 @@ INSERT INTO `skills_category` (`id`, `category_name`, `created_at`, `updated_at`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tasks`
+-- Table structure for table `top_categories_audit`
 --
 
-CREATE TABLE `tasks` (
-  `task_id` int(11) NOT NULL,
-  `project_id` int(11) DEFAULT NULL,
-  `task_title` varchar(255) NOT NULL,
-  `task_description` text DEFAULT NULL,
-  `status` enum('pending','in progress','completed','approved') NOT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+CREATE TABLE `top_categories_audit` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `frequency` int(11) NOT NULL,
+  `month_collected` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -962,7 +1273,6 @@ CREATE TABLE `users` (
   `reset_token_expiry` datetime DEFAULT NULL,
   `activation_token_hash` varchar(255) DEFAULT NULL,
   `last_login_date` datetime DEFAULT NULL,
-  `attempts` int(1) DEFAULT NULL,
   `deactivation_duration` datetime DEFAULT NULL,
   `status_id` int(11) DEFAULT 1,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
@@ -973,34 +1283,60 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `attempts`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
-(30, 'Freelance Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910708', 'Filipino', 'Tagalog', 2, '../../dist/php/uploads/profile_pictures/675246781cbb9_IMG_20230104_162006.png', 3, '$2y$10$Q3m0sXMrqggmcrhuC12vIOF.6X3JBBgrD0P/83W02T67CyUwneq12', NULL, '2024-12-10 20:07:53', NULL, '2024-12-10 22:43:21', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-10 14:43:21'),
-(31, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'American', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/67578ddc5763e_vlcsnap-2024-03-24-13h58m13s661.png', 1, '$2y$10$vHM7B/FJH.ob3aWWSVs9Sup1AWms7CAZne0HxsmAiQCbSxfnRjFZi', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-10 11:12:10'),
-(32, 'Kate', 'Jensen', '2003-07-10', 2, 'Antipolo, Rizal, Philippines', 'ronaldsullano12345@gmail.com', '9515910702', 'Thai', 'Guaranir', 1, '../../dist/php/uploads/profile_pictures/6752d8cfd48d2_received_364139713153077.jpeg', 3, '$2y$10$sTftvqLPrrJnugSToi/2Ee7qHUqAU26S6RWhgIg5Rvari9KdxdAGa', NULL, NULL, NULL, '2024-12-13 16:47:07', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-13 08:47:07'),
-(35, 'Freelance Kate', 'Jensen', '2003-07-03', 2, 'Angeles, Pampanga, Philippines', 'ronaldsullano6666@gmail.com', '9515120708', 'Filipino', 'Tagalog', 2, '../../dist/php/uploads/profile_pictures/6752e0aaed0bc_received_364139713153077.jpeg', 1, '$2y$10$I3mN3hppEF20cswF8ty1L.euzn1caw0ZyBSahmbfINVIRaCAChHbe', NULL, NULL, NULL, '2024-12-11 21:49:02', NULL, NULL, 1, '2024-12-09 11:44:32', '2024-12-11 13:49:02'),
-(37, 'Ronald', 'Sullano', '2003-06-10', 1, 'Angeles, Pampanga, Philippines', 'ronaldsullano76@gmail.com', '', '', '', 2, '', NULL, '$2y$10$J0HgpBTEQodobO7/uuhzvuLJaNeFuGrhrsQZlAq1ZG2sk4inX2/aW', NULL, NULL, NULL, '2024-12-11 17:47:23', NULL, NULL, 1, '2024-12-10 14:26:07', '2024-12-11 09:47:23'),
-(41, 'Client jireh', 'Sodsod', '2003-09-07', 1, 'Caloocan City, Metro Manila, Philippines', 'sodsodwalter@gmail.com', '', '', '', 1, '', NULL, '$2y$10$uOyJUlaHc9uRf/9O2vhQK.wMEB1fWY.3WV2YkAWWjSUucef5O34ea', NULL, NULL, NULL, '2024-12-13 05:56:18', NULL, NULL, 1, '2024-12-12 16:16:16', '2024-12-12 21:56:18'),
-(42, 'Freelancer jireh', 'Sodsod', '2003-09-07', 1, 'Bayag, Apayao, Philippines', 'jirehwaltersodsod@gmail.com', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675b24b0f3ef2_20240812_123813_0004.png', NULL, '$2y$10$BuMI/.SWVBG8yWdyCaL.Lu1nfNsj2TIJAg3P.jLpldiyrNxf.PqsC', NULL, NULL, NULL, '2024-12-13 05:48:51', NULL, NULL, 1, '2024-12-12 16:18:26', '2024-12-12 21:48:51'),
-(43, 'Jensen', 'Kate', '2003-08-11', 2, 'Zamboanga, Philippines', 'jensenkajie@gmail.com', '', '', '', 2, '', NULL, '$2y$10$9yL8y2ni1Lw4JYawKGO9JO5bXPDh792IH5KiAwdttn1FTegY9GsYe', NULL, NULL, NULL, '2024-12-13 14:41:54', NULL, NULL, 1, '2024-12-13 06:40:37', '2024-12-13 06:42:37');
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
+(44, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910701', 'Filipino', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/675eef1b9bf16_nTGMV1Eo_400x400.jpg', 1, '$2y$10$VICcznSY.2YbbFpYtOk8GOa7uXD3iwt92qDf300dZHcNAw70hDwjy', NULL, NULL, NULL, '2024-12-15 22:51:26', NULL, 1, '2024-12-15 14:50:44', '2024-12-15 15:00:43'),
+(45, 'Freelancer Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 2, '../../dist/php/uploads/profile_pictures/675eee2120b97_IMG_20230104_162006.png', 1, '$2y$10$8Gy0CYySzXp9yzRYKjCRw.oTEO3FT4qJzDUcaqtuxzFybJSs.IEk6', NULL, NULL, NULL, '2024-12-15 22:55:05', NULL, 1, '2024-12-15 14:54:46', '2024-12-15 14:56:33');
 
 --
 -- Triggers `users`
 --
 DELIMITER $$
 CREATE TRIGGER `tr_capitalize_first_name_before_insert` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
-    SET NEW.first_name = CONCAT(
-        UPPER(LEFT(NEW.first_name, 1)),
-        LOWER(SUBSTRING(NEW.first_name, 2))
-    );
+    DECLARE i INT DEFAULT 1;
+    DECLARE word_count INT;
+    DECLARE word TEXT;
+    DECLARE result TEXT DEFAULT '';
+
+    SET word_count = LENGTH(NEW.first_name) - LENGTH(REPLACE(NEW.first_name, ' ', '')) + 1;
+
+    WHILE i <= word_count DO
+        SET word = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(NEW.first_name, ' ', i), ' ', -1));
+
+        SET result = CONCAT(
+            result,
+            IF(result = '', '', ' '),
+            CONCAT(UPPER(SUBSTRING(word, 1, 1)), LOWER(SUBSTRING(word FROM 2)))
+        );
+
+        SET i = i + 1;
+    END WHILE;
+
+    SET NEW.first_name = result;
 END
 $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_capitalize_first_name_before_update` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
-    SET NEW.first_name = CONCAT(
-        UPPER(LEFT(NEW.first_name, 1)),
-        LOWER(SUBSTRING(NEW.first_name, 2))
-    );
+    DECLARE i INT DEFAULT 1;
+    DECLARE word_count INT;
+    DECLARE word TEXT;
+    DECLARE result TEXT DEFAULT '';
+
+    SET word_count = LENGTH(NEW.first_name) - LENGTH(REPLACE(NEW.first_name, ' ', '')) + 1;
+
+    WHILE i <= word_count DO
+        SET word = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(NEW.first_name, ' ', i), ' ', -1));
+
+        SET result = CONCAT(
+            result,
+            IF(result = '', '', ' '), 
+            CONCAT(UPPER(SUBSTRING(word, 1, 1)), LOWER(SUBSTRING(word FROM 2)))
+        );
+
+        SET i = i + 1; 
+    END WHILE;
+
+    SET NEW.first_name = result;
 END
 $$
 DELIMITER ;
@@ -1212,6 +1548,48 @@ CREATE TABLE `v_available_skills_category` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `v_clients`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_clients` (
+`id` int(11)
+,`first_name` varchar(50)
+,`last_name` varchar(50)
+,`birthdate` date
+,`gender` varchar(50)
+,`city` varchar(255)
+,`email` varchar(255)
+,`mobile_number` varchar(13)
+,`nationality` varchar(255)
+,`language` varchar(255)
+,`job_title` varchar(255)
+,`profile_picture_url` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_freelancers`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_freelancers` (
+`id` int(11)
+,`first_name` varchar(50)
+,`last_name` varchar(50)
+,`birthdate` date
+,`gender` varchar(50)
+,`city` varchar(255)
+,`email` varchar(255)
+,`mobile_number` varchar(13)
+,`nationality` varchar(255)
+,`language` varchar(255)
+,`job_title` varchar(255)
+,`profile_picture_url` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `v_freelancer_connects_and_merits`
 -- (See below for the actual view)
 --
@@ -1239,12 +1617,78 @@ CREATE TABLE `v_freelancer_experiences` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `v_freelancer_submissions`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_freelancer_submissions` (
+`id` int(11)
+,`project_id` int(11)
+,`user_id` int(11)
+,`submission_url` varchar(255)
+,`status` varchar(255)
+,`created_at` timestamp
+,`updated_at` timestamp
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_notifications`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_notifications` (
+`id` int(11)
+,`application_id` int(11)
+,`project_id` int(11)
+,`user_id` int(11)
+,`type` int(1)
+,`message` text
+,`is_read` int(1)
+,`created_at` timestamp
+,`updated_at` timestamp
+);
+
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `v_not_verified_emails`
 -- (See below for the actual view)
 --
 CREATE TABLE `v_not_verified_emails` (
 `email` varchar(255)
 ,`activation_token_hash` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_project_comments`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_project_comments` (
+`id` int(11)
+,`project_id` int(11)
+,`user_id` int(11)
+,`comment` text
+,`created_at` timestamp
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_project_completion_history`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_project_completion_history` (
+`id` int(11)
+,`application_id` int(11)
+,`project_id` int(11)
+,`user_id` int(11)
+,`action_type` enum('INSERT','UPDATE','DELETE')
+,`action_timestamp` timestamp
+,`new_submission_url` varchar(255)
+,`status` varchar(255)
+,`created_at` timestamp
 );
 
 -- --------------------------------------------------------
@@ -1259,6 +1703,7 @@ CREATE TABLE `v_project_details` (
 ,`project_title` varchar(255)
 ,`project_category` varchar(255)
 ,`project_description` text
+,`project_objective` text
 ,`project_status` varchar(255)
 ,`project_connect_cost` int(11)
 ,`project_merit_worth` int(11)
@@ -1394,6 +1839,24 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Structure for view `v_clients`
+--
+DROP TABLE IF EXISTS `v_clients`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_clients`  AS SELECT `users`.`id` AS `id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users_gender`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`nationality` AS `nationality`, `users`.`language` AS `language`, `users_job_titles`.`job_title` AS `job_title`, `users`.`profile_picture_url` AS `profile_picture_url` FROM ((`users` join `users_gender` on(`users`.`gender_id` = `users_gender`.`id`)) left join `users_job_titles` on(`users`.`job_title_id` = `users_job_titles`.`id`)) WHERE `users`.`role_id` = 1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_freelancers`
+--
+DROP TABLE IF EXISTS `v_freelancers`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_freelancers`  AS SELECT `users`.`id` AS `id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users_gender`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`nationality` AS `nationality`, `users`.`language` AS `language`, `users_job_titles`.`job_title` AS `job_title`, `users`.`profile_picture_url` AS `profile_picture_url` FROM ((`users` join `users_gender` on(`users`.`gender_id` = `users_gender`.`id`)) left join `users_job_titles` on(`users`.`job_title_id` = `users_job_titles`.`id`)) WHERE `users`.`role_id` = 2 ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `v_freelancer_connects_and_merits`
 --
 DROP TABLE IF EXISTS `v_freelancer_connects_and_merits`;
@@ -1412,6 +1875,24 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Structure for view `v_freelancer_submissions`
+--
+DROP TABLE IF EXISTS `v_freelancer_submissions`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_freelancer_submissions`  AS SELECT `freelancer_project_submissions`.`id` AS `id`, `freelancer_project_submissions`.`project_id` AS `project_id`, `freelancer_project_submissions`.`user_id` AS `user_id`, `freelancer_project_submissions`.`submission_url` AS `submission_url`, `freelancer_project_submissions_status`.`status` AS `status`, `freelancer_project_submissions`.`created_at` AS `created_at`, `freelancer_project_submissions`.`updated_at` AS `updated_at` FROM (`freelancer_project_submissions` join `freelancer_project_submissions_status` on(`freelancer_project_submissions_status`.`id` = `freelancer_project_submissions`.`submission_status_id`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_notifications`
+--
+DROP TABLE IF EXISTS `v_notifications`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_notifications`  AS SELECT `notifications`.`id` AS `id`, `notifications`.`application_id` AS `application_id`, `notifications`.`project_id` AS `project_id`, `notifications`.`user_id` AS `user_id`, `notifications`.`type` AS `type`, `notifications`.`message` AS `message`, `notifications`.`is_read` AS `is_read`, `notifications`.`created_at` AS `created_at`, `notifications`.`updated_at` AS `updated_at` FROM `notifications` ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `v_not_verified_emails`
 --
 DROP TABLE IF EXISTS `v_not_verified_emails`;
@@ -1421,11 +1902,29 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Structure for view `v_project_comments`
+--
+DROP TABLE IF EXISTS `v_project_comments`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_project_comments`  AS SELECT `project_comments`.`id` AS `id`, `project_comments`.`project_id` AS `project_id`, `project_comments`.`user_id` AS `user_id`, `project_comments`.`comment` AS `comment`, `project_comments`.`created_at` AS `created_at` FROM `project_comments` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_project_completion_history`
+--
+DROP TABLE IF EXISTS `v_project_completion_history`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_project_completion_history`  AS SELECT `fpsa`.`id` AS `id`, `fpsa`.`application_id` AS `application_id`, `fpsa`.`project_id` AS `project_id`, `fpsa`.`user_id` AS `user_id`, `fpsa`.`action_type` AS `action_type`, `fpsa`.`action_timestamp` AS `action_timestamp`, `fpsa`.`new_submission_url` AS `new_submission_url`, `fss`.`status` AS `status`, `fpsa`.`new_updated_at` AS `created_at` FROM (`freelancer_project_submissions_audit` `fpsa` left join `freelancer_project_submissions_status` `fss` on(`fpsa`.`new_submission_status_id` = `fss`.`id`)) ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `v_project_details`
 --
 DROP TABLE IF EXISTS `v_project_details`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_project_details`  AS SELECT `client_projects`.`id` AS `id`, `client_projects`.`user_id` AS `project_owner`, `client_projects`.`project_title` AS `project_title`, `skills_category`.`category_name` AS `project_category`, `client_projects`.`project_description` AS `project_description`, `client_project_status`.`status` AS `project_status`, `client_projects`.`project_connect_cost` AS `project_connect_cost`, `client_projects`.`project_merit_worth` AS `project_merit_worth`, `client_projects`.`created_at` AS `created_at` FROM ((`client_projects` join `skills_category` on(`client_projects`.`project_category_id` = `skills_category`.`id`)) join `client_project_status` on(`client_projects`.`project_status_id` = `client_project_status`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_project_details`  AS SELECT `client_projects`.`id` AS `id`, `client_projects`.`user_id` AS `project_owner`, `client_projects`.`project_title` AS `project_title`, `skills_category`.`category_name` AS `project_category`, `client_projects`.`project_description` AS `project_description`, `client_projects`.`project_objective` AS `project_objective`, `client_project_status`.`status` AS `project_status`, `client_projects`.`project_connect_cost` AS `project_connect_cost`, `client_projects`.`project_merit_worth` AS `project_merit_worth`, `client_projects`.`created_at` AS `created_at` FROM ((`client_projects` join `skills_category` on(`client_projects`.`project_category_id` = `skills_category`.`id`)) join `client_project_status` on(`client_projects`.`project_status_id` = `client_project_status`.`id`)) ;
 
 -- --------------------------------------------------------
 
@@ -1498,6 +1997,12 @@ ALTER TABLE `client_project_status`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `completed_projects_audit`
+--
+ALTER TABLE `completed_projects_audit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
@@ -1540,12 +2045,44 @@ ALTER TABLE `freelancer_merits`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `freelancer_project_submissions`
+--
+ALTER TABLE `freelancer_project_submissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `submission_id` (`submission_status_id`);
+
+--
+-- Indexes for table `freelancer_project_submissions_audit`
+--
+ALTER TABLE `freelancer_project_submissions_audit`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `freelancer_project_submissions_status`
+--
+ALTER TABLE `freelancer_project_submissions_status`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `freelancer_skills`
 --
 ALTER TABLE `freelancer_skills`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `skill_id` (`skill_id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `project_comments`
+--
+ALTER TABLE `project_comments`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `skills`
@@ -1561,12 +2098,11 @@ ALTER TABLE `skills_category`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tasks`
+-- Indexes for table `top_categories_audit`
 --
-ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`task_id`),
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `tasks_ibfk_2` (`assigned_to`);
+ALTER TABLE `top_categories_audit`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `users`
@@ -1612,13 +2148,13 @@ ALTER TABLE `users_status`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `client_project_audit`
 --
 ALTER TABLE `client_project_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `client_project_status`
@@ -1627,16 +2163,22 @@ ALTER TABLE `client_project_status`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `completed_projects_audit`
+--
+ALTER TABLE `completed_projects_audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- AUTO_INCREMENT for table `freelancer_applications_audit`
 --
 ALTER TABLE `freelancer_applications_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `freelancer_application_status`
@@ -1648,25 +2190,55 @@ ALTER TABLE `freelancer_application_status`
 -- AUTO_INCREMENT for table `freelancer_connects`
 --
 ALTER TABLE `freelancer_connects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `freelancer_experiences`
 --
 ALTER TABLE `freelancer_experiences`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `freelancer_merits`
 --
 ALTER TABLE `freelancer_merits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `freelancer_project_submissions`
+--
+ALTER TABLE `freelancer_project_submissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `freelancer_project_submissions_audit`
+--
+ALTER TABLE `freelancer_project_submissions_audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `freelancer_project_submissions_status`
+--
+ALTER TABLE `freelancer_project_submissions_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `freelancer_skills`
 --
 ALTER TABLE `freelancer_skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=243;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+
+--
+-- AUTO_INCREMENT for table `project_comments`
+--
+ALTER TABLE `project_comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `skills`
@@ -1681,16 +2253,16 @@ ALTER TABLE `skills_category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT for table `tasks`
+-- AUTO_INCREMENT for table `top_categories_audit`
 --
-ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `top_categories_audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `users_gender`
@@ -1749,6 +2321,13 @@ ALTER TABLE `freelancer_merits`
   ADD CONSTRAINT `freelancer_merits_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `freelancer_project_submissions`
+--
+ALTER TABLE `freelancer_project_submissions`
+  ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `submission_id` FOREIGN KEY (`submission_status_id`) REFERENCES `freelancer_project_submissions_status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `freelancer_skills`
 --
 ALTER TABLE `freelancer_skills`
@@ -1762,11 +2341,10 @@ ALTER TABLE `skills`
   ADD CONSTRAINT `category_id` FOREIGN KEY (`skill_category_id`) REFERENCES `skills_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `tasks`
+-- Constraints for table `top_categories_audit`
 --
-ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `top_categories_audit`
+  ADD CONSTRAINT `top_categories_audit_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `skills_category` (`id`);
 
 --
 -- Constraints for table `users`
@@ -1790,6 +2368,60 @@ CREATE DEFINER=`root`@`localhost` EVENT `e_delete_rejected_applications` ON SCHE
     DELETE FROM freelancer_applications
     WHERE application_status_id = 3;
 END$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `e_user_connects_rest` ON SCHEDULE EVERY 1 MONTH STARTS '2024-12-01 23:41:43' ENDS '2026-12-01 23:41:43' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    UPDATE freelancer_connects
+    SET connects = 100;
+END$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `e_completed_projects` ON SCHEDULE EVERY 1 MONTH STARTS '2024-12-15 17:33:24' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    INSERT INTO completed_projects_audit (
+        project_id,
+        user_id,
+        project_title,
+        project_category_id,
+        project_description,
+        project_objective,
+        project_status_id,
+        project_connect_cost,
+        project_merit_worth,
+        created_at,
+        updated_at,
+        month_collected
+    )
+    SELECT 
+        id AS project_id,
+        user_id,
+        project_title,
+        project_category_id,
+        project_description,
+        project_objective,
+        project_status_id,
+        project_connect_cost,
+        project_merit_worth,
+        created_at,
+        updated_at,
+        DATE_FORMAT(NOW(), '%M') AS month_collected 
+    FROM client_projects
+    WHERE project_status_id = 3;
+END$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `e_top_categories` ON SCHEDULE EVERY 1 MONTH STARTS '2024-12-15 17:39:19' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+   
+    INSERT INTO top_categories_audit (category_id, frequency, month_collected, created_at)
+    SELECT 
+        project_category_id AS category_id,
+        COUNT(project_category_id) AS frequency,
+        DATE_FORMAT(NOW(), '%M') AS month_collected,
+        NOW() AS created_at
+    FROM client_projects
+    GROUP BY project_category_id
+    ORDER BY frequency DESC
+    LIMIT 10;
+END$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `e_delete_read_notifications` ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 22:37:44' ENDS '2025-12-01 22:37:44' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM notifications
+    WHERE is_read = 1$$
 
 DELIMITER ;
 COMMIT;

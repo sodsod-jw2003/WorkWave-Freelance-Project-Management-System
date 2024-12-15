@@ -73,7 +73,10 @@ $category_icons = [
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
-
+    
+    <!-- SWAL -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../../dist/js/client_projects.js" defer></script>
     <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
@@ -100,106 +103,13 @@ $category_icons = [
             </div>
             <!-- add project -->
             <div class="col-12 my-3">
-                <button class="btn btn-dark-green">
+                <button class="btn btn-dark-green" id="addProject">
                     <i class="fas fa-plus me-2"></i>New Project
                 </button>
-                <div class="col-12 mt-3">
-                    <form id="addProjectForm" class="needs-validation" novalidate>
-                        <div class="card p-4 pb-3 mb-3 bg-light shadow-sm">
-                            <div class="row">
-                                <div class="col-md-5 mb-1">
-                                    <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
-                                    <input type="text" 
-                                        name="project_title" 
-                                        id="project_title" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                        required>
-                                    <div class="invalid-feedback">Enter a project title.</div>
-                                </div>
-                                <div class="col-md-4 mb-1">
-                                    <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
-                                    <select 
-                                        name="project_category" 
-                                        id="project_category" 
-                                        class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category"
-                                        required>
-                                        <option value="" disabled selected>Select Category</option>
-                                    </select>
-                                    <div class="invalid-feedback">Select a category.</div>
-                                </div>
-                                <div class="col-md-3 mb-1">
-                                    <label for="status" class="text-muted small mb-2 ms-1">Status</label>
-                                    <select 
-                                        name="status" 
-                                        id="status" 
-                                        class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
-                                        required>
-                                        <option value="" disabled selected>Select Status</option>
-                                        <option value="1">Hiring</option>
-                                        <option value="2">In Progress</option>
-                                        <option value="3">Completed</option>
-                                    </select>
-                                    <div class="invalid-feedback">Select a status.</div>
-                                </div>
-                            </div>
-                            <div class="row mt-1">
-                                <div class="col-md-12 mb-1">
-                                    <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
-                                    <textarea 
-                                        name="project_description" 
-                                        id="project_description" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1"
-                                        required></textarea>
-                                    <div class="invalid-feedback">Enter a project description.</div>
-                                </div>
-                            </div>
-                            <!-- newly added project objective -->
-                            <div class="row mt-1">
-                                <div class="col-md-12 mb-1">
-                                    <label for="project_objective" class="text-muted small mb-2 ms-1">Project Objective</label>
-                                    <textarea 
-                                        name="project_objective" 
-                                        id="project_objective" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1"
-                                        required></textarea>
-                                    <div class="invalid-feedback">Enter a project objective.</div>
-                                </div>
-                            </div>
-                            <!-- /newly added project objective -->
-                            <div class="row mt-1">
-                                <div class="col-md-6 mb-1">
-                                    <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
-                                    <input type="number" 
-                                        name="connect_cost" 
-                                        id="connect_cost" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                        min="5"
-                                        max="10" 
-                                        required>
-                                    <div class="invalid-feedback">Enter a connect cost between 5 and 10.</div>
-                                </div>
-                                <div class="col-md-6 mb-1">
-                                    <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
-                                    <input type="number" 
-                                        name="merit_worth" 
-                                        id="merit_worth" 
-                                        class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                        min="10"
-                                        max="50" 
-                                        required>
-                                    <div class="invalid-feedback">Enter a merit worth between 10 and 50.</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="container pt-3 mb-3">
-                                    <button type="submit" class="btn btn-dark-green">Save Project</button>
-                                    <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
             </div>
+
+            <div id="projectFormContainer"></div>
+
             <!-- add project -->
             <!-- projects -->
             <div class="row mt-4">
@@ -209,59 +119,13 @@ $category_icons = [
                             <div class="row my-3 mx-1 border-0">
                                 <h3>Your Projects</h3>
                             </div>
+                            <!-- This is where projects will be loaded dynamically -->
                             <div class="row px-4">
-                                <?php if ($projects): ?>
-                                    <?php foreach($projects as $project): ?>
-                                        <div class="col-12 d-flex justify-content-center align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
-                                            <div class="col-12">
-                                                <div class="row align-items-center px-3 py-2 rounded-top">
-                                                    <div class="col-md-6 d-flex align-items-center ps-0">
-                                                        <h5 class="mb-0">
-                                                            <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" class="text-green-50 fs-4 text-decoration-none fw-semibold">
-                                                                <?php echo htmlspecialchars($project['project_title']); ?>
-                                                            </a>
-                                                            <span class="badge bg-secondary text-white ms-2 small">
-                                                                Posted <?php echo date('M j, Y', strtotime($project['created_at'])); ?>
-                                                            </span>
-                                                        </h5>
-                                                    </div>
-                                                    <div class="col-md-6 d-flex justify-content-end pe-0">
-                                                        <span class="badge bg-success">
-                                                            <?php echo htmlspecialchars($project['project_status']); ?>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-center px-3 py-2 rounded-bottom">
-                                                    <div class="col-md-6 d-flex align-items-center ms-0 ps-0">
-                                                        <i class="<?php echo $category_icons[$project['project_category']] ?? 'fas fa-folder'; ?> me-3 text-green-50 fa-2x"></i>
-                                                        <span class="fs-5">
-                                                            <?php echo htmlspecialchars($project['project_category']); ?>
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-md-6 d-flex justify-content-end pe-0 ">
-                                                        <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" 
-                                                            class="btn btn-secondary me-2">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <button class="btn btn-primary me-2">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <button class="btn btn-danger">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <div class="col-12 text-center py-4">
-                                        <p>No projects found.</p>
-                                    </div>
-                                <?php endif; ?>
+                                <!-- Projects will be inserted here by loadProjects() -->
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
             <!-- /projects -->
         </div>

@@ -81,6 +81,19 @@ document.addEventListener("DOMContentLoaded", function () {
 $(document).on('submit', '#personalInfoForm', function(e) {
     e.preventDefault();
     
+    function capitalizeWords(name) {
+        return name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    }
+    
+    const firstName = capitalizeWords($('#first_name').val());
+    const lastName = capitalizeWords($('#last_name').val());
+    
+    $('#first_name').val(firstName);
+    $('#last_name').val(lastName);
+
     $.ajax({
         url: '../../dist/php/process/proc_update_personal_info.php',
         type: 'POST',
@@ -89,7 +102,7 @@ $(document).on('submit', '#personalInfoForm', function(e) {
         success: function(response) {
             if(response.success) {
                 // Update profile card name
-                const fullName = $('#first_name').val() + ' ' + $('#last_name').val();
+                const fullName = firstName + ' ' + lastName;
                 $('.container.fs-5.text-center.mt-3').text(fullName);
                 // Update job title using selected option text
                 const jobTitle = $('#job_title option:selected').text();
@@ -276,100 +289,57 @@ $('#addProject').click(function () {
     }
 
     const newProjectForm = `
-        <form id="addProjectForm" class="needs-validation" novalidate>
-            <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
-                <div class="row">
-                    <div class="col-md-5 mb-1">
-                        <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
-                        <input type="text" 
-                            name="project_title" 
-                            id="project_title" 
-                            class="form-control bg-white-100 no-outline-green-focus border-1" 
-                            required>
-                        <div class="invalid-feedback">Enter a project title.</div>
-                    </div>
-                    <div class="col-md-4 mb-1">
-                        <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
-                        <select 
-                            name="project_category" 
-                            id="project_category" 
-                            class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category"
-                            required>
-                            <option value="" disabled selected>Select Category</option>
-                            ${savedCategories}
-                        </select>
-                        <div class="invalid-feedback">Select a category.</div>
-                    </div>
-                    <div class="col-md-3 mb-1">
-                        <label for="status" class="text-muted small mb-2 ms-1">Status</label>
-                        <select 
-                            name="status" 
-                            id="status" 
-                            class="form-select bg-white-100 no-outline-green-focus border-1 w-100"
-                            required>
-                            <option value="" disabled selected>Select Status</option>
-                            <option value="1">Hiring</option>
-                            <option value="2">In Progress</option>
-                            <option value="3">Completed</option>
-                        </select>
-                        <div class="invalid-feedback">Select a status.</div>
-                    </div>
+    <form id="addProjectForm" class="needs-validation" novalidate>
+        <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
+            <div class="row">
+                <div class="col-md-5 mb-1">
+                    <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
+                    <input type="text" name="project_title" id="project_title" class="form-control bg-white-100 no-outline-green-focus border-1" required>
+                    <div class="invalid-feedback">Enter a project title.</div>
                 </div>
-                <div class="row mt-1">
-                    <div class="col-md-12 mb-1">
-                        <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
-                        <textarea 
-                            name="project_description" 
-                            id="project_description" 
-                            class="form-control bg-white-100 no-outline-green-focus border-1"
-                            required></textarea>
-                        <div class="invalid-feedback">Enter a project description.</div>
-                    </div>
+                <div class="col-md-4 mb-1">
+                    <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
+                    <select name="project_category" id="project_category" class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category" required>
+                        <option value="" disabled selected>Select Category</option>
+                        ${savedCategories}
+                    </select>
+                    <div class="invalid-feedback">Select a category.</div>
                 </div>
-                <div class="row mt-1">
-                    <div class="col-md-12 mb-1">
-                        <label for="project_objective" class="text-muted small mb-2 ms-1">Project Objective</label>
-                        <textarea 
-                            name="project_objective" 
-                            id="project_objective" 
-                            class="form-control bg-white-100 no-outline-green-focus border-1"
-                            required></textarea>
-                        <div class="invalid-feedback">Enter a project objective.</div>
-                    </div>
-                </div>
-                <div class="row mt-1">
-                    <div class="col-md-6 mb-1">
-                        <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
-                        <input type="number" 
-                            name="connect_cost" 
-                            id="connect_cost" 
-                            class="form-control bg-white-100 no-outline-green-focus border-1" 
-                            min="5"
-                            max="10" 
-                            required>
-                        <div class="invalid-feedback">Enter a connect cost between 5 and 10.</div>
-                    </div>
-                    <div class="col-md-6 mb-1">
-                        <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
-                        <input type="number" 
-                            name="merit_worth" 
-                            id="merit_worth" 
-                            class="form-control bg-white-100 no-outline-green-focus border-1" 
-                            min="10"
-                            max="50" 
-                            required>
-                        <div class="invalid-feedback">Enter a merit worth between 10 and 50.</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="container pt-3 mb-3">
-                        <button type="submit" class="btn btn-dark-green">Save Project</button>
-                        <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
-                    </div>
+                <div class="col-md-3 mb-1">
+                    <label for="status" class="text-muted small mb-2 ms-1">Status</label>
+                    <select name="status" id="status" class="form-select bg-white-100 no-outline-green-focus border-1 w-100" required>
+                        <option value="" disabled selected>Select Status</option>
+                        <option value="1">Hiring</option>
+                        <option value="2">In Progress</option>
+                        <option value="3">Completed</option>
+                    </select>
+                    <div class="invalid-feedback">Select a status.</div>
                 </div>
             </div>
-        </form>
-    `;
+            <div class="row mt-1">
+                <div class="col-md-12 mb-1">
+                    <label for="project_description" class="text-muted small mb-2 ms-1">Project Description</label>
+                    <textarea name="project_description" id="project_description" class="form-control bg-white-100 no-outline-green-focus border-1" required></textarea>
+                    <div class="invalid-feedback">Enter a project description.</div>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-md-12 mb-1">
+                    <label for="project_objective" class="text-muted small mb-2 ms-1">Project Objective</label>
+                    <textarea name="project_objective" id="project_objective" class="form-control bg-white-100 no-outline-green-focus border-1" required></textarea>
+                    <div class="invalid-feedback">Enter a project objective.</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container pt-3 mb-3">
+                    <button type="submit" class="btn btn-dark-green">Save Project</button>
+                    <button type="button" class="btn btn-secondary" id="cancelAddProject">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+`;
+
     $('#projectContainer').prepend(newProjectForm);
 });
 
@@ -389,11 +359,11 @@ $(document).on('submit', '#addProjectForm', function (e) {
     const projectData = {
         project_title: $('#project_title').val(),
         project_description: $('#project_description').val(),
+        project_objective: $('#project_objective').val(),
         project_category: $('#project_category').val(),
-        status: $('#status').val(),
-        connect_cost: $('#connect_cost').val(),
-        merit_worth: $('#merit_worth').val()
+        status: $('#status').val()
     };
+    
 
     // AJAX request
     $.ajax({
@@ -430,11 +400,11 @@ $(document).on('submit', '#addProjectForm', function (e) {
                         </div>
                         <div class="container">
                             <span class="text-secondary small">Costs: </span>
-                            <span class="text-green-50 fw-semibold small">${projectData.connect_cost} Connects</span>
+                            <span class="text-green-50 fw-semibold small">10 Connects</span>
                         </div>
                         <div class="container mb-3">
                             <span class="text-secondary small">Worth: </span>
-                            <span class="text-green-50 fw-semibold small">${projectData.merit_worth} Merit</span>
+                            <span class="text-green-50 fw-semibold small">10 Merits</span>
                         </div>
                     </div>
                 `;
@@ -510,34 +480,8 @@ $(document).on('click', '.edit-project', function () {
                                     name="project_objective" 
                                     id="project_objective" 
                                     class="form-control bg-white-100 no-outline-green-focus border-1"
-                                    required></textarea>
+                                    required>${project.project_objective}</textarea>
                                 <div class="invalid-feedback">Enter a project objective.</div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 mb-1">
-                                <label for="connect_cost" class="text-muted small mb-2 ms-1">Connect Cost</label>
-                                <input type="number" 
-                                    name="connect_cost" 
-                                    id="connect_cost" 
-                                    class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                    min="5"
-                                    max="10"
-                                    value="${project.project_connect_cost}" 
-                                    required>
-                                <div class="invalid-feedback">Connect cost must be between 5 and 10.</div>
-                            </div>
-                            <div class="col-md-6 mb-1">
-                                <label for="merit_worth" class="text-muted small mb-2 ms-1">Merit</label>
-                                <input type="number" 
-                                    name="merit_worth" 
-                                    id="merit_worth" 
-                                    class="form-control bg-white-100 no-outline-green-focus border-1" 
-                                    min="10"
-                                    max="50" 
-                                    value="${project.project_merit_worth}" 
-                                    required>
-                                <div class="invalid-feedback">Merit worth must be between 10 and 50.</div>
                             </div>
                         </div>
                         <div class="row">
@@ -572,32 +516,15 @@ $(document).on('submit', '#editProjectForm', function (e) {
     const projectCategory = $('select[name="project_category"]').val();
     const projectStatus = $('select[name="status"]').val();
     const projectDescription = $('textarea[name="project_description"]').val().trim();
-    const connectCost = $('input[name="connect_cost"]').val().trim();
-    const meritWorth = $('input[name="merit_worth"]').val().trim();
-
-    if (connectCost < 5 || connectCost > 10) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Connect Cost',
-            text: 'Connect Cost must be between 5 and 10.',
-        });
-        return;
-    }
-
-    if (meritWorth < 10 || meritWorth > 50) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Merit Worth',
-            text: 'Merit Worth must be between 10 and 50.',
-        });
-        return;
-    }
+    const projectObjective = $('textarea[name="project_objective"]').val().trim();
 
     const projectId = $(this).data('project-id');
     const formData = $(this).serializeArray();
     formData.push({ name: 'action', value: 'update' });
     formData.push({ name: 'project_id', value: projectId });
 
+    console.log('Sending Data:', formData);
+    
     $.ajax({
         url: '../../dist/php/process/proc_manage_project.php',
         type: 'POST',
@@ -756,3 +683,5 @@ $(document).on('click', '.delete-project', function () {
           }
       });
   }
+
+  

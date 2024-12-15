@@ -9,35 +9,22 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-$freelancer_id = $_GET['id'];
+$client_id = $_GET['id'];
 
 // Query for freelancer details
 $details_query = "SELECT * FROM v_user_profile 
-                 JOIN v_freelancer_connects_and_merits ON v_user_profile.id = v_freelancer_connects_and_merits.id
                  WHERE v_user_profile.id = ?";
 $stmt = $mysqli->prepare($details_query);
-$stmt->bind_param("i", $freelancer_id);
+$stmt->bind_param("i", $client_id);
 $stmt->execute();
-$freelancer = $stmt->get_result()->fetch_assoc();
-
-// Query for job experience
-$experience_query = "SELECT * FROM freelancer_experiences 
-                    WHERE user_id = ? 
-                    ORDER BY duration DESC";
-$stmt = $mysqli->prepare($experience_query);
-$stmt->bind_param("i", $freelancer_id);
-$stmt->execute();
-$experiences = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$client = $stmt->get_result()->fetch_assoc();
 
 // Query for project history
-$projects_query = "SELECT * FROM v_applications
-                  JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
-                  JOIN v_project_details ON v_applications_ids.project_id = v_project_details.id
-                  JOIN v_user_profile ON v_project_details.project_owner = v_user_profile.id
-                  WHERE v_applications_ids.user_id = ? 
-                  ORDER BY v_applications.created_at DESC";
+$projects_query = "SELECT * FROM v_project_details
+                  WHERE project_owner = ? 
+                  ORDER BY created_at DESC";
 $stmt = $mysqli->prepare($projects_query);
-$stmt->bind_param("i", $freelancer_id);
+$stmt->bind_param("i", $client_id);
 $stmt->execute();
 $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
@@ -72,15 +59,15 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             <div class="row mt-4 d-flex align-items-center">
                 <!-- profile title -->
                 <div class="col-12 col-md-6">
-                    <h2 class="text-start">Dynamic Client Name</h2>
+                    <h2 class="text-start"><?php echo $client['first_name'] . ' ' . $client['last_name'] ?> </h2>
                 </div>
                 <!-- breadcrumb navigation -->
                 <div class="col-12 col-md-6 d-flex justify-content-md-end mt-3 mt-md-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="dashboard.php">'s Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="dashboard.php"><?php echo htmlspecialchars($user['first_name']); ?>'s Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="clients.php">All Clients</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">dynamic client name</li>
+                            <li class="breadcrumb-item active" aria-current="page"><?php echo $client['first_name'] . ' ' . $client['last_name'] ?></li>
                         </ol>
                     </nav>
                 </div>
@@ -94,11 +81,11 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         <div class="container d-flex justify-content-center mt-5 position-relative">
                             <div class="profile-pic-wrapper">
                                 <!-- client pfp -->
-                                <img src="" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
+                                <img src="<?php echo $client['profile_picture_url'] ?>" class="profile-pic rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" onerror="this.onerror=null; this.src='../../img/default-profile.png';">
                             </div>
                         </div>
-                        <div class="container fs-5 text-center mt-3">client name</div>
-                        <div class="container fs-6 text-center text-muted mb-5">job title</div>
+                        <div class="container fs-5 text-center mt-3"><?php echo $client['first_name'] . ' ' . $client['last_name'] ?></div>
+                        <div class="container fs-6 text-center text-muted mb-5"><?php echo $client['job_title'] ?></div>
                     </div>
                     <!-- sidebar: personal information -->
                     <div class="card card-primary card-outline shadow border-0 mb-4">
@@ -114,37 +101,37 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             <div class="mb-3">
                                 <span class="fas fa-envelope me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Email</span>
-                                <div class="text-muted small"><?php echo $freelancer['email'] ?></div>
+                                <div class="text-muted small"><?php echo $client['email'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-phone me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                <div class="text-muted small"><?php echo $freelancer['mobile_number'] ?></div>
+                                <div class="text-muted small"><?php echo $client['mobile_number'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Gender</span>
-                                <div class="text-muted small"><?php echo $freelancer['gender'] ?></div>
+                                <div class="text-muted small"><?php echo $client['gender'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-location-dot me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Location</span>
-                                <div class="text-muted small"><?php echo $freelancer['city'] ?></div>
+                                <div class="text-muted small"><?php echo $client['city'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-flag me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo $freelancer['nationality'] ?></div>
+                                <div class="text-muted small"><?php echo $client['nationality'] ?></div>
                             </div>
                             <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>
-                                <div class="text-muted small"><?php echo $freelancer['language'] ?></div>
+                                <div class="text-muted small"><?php echo $client['language'] ?></div>
                             </div>
                         </div>
                     </div>                        
@@ -208,17 +195,7 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                 <hr class="divider mx-2 mt-3">
                                                 <!-- client name and posted time -->
                                                 <div class="col-12 col d-flex align-items-center px-2 pt-0 mt-0">
-                                                    <div class="col-md-6 d-flex bg- align-items-center">
-                                                        <span>
-                                                            <span class="text-muted me-1">Posted by:</span>
-                                                            <span class="fw-semibold text-green-40">
-                                                                <?php 
-                                                                    echo htmlspecialchars($project['first_name'] . ' ' . $project['last_name']); 
-                                                                ?>
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                                    <div class="col-md-12 d-flex align-items-center justify-content-end">
                                                         <span class="text-muted small">
                                                             <?php 
                                                                 echo htmlspecialchars(date('M j, Y', strtotime($project['created_at'])));

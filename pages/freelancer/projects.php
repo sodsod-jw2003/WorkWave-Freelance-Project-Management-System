@@ -9,9 +9,11 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-$query = "SELECT * FROM v_project_details
-          WHERE v_project_details.project_owner = ?
-          ORDER BY created_at DESC;";
+$query = "SELECT * FROM v_applications
+          JOIN v_applications_ids ON v_applications.id = v_applications_ids.id
+          JOIN v_project_details ON v_applications_ids.project_id = v_project_details.id
+          WHERE v_applications_ids.user_id = ? AND v_applications.status = 'accepted'
+          ORDER BY v_project_details.created_at DESC;";
 
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $_SESSION['user_id']);
@@ -74,7 +76,7 @@ $category_icons = [
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../dist/css/custom.css">
 
-    <script src="../../dist/js/client_projects.js" defer></script>
+    <script src="../../dist/js/freelancer_projects.js" defer></script>
     <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
 
@@ -107,46 +109,57 @@ $category_icons = [
                                 <h3>Your Projects</h3>
                             </div>
                             <div class="row px-4">
-                                <div class="col-12 d-flex justify-content-center align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
-                                    <div class="col-12">
-                                        <div class="row align-items-center px-3 py-2 rounded-top">
-                                            <div class="col-md-6 d-flex align-items-center ps-0">
-                                                <h5 class="mb-0">
-                                                    <a href="project_details.php?id=" class="text-green-50 fs-4 text-decoration-none fw-semibold">
-                                                        Proj Title
-                                                    </a>
-                                                    <span class="badge bg-secondary text-white ms-2 small">
-                                                        Posted 
-                                                    </span>
-                                                </h5>
-                                            </div>
-                                            <div class="col-md-6 d-flex justify-content-end pe-0">
-                                                <span class="badge bg-success">
-                                                    Proj Status
-                                                </span>
+                                <?php if (!empty($projects)): ?>
+                                    <?php foreach ($projects as $project): ?>
+                                        <div class="col-12 d-flex justify-content-center align-items-center p-4 rounded shadow-sm border mb-3 bg-light">
+                                            <div class="col-12">
+                                                <!-- Project Header -->
+                                                <div class="row align-items-center px-3 py-2 rounded-top">
+                                                    <div class="col-md-6 d-flex align-items-center ps-0">
+                                                        <h5 class="mb-0">
+                                                            <a href="project_details.php?id=<?php echo htmlspecialchars($project['id']); ?>" 
+                                                            class="text-green-50 fs-4 text-decoration-none fw-semibold">
+                                                            <?php echo htmlspecialchars($project['project_title']); ?>
+                                                            </a>
+                                                            <span class="badge bg-secondary text-white ms-2 small">
+                                                                Posted on <?php echo date('M d, Y', strtotime($project['created_at'])); ?>
+                                                            </span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-md-6 d-flex justify-content-end pe-0">
+                                                        <span class="badge bg-success">
+                                                            <?php echo ucfirst(htmlspecialchars($project['project_status'])); ?>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- Project Details -->
+                                                <div class="row align-items-center px-3 py-2 rounded-bottom">
+                                                    <div class="col-md-6 d-flex align-items-center ms-0 ps-0">
+                                                        <?php 
+                                                            $category = htmlspecialchars($project['project_category']);
+                                                            $icon = $category_icons[$category] ?? 'fa-solid fa-folder';
+                                                        ?>
+                                                        <i class="<?php echo $icon; ?> me-3 text-green-50 fa-2x"></i>
+                                                        <span class="fs-5">
+                                                            <?php echo $category; ?>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-6 d-flex justify-content-end pe-0">
+                                                        <a href="project_details.php?id=<?php echo htmlspecialchars($project['project_id']); ?>" 
+                                                        class="btn btn-outline-secondary me-0">
+                                                            View Project
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="row align-items-center px-3 py-2 rounded-bottom">
-                                            <div class="col-md-6 d-flex align-items-center ms-0 ps-0">
-                                                <i class="fas fa-folder me-3 text-green-50 fa-2x"></i>
-                                                <span class="fs-5">
-                                                    Proj Category
-                                                </span>
-                                            </div>
-                                            <div class="col-md-6 d-flex justify-content-end pe-0">
-                                                <a href="project_details.php?id=" 
-                                                class="btn btn-outline-secondary me-0">
-                                                    View Project
-                                                </a>
-                                            </div>
-                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <!-- No Projects Found -->
+                                    <div class="col-12 text-center py-4">
+                                        <p>No projects found.</p>
                                     </div>
-                                </div>
-
-                                <div class="col-12 text-center py-4">
-                                    <p>No projects found.</p>
-                                </div>
-
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

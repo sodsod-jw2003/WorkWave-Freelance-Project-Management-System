@@ -70,7 +70,7 @@ $category_icons = [
     'Software Development' => 'fa-solid fa-file-code',
     'Digital Marketing' => 'fa-solid fa-store',
     'Sales Support' => 'fa-solid fa-phone',
-    'Advertising' => 'fa-solid fa-megaphone',
+    'Advertising' => 'fa-solid fa-phone',
     'Virtual Assistance' => 'fa-solid fa-headset',
     'Data Entry' => 'fa-solid fa-database',
     'Customer Support' => 'fa-solid fa-phone',
@@ -90,8 +90,9 @@ $category_icons = [
     'Data Processing' => 'fa-solid fa-chart-simple',
     'Advanced Analytics' => 'fa-solid fa-chart-line',
     'Game Development Support' => 'fa-solid fa-gamepad',
-    'Monetization & Coaching' => 'fa-solid fa-chalkboard-user'
+    'Monetization & Coaching' => 'fa-solid fa-chalkboard-user',
 ];
+
 ?>
 
 <!DOCTYPE html>

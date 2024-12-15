@@ -48,14 +48,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 Swal.fire({
                     icon: 'success',
-                    title: 'Status Updated',
-                    text: 'Application status has been updated successfully'
+                    title: 'Freelancer Successfully Hired',
+                    text: 'Freelancer has successfully hired for this project',
                 });
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Update Failed',
-                    text: data.message || 'Failed to update application status'
+                    title: 'Hiring Failed',
+                    text: data.message || 'An application is already accepted for this project'
+                }).then(() => {
+                    // Refresh the page to show current state
+                    location.reload();
                 });
             }
         })
@@ -67,5 +70,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: 'An error occurred while updating the application'
             });
         });
-    }
+    }    
 });
