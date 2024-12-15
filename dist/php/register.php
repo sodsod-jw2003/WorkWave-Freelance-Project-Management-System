@@ -25,8 +25,16 @@
     <script src="../js/register.js" defer></script>
 </head>
 <body>
-<section class="container-fluid poppins vh-100 p-5 d-flex justify-content-center align-items-center">
-    <div class="card p-5 rounded-5 shadow w-50">
+<section class="container-fluid poppins vh-100 p-5 d-flex justify-content-center align-items-center position-relative">
+    <!-- Video Background -->
+    <div class="hero-video position-absolute top-0 start-0 w-100 h-100 z-index-0">
+        <video autoplay loop muted playsinline class="w-100 h-100 object-fit-cover">
+            <source src="/dist/php/uploads/vid/hero_vid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="card p-5 rounded-5 shadow w-50 position-relative z-index-1">
         <!-- header -->
         <div class="container">
             <h1 class="fs-1 text-center text-green-70 fw-bold">Account Registration</h1>
@@ -221,9 +229,9 @@
         async
         defer>
 
+
+    </script>
 <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
-    </script>
-
 </body>
 </html>

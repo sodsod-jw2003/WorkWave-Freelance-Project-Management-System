@@ -49,17 +49,24 @@ if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
     
 </head>
 <body>
-    <section class="container-fluid poppins vh-100 p-5 d-flex justify-content-center align-items-center">
-        <div class="card p-5 rounded-5 shadow w-50">
+<section class="container-fluid poppins vh-100 p-5 d-flex justify-content-center align-items-center position-relative">
+    <!-- Video Background -->
+    <div class="hero-video position-absolute top-0 start-0 w-100 h-100 z-index-0">
+        <video autoplay loop muted playsinline class="w-100 h-100 object-fit-cover">
+            <source src="/dist/php/uploads/vid/hero_vid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
-            <!-- header -->
-            <div class="container">
-                <h1 class="fs-1 text-center text-green-70 fw-bold">Reset Password</h1>
-                <h6 class="fs-6 text-center">Enter your new Password</h6>
-            </div>
+    <div class="card p-5 rounded-5 shadow w-50 z-index-1">
+        <!-- header -->
+        <div class="container">
+            <h1 class="fs-1 text-center text-green-70 fw-bold">Reset Password</h1>
+            <h6 class="fs-6 text-center">Enter your new Password</h6>
+        </div>
 
-            <!-- form -->
-            <form action="process/proc_reset_password.php" method="post" id="reset">
+        <!-- form -->
+        <form action="process/proc_reset_password.php" method="post" id="reset">
             <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 
             <!-- password -->
@@ -105,9 +112,9 @@ if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
             </div>
             
             <!-- form ends here -->
-            </form>
+        </form>
+    </div>
+</section>
 
-        </div>
-    </section>
 </body>
 </html>
