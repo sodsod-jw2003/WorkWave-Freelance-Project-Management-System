@@ -21,7 +21,7 @@ $stmt->execute();
 $freelancer = $stmt->get_result()->fetch_assoc();
 
 // Query for job experience
-$experience_query = "SELECT * FROM freelancer_experiences 
+$experience_query = "SELECT * FROM v_freelancer_experiences 
                     WHERE user_id = ? 
                     ORDER BY duration DESC";
 $stmt = $mysqli->prepare($experience_query);

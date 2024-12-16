@@ -75,7 +75,7 @@ date_default_timezone_set('Asia/Manila');
                         <li class="dropdown-header">Notifications</li>
                         <?php
                         // Get notifications
-                        $notif_query = "SELECT * FROM notifications WHERE user_id = ? AND is_read = 0 ORDER BY created_at DESC LIMIT 5";
+                        $notif_query = "SELECT * FROM v_notifications WHERE user_id = ? AND is_read = 0 ORDER BY created_at DESC LIMIT 5";
                         $stmt = $mysqli->prepare($notif_query);
                         $stmt->bind_param("i", $_SESSION['user_id']);
                         $stmt->execute();

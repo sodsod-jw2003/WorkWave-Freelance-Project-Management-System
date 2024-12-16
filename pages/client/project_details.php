@@ -17,7 +17,7 @@ $project = $project_result->fetch_assoc();
 
 $submission_query = "SELECT fs.*, u.first_name, u.last_name 
                      FROM v_freelancer_submissions fs
-                     JOIN users u ON fs.user_id = u.id 
+                     JOIN v_user_profile u ON fs.user_id = u.id 
                      WHERE fs.project_id = ?";
 $stmt = $mysqli->prepare($submission_query);
 $stmt->bind_param("i", $project_id);

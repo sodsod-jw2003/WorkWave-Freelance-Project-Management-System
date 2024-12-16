@@ -20,7 +20,7 @@ $mysqli->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkWave</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="../../img/WorkWaveLogo.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/img/WorkWaveLogo.png">
 
     <!-- Bootstrap CSS from CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,7 +29,7 @@ $mysqli->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../dist/css/index.css">
+    <link rel="stylesheet" href="dist/css/index.css">
 
     <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
     <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
@@ -56,7 +56,7 @@ $mysqli->close();
             </div>
             <div class="hero-video">
                 <video autoplay loop muted playsinline>
-                    <source src="/dist/php/uploads/vid/hero_vid.mp4" type="video/mp4">
+                    <source src="dist/php/uploads/vid/hero_vid.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>

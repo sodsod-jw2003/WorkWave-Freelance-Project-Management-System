@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <!-- Video Background -->
     <div class="hero-video position-absolute top-0 start-0 w-100 h-100 z-index-0">
         <video autoplay loop muted playsinline class="w-100 h-100 object-fit-cover">
-            <source src="/dist/php/uploads/vid/hero_vid.mp4" type="video/mp4">
+            <source src="uploads/vid/hero_vid.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
