@@ -1,24 +1,9 @@
 <?php
 date_default_timezone_set('Asia/Manila');
-$token = $_GET["token"];
-
-$mysqli = require "../../connection.php";
-
-//checking of token
-$stmt = $mysqli->prepare("SELECT * FROM v_users_with_reset_tokens WHERE reset_token_hash = ?");
-$stmt->bind_param("s", $token);
-
-$stmt->execute();
-
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-if ($user === null) {
-    die("token not found.");
-}
-
-if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
-    die("token has expired");
+session_start();
+if (!isset($_SESSION['reset_email'])) {
+    header("Location: forgot_password.php");
+    exit;
 }
 ?>
 
@@ -67,8 +52,6 @@ if ($user["reset_token_expiry"] <= date('Y-m-d H:i:s')) {
 
         <!-- form -->
         <form action="process/proc_reset_password.php" method="post" id="reset">
-            <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
-
             <!-- password -->
             <div class="container mt-4 mb-3">
                 <div class="input-group my-1">

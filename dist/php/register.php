@@ -192,7 +192,112 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p class="container">terms and conditions bla bla bla</p>
+                            <div class="stepper-wrapper">
+                                <!-- Step 1 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">1</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">Definitions</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <ul class="list-unstyled">
+                                            <li>• Platform: WorkWave is a localhost project for educational purposes</li>
+                                            <li>• User: Any person accessing the Platform</li>
+                                            <li>• Client: A User who uploads/creates projects</li>
+                                            <li>• Freelancer: A User who takes on projects</li>
+                                            <li>• Content: All information, materials, and data entered</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">2</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">Eligibility</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <p>Users must be at least 18 years old or the age of majority in their jurisdiction.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">3</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">User Responsibilities</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <ul class="list-unstyled">
+                                            <li>• Provide accurate and complete information</li>
+                                            <li>• Responsible for posted Content</li>
+                                            <li>• Agree on project terms and timelines</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">4</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">Prohibited Activities</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <ul class="list-unstyled">
+                                            <li>• Post false or misleading Content</li>
+                                            <li>• Use Platform for illegal purposes</li>
+                                            <li>• Attempt to hack or disrupt operations</li>
+                                            <li>• Engage in harassment or discrimination</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Step 5 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">5</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">Privacy Policy</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <ul class="list-unstyled">
+                                            <li>• Data collection for functionality only</li>
+                                            <li>• No third-party sharing</li>
+                                            <li>• Limited data security (localhost project)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Step 6 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">6</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">Governing Law</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <p>This Agreement is governed by the laws of the Republic of the Philippines, including:</p>
+                                        <ul class="list-unstyled">
+                                            <li>• Republic Act No. 11967 (Internet Transactions Act)</li>
+                                            <li>• Republic Act No. 8792 (E-Commerce Act)</li>
+                                            <li>• Republic Act No. 7394 (Consumer Act)</li>
+                                            <li>• Republic Act No. 10173 (Data Privacy Act)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Step 7 -->
+                                <div class="step mb-4">
+                                    <div class="step-title d-flex align-items-center">
+                                        <span class="step-number bg-green-30 text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">7</span>
+                                        <h5 class="ms-3 mb-0 text-green-50">Contact Information</h5>
+                                    </div>
+                                    <div class="step-content ms-5 mt-3">
+                                        <ul class="list-unstyled">
+                                            <li>• Email: workwave2024@gmail.com</li>
+                                            <li>• Phone: +63 999 123 4567</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

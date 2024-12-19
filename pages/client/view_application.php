@@ -2,7 +2,7 @@
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
+    header("Location: /WorkWave/index.php");
     exit;
 }
 include ('../../misc/modals.php');
@@ -31,6 +31,14 @@ $stmt->bind_param("i", $application_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $applyinguser = $result->fetch_assoc();
+
+// Skills query for the freelancer
+$skills_query = "SELECT skill_name FROM v_user_skills WHERE user_id = ?";
+$stmt = $mysqli->prepare($skills_query);
+$stmt->bind_param("i", $applyinguser['id']);
+$stmt->execute();
+$skills_result = $stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
@@ -142,7 +150,7 @@ $applyinguser = $result->fetch_assoc();
                             </div>
                         </div>
                         <div class="container fs-5 text-center mt-3"><?php echo htmlspecialchars($applyinguser['first_name'] . ' ' . $applyinguser['last_name']); ?></div>
-                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($applyinguser['job_title']); ?> hayst</div>
+                        <div class="container fs-6 text-center text-muted"><?php echo htmlspecialchars($applyinguser['job_title']); ?></div>
                         <div class="mt-3">
                             <div class="mb-3">
                                 <span class="fas fa-star me-1 text-green-60"></span>
@@ -150,16 +158,32 @@ $applyinguser = $result->fetch_assoc();
                                 <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['merits']); ?></div>
                             </div>
                             <hr class="divider">
-                            <div class="mb-3">
-                                <span class="fas fa-phone me-1 text-green-60"></span>
-                                <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['mobile_number']); ?>TITE</div>
+                            <div class="">
+                                <span class="fas fa-lightbulb me-1 text-green-60"></span>
+                                <span class="text-muted fw-semibold text-green-60">Skills</span>
+                                <div class="container d-flex justify-content-center mt-2">
+                                    <div class="mb-1 text-secondary d-inline">
+                                        <?php                                  
+                                        while ($skill = $skills_result->fetch_assoc()) {
+                                            echo '<span class="badge bg-light-green text-green-50 me-1 mb-1">' . 
+                                                htmlspecialchars($skill['skill_name']) . 
+                                                '</span>';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
                                 <span class="fas fa-envelope me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Email</span>
                                 <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['email']); ?></div>
+                            </div>
+                            <hr class="divider">
+                            <div class="mb-3">
+                                <span class="fas fa-phone me-1 text-green-60"></span>
+                                <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['mobile_number']); ?></div>
                             </div>
                             <hr class="divider">
                             <div class="mb-3">
@@ -174,16 +198,11 @@ $applyinguser = $result->fetch_assoc();
                                 <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['city']); ?></div>
                             </div>
                             <hr class="divider">
-                            <div class="mb-3">
-                                <span class="fas fa-flag me-1 text-green-60"></span>
-                                <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['nationality']); ?></div>
-                            </div>
-                            <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>
                                 <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['language']); ?></div>
+                                <div class="text-muted small"><?php echo htmlspecialchars($applyinguser['language_2nd']); ?></div>
                             </div>
                         </div>
                     </div>

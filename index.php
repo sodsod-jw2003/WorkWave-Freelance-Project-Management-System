@@ -1,5 +1,16 @@
 <?php
+session_start();
 require ('connection.php');
+
+// Add this login check
+if (isset($_SESSION["user_id"])) {
+    if ($_SESSION["role"] === "Client") {
+        header("Location: pages/client/dashboard.php");
+    } else {
+        header("Location: pages/freelancer/dashboard.php");
+    }
+    exit;
+}
 
 $sql = "SELECT * FROM v_indemand_categories";
 $result = $mysqli->query($sql);
@@ -50,8 +61,8 @@ $mysqli->close();
                 <br><br>
                 <h6 class="hero-text fs-5 text-start mb-3">Join our growing community and show your skills to the world!</h6>
                 <div class="d-flex justify-content-start ps-5">
-                    <a href="/dist/php/register.php" class="btn btn-dark-green ms-5">Create an Account</a>
-                    <a href="/dist/php/login.php" class="btn btn-outline-light ms-2">Login</a>
+                    <a href="dist/php/register.php" class="btn btn-dark-green ms-5">Create an Account</a>
+                    <a href="dist/php/login.php" class="btn btn-outline-light ms-2">Login</a>
                 </div>
             </div>
             <div class="hero-video">

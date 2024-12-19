@@ -4,7 +4,7 @@ $mysqli = require('../../../connection.php');
 
 //login checking
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");
+    header("Location: /WorkWave/index.php");
     exit;
 }
 

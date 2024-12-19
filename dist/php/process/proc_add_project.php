@@ -10,9 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_category = $_POST['project_category'];
     $project_description = $_POST['project_description']; 
     $project_objective = $_POST['project_objective'];
-    $project_status = $_POST['status'];
 
-    $query = "CALL sp_add_projects(?,?,?,?,?,?)";
+    $query = "CALL sp_add_projects(?,?,?,?,?)";
     $stmt = $mysqli->prepare($query);
 
     if (!$stmt) {
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt->bind_param("isssss", $user_id, $project_title, $project_category, $project_description, $project_objective, $project_status);
+    $stmt->bind_param("issss", $user_id, $project_title, $project_category, $project_description, $project_objective);
     
     $response = array();
     if ($stmt->execute()) {

@@ -8,31 +8,35 @@
     $mysqli = require "../../../connection.php";
 
     //reset token generation
-    $reset_token = bin2hex(random_bytes(16));
-    $reset_token_hash = hash("sha256", $reset_token);
+    $reset_token = random_int(100000, 999999);
 
     $stmt = $mysqli->prepare("CALL sp_update_reset_token(?, ?)");
-    $stmt->bind_param("ss", $reset_token_hash, $_POST["email"]);
+    $stmt->bind_param("ss", $reset_token, $_POST["email"]);
     $stmt->execute();
 
     //sending email
     $mail = new PHPMailer(true);
 
     try {
-        $mail->isHTML(true);                                  //Set email format to HTML;
+        $mail->isHTML(true);                                 
         
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'workwavefpms@gmail.com';                     //SMTP username
-        $mail->Password   = 'ohhc ilhr vcjw hcfu';                               //SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        $mail->isSMTP();                                           
+        $mail->Host       = 'smtp.gmail.com';                    
+        $mail->SMTPAuth   = true;                                   
+        $mail->Username   = 'workwavefpms@gmail.com';                     
+        $mail->Password   = 'ohhc ilhr vcjw hcfu';                         
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
         $mail->Port       = 465;
     
         $mail->setFrom('workwavefpms@gmail.com', 'no-reply');
         $mail->addAddress($_POST["email"]);
         $mail->addReplyTo('no-reply@gmail.com', 'No Reply');
         $mail->Subject = 'Reset Password';
+        
+        session_start();
+        $_SESSION['reset_email'] = $_POST["email"];
+        $_SESSION['reset_token'] = $reset_token;
+
         $mail->Body = <<<END
         <html lang="en">
         <head>
@@ -104,11 +108,7 @@
                 </div>
                 <div class="content">
                     <p>Hello,</p>
-                    <p>You have requested to reset your password. Click the button below to reset it:</p>
-                    <form action="http://localhost/workwave/dist/php/reset_password.php" method="GET">
-                        <input type="hidden" name="token" value="$reset_token_hash">
-                        <input type="submit" value="Reset Password" class="btn">
-                    </form>
+                    <p>You have requested to reset your password. Your OTP is: $reset_token</p>
                     <p>If you didn’t request a password reset, you can ignore this email.</p>
                     <p>Thank you,<br>WorkWave Team</p>
                 </div>
@@ -116,15 +116,12 @@
                     <p>WorkWave &copy; 2024</p>
                 </div>
             </div>
-        </body>
-        </html>
         END;
     
         $mail->send();
-        echo "<script type='text/javascript'>
-        alert('A reset link has been sent to your email. Please check your inbox.');
-        window.location.href = '../login.php';  // Redirect to login page
-        </script>";
+        
+        // Redirect to OTP verification
+        header("Location: ../otp_verification.php");
         exit;
     } catch (mysqli_sql_exception $e) {
         die($e->getMessage());

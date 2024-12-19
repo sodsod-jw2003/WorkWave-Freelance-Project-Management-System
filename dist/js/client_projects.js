@@ -8,28 +8,18 @@ document.addEventListener('DOMContentLoaded', function() {
             <form id="addProjectForm" class="needs-validation" novalidate>
                 <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
                     <div class="row">
-                        <div class="col-md-5 mb-1">
+                        <div class="col-md-6 mb-1">
                             <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
                             <input type="text" name="project_title" id="project_title" class="form-control bg-white-100 no-outline-green-focus border-1" required>
                             <div class="invalid-feedback">Enter a project title.</div>
                         </div>
-                        <div class="col-md-4 mb-1">
+                        <div class="col-md-6 mb-1">
                             <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
                             <select name="project_category" id="project_category" class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category" required>
                                 <option value="" disabled selected>Select Category</option>
                                 ${window.savedCategories}
                             </select>
                             <div class="invalid-feedback">Select a category.</div>
-                        </div>
-                        <div class="col-md-3 mb-1">
-                            <label for="status" class="text-muted small mb-2 ms-1">Status</label>
-                            <select name="status" id="status" class="form-select bg-white-100 no-outline-green-focus border-1 w-100" required>
-                                <option value="" disabled selected>Select Status</option>
-                                <option value="1">Hiring</option>
-                                <option value="2">In Progress</option>
-                                <option value="3">Completed</option>
-                            </select>
-                            <div class="invalid-feedback">Select a status.</div>
                         </div>
                     </div>
                     <div class="row mt-1">

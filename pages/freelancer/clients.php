@@ -2,8 +2,7 @@
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
-    exit;
+    header("Location: /WorkWave/index.php");
 }
 include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');

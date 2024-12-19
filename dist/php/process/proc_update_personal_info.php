@@ -18,13 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id,
         $_POST['first_name'],
         $_POST['last_name'],
-        $job_title, // Use the processed job_title variable
+        $job_title,
         $_POST['gender'],
         $_POST['mobile_number'],
         $_POST['email'],
         $_POST['city'],
-        $_POST['nationality'],
-        $_POST['language']
+        $_POST['language'],
+        $_POST['secondlanguage'],
+
     );
     
     $result = ['success' => false, 'message' => ''];

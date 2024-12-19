@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 $is_invalid_status = false;
 $is_invalid = false;
 
@@ -23,46 +22,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($user) {
         // Check password validity
         if (password_verify($_POST["password"], $user["password_hash"])) {
-            // Check if account is activated
-            if ($not_verified['count'] == 0) {
+            if ($not_verified['count'] > 0) {
+                // Account is not verified
+                session_start();
+                $_SESSION['temp_user_id'] = $user["id"];
+                $_SESSION['temp_email'] = $_POST["email"];
+
+                // Redirect to OTP verification page
+                header("Location: process/proc_verify_otp.php");
+                exit;
+            } else {
+                // Account is verified, proceed to login
+                session_start();
+                session_regenerate_id();
+                $_SESSION["user_id"] = $user["id"];
+                $_SESSION["role"] = $user["role"];
+
+                // Call stored procedure to update last login date
                 $stmt = $mysqli->prepare("CALL sp_update_user_last_login_date(?)");
                 $stmt->bind_param("i", $user["id"]);
                 $stmt->execute();
 
-                // Account is verified, proceed to login
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-
-                session_regenerate_id(); 
-                $_SESSION["user_id"] = $user["id"];
-                $_SESSION["role"] = $user["role"];
-
                 // Redirect based on role
                 if ($user["role"] === "Client") {
                     header("Location: ../../pages/client/dashboard.php");
-                } elseif ($user["role"] === "Freelancer") {
+                } else {
                     header("Location: ../../pages/freelancer/dashboard.php");
                 }
                 exit;
-            } else {
-                // Account not verified
-                $is_invalid_status = true;
-                $error_message = "Account not activated. Please verify your email.";
             }
         } else {
-            // Incorrect password
             $is_invalid = true;
             $error_message = "Wrong email or password.";
         }
     } else {
-        // User not found
         $is_invalid = true;
         $error_message = "Wrong email or password.";
     }
 }
-
 ?>
+
 
 
 <!DOCTYPE html>

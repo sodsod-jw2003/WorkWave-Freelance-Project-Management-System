@@ -1,7 +1,7 @@
 <?php
 //checking if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
+    header("Location: /WorkWave/index.php");
     exit;
 }
 //query for user data

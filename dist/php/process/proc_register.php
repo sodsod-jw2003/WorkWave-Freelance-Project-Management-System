@@ -72,8 +72,7 @@
     $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
     
     // Activation token
-    $activation_token = bin2hex(random_bytes(16));
-    $activation_token_hash = password_hash($activation_token, PASSWORD_DEFAULT);
+    $activation_token = random_int(100000, 999999);
     
     // Insert user into the database
     $sql = "CALL sp_signup_users(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -92,7 +91,7 @@
         $_POST["city"],
         $_POST["email"],
         $password_hash,
-        $activation_token_hash,
+        $activation_token,
         $_POST["role"]
     );
     
@@ -120,7 +119,7 @@
         $mail->setFrom('workwavefpms@gmail.com', 'no-reply');
         $mail->addAddress($_POST["email"]);
         $mail->addReplyTo('no-reply@gmail.com', 'No Reply');
-        $mail->Subject = 'Activation Link';
+        $mail->Subject = 'Activation Code';
         $mail->Body    = <<<END
         <head>
             <meta charset="UTF-8">
@@ -191,11 +190,7 @@
                 </div>
                 <div class="content">
                     <p>Hello,</p>
-                    <p>To Activate your account. Click the button below.</p>
-                    <form action="http://localhost/workwave/dist/php/process/proc_account_activation.php" method="GET">
-                        <input type="hidden" name="token" value="$activation_token_hash">
-                        <input type="submit" value="Activate Account" class="btn">
-                    </form>
+                    <p>Your OTP Code is: $activation_token</p>
                     <p>If you didn’t register, you can ignore this email.</p>
                     <p>Thank you,<br>WorkWave Team</p>
                 </div>
@@ -209,7 +204,7 @@
     
         $mail->send();
         echo "<script type='text/javascript'>
-        alert('A activation link has been sent to your email. Please check your inbox.');
+        alert('A activation code has been sent to your email. Please check your inbox.');
         window.location.href = '../login.php';  // Redirect to login page
         </script>";
         exit;

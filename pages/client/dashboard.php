@@ -3,7 +3,7 @@ $mysqli = require ('../../connection.php');
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
+    header("Location: /WorkWave/index.php");
     exit;
 }
 include ('../../misc/modals.php');

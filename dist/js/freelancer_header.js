@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const searchTerm = this.value.trim();
             
             if (searchTerm.length > 0) {
-                fetch('../../dist/php/process/search_projects_clients.php', {
+                fetch('../../dist/php/process/proc_search_projects_clients.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

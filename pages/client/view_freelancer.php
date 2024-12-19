@@ -2,7 +2,7 @@
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
+    header("Location: /WorkWave/index.php");
     exit;
 }
 include ('../../misc/modals.php');
@@ -134,16 +134,11 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                 <div class="text-muted small"><?php echo $freelancer['city'] ?></div>
                             </div>
                             <hr class="divider">
-                            <div class="mb-3">
-                                <span class="fas fa-flag me-1 text-green-60"></span>
-                                <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo $freelancer['nationality'] ?></div>
-                            </div>
-                            <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>
                                 <div class="text-muted small"><?php echo $freelancer['language'] ?></div>
+                                <div class="text-muted small"><?php echo $freelancer['language_2nd'] ?></div>
                             </div>
                         </div>
                     </div>                        

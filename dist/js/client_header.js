@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const searchTerm = this.value.trim();
             
             if (searchTerm.length > 0) {
-                fetch('../../dist/php/process/search_freelancers.php', {
+                fetch('../../dist/php/process/proc_search_freelancers.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

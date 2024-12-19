@@ -2,7 +2,7 @@
 
 require ('../../connection.php');
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dist/php/login.php");; //to be updated to landing page if done(index.php)
+    header("Location: /WorkWave/index.php");
     exit;
 }
 include ('../../misc/modals.php');
@@ -170,7 +170,6 @@ $project = $result->fetch_assoc();
                                 class="form-control bg-light no-outline-green-focus border-1 w-100" 
                                 placeholder="https://" 
                                 value="<?php echo $existing_application ? htmlspecialchars($existing_application['portfolio_url']) : ''; ?>"
-                                required
                                 <?php echo $existing_application ? 'disabled' : ''; ?>
                             >
                             <div class="invalid-feedback">Enter a valid URL for your portfolio.</div>

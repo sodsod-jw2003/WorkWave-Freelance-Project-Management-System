@@ -484,6 +484,12 @@ $(document).on('submit', '#passwordChangeForm', function(e) {
           success: function(response) {
               if(response.success) {
                   updateSidebarSkills();
+                  Swal.fire({
+                    title: 'Success!',
+                    text: 'Your skills has been saved.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
               }
           }
       });
@@ -614,3 +620,18 @@ function loadUserSkills() {
         }
     });
 }
+
+document.getElementById('toggleMobile').addEventListener('click', function() {
+    const mobileInput = document.getElementById('mobile_number');
+    const icon = this.querySelector('span');
+    
+    if (mobileInput.type === 'password') {
+        mobileInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        mobileInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});

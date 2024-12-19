@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     // Update profile picture preview
                     document.querySelector('.profile-pic').src = data.image_url;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Profile picture updated successfully',
+                        text: 'The Profile picture was successfully updated.',
+                    });
                 }
             });
         }
@@ -107,6 +112,11 @@ $(document).on('submit', '#personalInfoForm', function(e) {
                 // Update job title using selected option text
                 const jobTitle = $('#job_title option:selected').text();
                 $('.container.fs-6.text-center.text-muted.mb-5').text(jobTitle);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Personal Information Updated',
+                    text: 'The personal information was successfully updated.',
+                });
                 updateSidebarInfo();
             } else {
                 alert(response.message || 'Failed to update personal information');
@@ -292,28 +302,18 @@ $('#addProject').click(function () {
     <form id="addProjectForm" class="needs-validation" novalidate>
         <div class="card px-3 pt-3 pb-1 mx-2 mb-3 bg-light border-start-accent">
             <div class="row">
-                <div class="col-md-5 mb-1">
+                <div class="col-md-6 mb-1">
                     <label for="project_title" class="text-muted small mb-2 ms-1">Project Title</label>
                     <input type="text" name="project_title" id="project_title" class="form-control bg-white-100 no-outline-green-focus border-1" required>
                     <div class="invalid-feedback">Enter a project title.</div>
                 </div>
-                <div class="col-md-4 mb-1">
+                <div class="col-md-6 mb-1">
                     <label for="project_category" class="text-muted small mb-2 ms-1">Category</label>
                     <select name="project_category" id="project_category" class="form-select bg-white-100 no-outline-green-focus border-1 w-100 project_category" required>
                         <option value="" disabled selected>Select Category</option>
                         ${savedCategories}
                     </select>
                     <div class="invalid-feedback">Select a category.</div>
-                </div>
-                <div class="col-md-3 mb-1">
-                    <label for="status" class="text-muted small mb-2 ms-1">Status</label>
-                    <select name="status" id="status" class="form-select bg-white-100 no-outline-green-focus border-1 w-100" required>
-                        <option value="" disabled selected>Select Status</option>
-                        <option value="1">Hiring</option>
-                        <option value="2">In Progress</option>
-                        <option value="3">Completed</option>
-                    </select>
-                    <div class="invalid-feedback">Select a status.</div>
                 </div>
             </div>
             <div class="row mt-1">
@@ -685,3 +685,17 @@ $(document).on('click', '.delete-project', function () {
   }
 
   
+  document.getElementById('toggleMobile').addEventListener('click', function() {
+    const mobileInput = document.getElementById('mobile_number');
+    const icon = this.querySelector('span');
+    
+    if (mobileInput.type === 'password') {
+        mobileInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        mobileInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});

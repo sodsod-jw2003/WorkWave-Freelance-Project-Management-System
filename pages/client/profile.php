@@ -137,30 +137,6 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         </div>
                     </div>
 
-                    <!-- sidebar: freelancers -->
-                    <div class="card card-primary card-outline shadow border-0 mb-4">
-                        <!-- freelancers: collapsible header -->
-                        <div class="card-header bg-green-30 p-3">
-                            <a  class="d-flex align-items-center text-decoration-none"
-                                data-bs-toggle="collapse" 
-                                href="#freelancersCollapse" 
-                                role="button" 
-                                aria-expanded="true" 
-                                aria-controls="freelancersCollapse">
-
-                                <i class="fa-solid fa-user text-white mx-1"></i>
-                                <div class="text-white p-1 d-inline">Freelancers</div>
-                                <i class="fa-solid fa-chevron-down text-white ms-auto pe-1"></i>
-                            </a>
-                        </div>
-                        <!-- skills: collapsible content -->
-                        <div id="freelancersCollapse" class="collapse-section collapse show">
-                            <div class="card-body">
-
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- sidebar: personal information -->
                     <div class="card card-primary card-outline shadow border-0 mb-4">
 
@@ -183,21 +159,21 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         <div id="personalInformationCollapse" class="collapse-section collapse show">
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
-                                    <span class="text-muted fw-semibold text-green-60">Gender</span>
-                                    <div class="text-muted small"><?php echo $user['gender'] ?></div>
+                                    <span class="fas fa-envelope me-1 text-green-60"></span>
+                                    <span class="text-muted fw-semibold text-green-60">Email</span>
+                                    <div class="text-muted small"><?php echo $user['email'] ?></div>
                                 </div>
                                 <hr class="divider">
                                 <div class="mb-3">
                                     <span class="fas fa-phone me-1 text-green-60"></span>
                                     <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
-                                    <div class="text-muted small"><?php echo $user['first_name'] ?></div>
+                                    <div class="text-muted small"><?php echo $user['mobile_number'] ?></div>
                                 </div>
                                 <hr class="divider">
                                 <div class="mb-3">
-                                    <span class="fas fa-envelope me-1 text-green-60"></span>
-                                    <span class="text-muted fw-semibold text-green-60">Email</span>
-                                    <div class="text-muted small"><?php echo $user['email'] ?></div>
+                                    <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
+                                    <span class="text-muted fw-semibold text-green-60">Gender</span>
+                                    <div class="text-muted small"><?php echo $user['gender'] ?></div>
                                 </div>
                                 <hr class="divider">
                                 <div class="mb-3">
@@ -206,16 +182,11 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                     <div class="text-muted small"><?php echo $user['city'] ?></div>
                                 </div>
                                 <hr class="divider">
-                                <div class="mb-3">
-                                    <span class="fas fa-flag me-1 text-green-60"></span>
-                                    <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                    <div class="text-muted small"><?php echo $user['nationality'] ?></div>
-                                </div>
-                                <hr class="divider">
                                 <div class="">
                                     <span class="fas fa-language me-1 text-green-60"></span>
                                     <span class="text-muted fw-semibold text-green-60">Language</span>
                                     <div class="text-muted small"><?php echo $user['language'] ?></div>
+                                    <div class="text-muted small"><?php echo $user['language_2nd'] ?></div>
                                 </div>
                             </div>
                         </div>
@@ -402,8 +373,11 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     <div class="col-md-4 mb-1">
                                                         <label for="mobile_number" class="text-muted small mb-2 ms-1">Mobile Number</label>
                                                         <div class="input-group">
-                                                        <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
-                                                        <input type="text" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
+                                                            <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
+                                                            <input type="password" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
+                                                            <button type="button" id="toggleMobile" class="btn btn-white border rounded">
+                                                                <span class="fas fa-eye text-green-50"></span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
@@ -418,19 +392,7 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                         <input type="text" name="city" id="city" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['city']); ?>">
                                                     </div>
                                                     <div class="col-md-4 mb-1">
-                                                        <label for="nationality" class="text-muted small mb-2 ms-1">Nationality</label>
-                                                        <input 
-                                                            id="nationality" 
-                                                            type="text"
-                                                            name="nationality"
-                                                            class="form-control bg-white-100 no-outline-green-focus border-1 w-100"
-                                                            placeholder="Enter your Nationality"
-                                                            value="<?php echo $user['nationality'] ?>"
-                                                            list="nationalities">
-                                                        <datalist id="nationalities"></datalist>
-                                                    </div>
-                                                    <div class="col-md-4 mb-1">
-                                                        <label for="language" class="text-muted small mb-2 ms-1">Language</label>
+                                                        <label for="language" class="text-muted small mb-2 ms-1">Primary Language</label>
                                                         <input 
                                                             id="language" 
                                                             type="text" 
@@ -438,6 +400,18 @@ $freelancers = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                             class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
                                                             placeholder="Enter your Primary Language"
                                                             value="<?php echo $user['language'] ?>"
+                                                            list="languages">
+                                                        <datalist id="languages"></datalist>
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="language" class="text-muted small mb-2 ms-1">Secondary Language</label>
+                                                        <input 
+                                                            id="secondlanguage" 
+                                                            type="text" 
+                                                            name="secondlanguage" 
+                                                            class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
+                                                            placeholder="Enter your Secondary Language"
+                                                            value="<?php echo $user['language_2nd'] ?>"
                                                             list="languages">
                                                         <datalist id="languages"></datalist>
                                                     </div>

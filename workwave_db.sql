@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2024 at 04:01 PM
+-- Generation Time: Dec 19, 2024 at 07:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -25,11 +25,11 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activate_account` (IN `p_activation_token_hash` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activate_account` (IN `p_activation_token` VARCHAR(255))   BEGIN
 	SELECT * FROM
 	users 
 	WHERE
-	activation_token_hash = p_activation_token_hash;
+	activation_token = p_activation_token;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_application` (IN `p_project_id` INT(11), IN `p_user_id` INT(11), IN `p_application_details` TEXT, IN `p_portfolio_url` VARCHAR(255))   BEGIN
@@ -50,22 +50,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_application` (IN `p_project_
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_objective` TEXT, IN `p_project_status` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_projects` (IN `p_user_id` INT(11), IN `p_project_title` VARCHAR(255), IN `p_project_category` VARCHAR(255), IN `p_project_description` TEXT, IN `p_project_objective` TEXT)   BEGIN
     INSERT INTO client_projects (
         user_id,
         project_title,
         project_category_id,
         project_description,
-		project_objective,
-        project_status_id
+		project_objective
     )
     VALUES (
         p_user_id,
         p_project_title,
         p_project_category,
         p_project_description,
-		p_project_objective,
-        p_project_status
+		p_project_objective
     );
 	SELECT * FROM v_project_details WHERE id = LAST_INSERT_ID();
 END$$
@@ -112,13 +110,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_refund_connects` (IN `p_project_
     WHERE user_id = p_user_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_signup_users` (IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_birthdate` DATE, IN `p_gender` VARCHAR(21), IN `p_city` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password_hash` VARCHAR(255), IN `p_activation_token_hash` VARCHAR(255), IN `p_role` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_signup_users` (IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_birthdate` DATE, IN `p_gender` VARCHAR(21), IN `p_city` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_password_hash` VARCHAR(255), IN `p_activation_token` VARCHAR(255), IN `p_role` VARCHAR(255))   BEGIN
 	IF p_first_name = '' OR p_last_name = '' OR p_birthdate = '' OR p_gender = '' OR p_city = '' OR p_email = '' OR p_password_hash = ''
     THEN
     SELECT 'please fillup all fields' as error_message;
 	ELSE
-	INSERT INTO users(users.first_name, users.last_name, users.birthdate, users.gender_id, users.city, users.email, users.password_hash, users.activation_token_hash, users.role_id)
-	VALUES (p_first_name, p_last_name, p_birthdate, p_gender, p_city, p_email, p_password_hash, p_activation_token_hash, p_role);
+	INSERT INTO users(users.first_name, users.last_name, users.birthdate, users.gender_id, users.city, users.email, users.password_hash, users.activation_token, users.role_id)
+	VALUES (p_first_name, p_last_name, p_birthdate, p_gender, p_city, p_email, p_password_hash, p_activation_token, p_role);
 	END IF;
 END$$
 
@@ -137,7 +135,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_terminate_freelancer` (IN `p_use
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_activation_token` (IN `p_user_id` INT(11))   BEGIN
 	UPDATE users
 	SET
-	activation_token_hash = NULL
+	activation_token = NULL
 	WHERE
 	id = p_user_id;
 END$$
@@ -179,9 +177,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_freelancer_project_submis
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_notification` (IN `p_notification_id` INT(11))   UPDATE notifications SET is_read = 1 WHERE id = p_notification_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_reset_token` (IN `p_reset_token_hash` VARCHAR(255), IN `p_email` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_reset_token` (IN `p_reset_token` VARCHAR(255), IN `p_email` VARCHAR(255))   BEGIN
 	UPDATE users 
-    SET reset_token_hash = p_reset_token_hash,
+    SET reset_token = p_reset_token,
 		reset_token_expiry = DATE_ADD(NOW(), INTERVAL 30 MINUTE)
     WHERE email = p_email;
 END$$
@@ -199,11 +197,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_last_login_date` (IN
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_password` (IN `p_password_hash` VARCHAR(255), IN `p_user_id` INT(11))   BEGIN
 UPDATE users 
 SET password_hash = p_password_hash, 
-reset_token_hash = NULL 
+reset_token = NULL 
 WHERE id = p_user_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_profile` (IN `p_user_id` INT(11), IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_job_title_id` INT(11), IN `p_gender` VARCHAR(255), IN `p_mobile_number` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_nationality` VARCHAR(255), IN `p_language` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_profile` (IN `p_user_id` INT(11), IN `p_first_name` VARCHAR(255), IN `p_last_name` VARCHAR(255), IN `p_job_title_id` INT(11), IN `p_gender` VARCHAR(255), IN `p_mobile_number` VARCHAR(255), IN `p_email` VARCHAR(255), IN `p_city` VARCHAR(255), IN `p_language` VARCHAR(255), IN `p_language_2nd` VARCHAR(255))   BEGIN
     UPDATE users
     SET 
         first_name = p_first_name,
@@ -213,8 +211,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_user_profile` (IN `p_user
         mobile_number = p_mobile_number,
         email = p_email,
         city = p_city,
-        nationality = p_nationality,
-        language = p_language
+        language = p_language,
+        language_2nd = p_language_2nd
     WHERE 
         id = p_user_id;
 END$$
@@ -273,7 +271,8 @@ CREATE TABLE `client_projects` (
 --
 
 INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_category_id`, `project_description`, `project_objective`, `project_status_id`, `project_connect_cost`, `project_merit_worth`, `created_at`, `updated_at`) VALUES
-(69, 44, 'Networking Sample Project', 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 2, 10, 10, '2024-12-15 14:53:57', '2024-12-15 14:59:32');
+(80, 44, 'Testing Project', 21, 'Testing', 'Testing', 2, 10, 10, '2024-12-19 04:30:41', '2024-12-19 04:31:20'),
+(81, 44, 'Testing Project 2', 3, 'Testing 2', 'Testing 2', 2, 10, 10, '2024-12-19 04:36:48', '2024-12-19 04:37:10');
 
 --
 -- Triggers `client_projects`
@@ -398,7 +397,39 @@ CREATE TABLE `client_project_audit` (
 
 INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_project_title`, `new_project_title`, `old_project_category_id`, `new_project_category_id`, `old_project_description`, `new_project_description`, `old_project_objective`, `new_project_objective`, `old_project_connect_cost`, `new_project_connect_cost`, `old_project_merit_worth`, `new_project_merit_worth`) VALUES
 (1, 69, 44, 'INSERT', '2024-12-15 14:53:57', NULL, 'Networking Sample Project', NULL, 19, NULL, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', NULL, 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', NULL, 10, NULL, 10),
-(2, 69, 44, 'UPDATE', '2024-12-15 14:59:32', 'Networking Sample Project', 'Networking Sample Project', 19, 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 10, 10, 10, 10);
+(2, 69, 44, 'UPDATE', '2024-12-15 14:59:32', 'Networking Sample Project', 'Networking Sample Project', 19, 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 10, 10, 10, 10),
+(3, 70, 44, 'INSERT', '2024-12-15 15:54:03', NULL, 'Project Alpha', NULL, 15, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10),
+(4, 70, 44, 'DELETE', '2024-12-15 15:56:10', 'Project Alpha', NULL, 15, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10, NULL),
+(5, 71, 44, 'INSERT', '2024-12-15 16:00:23', NULL, 'Project Alpha', NULL, 29, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10),
+(6, 71, 44, 'UPDATE', '2024-12-15 16:01:05', 'Project Alpha', 'Project Alpha', 29, 29, 'Test Description', 'Test Description', 'Test Objective', 'Test Objective', 10, 10, 10, 10),
+(7, 72, 44, 'INSERT', '2024-12-15 19:05:02', NULL, 'Project Arki', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
+(8, 73, 44, 'INSERT', '2024-12-15 19:05:20', NULL, 'Cs Data ', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
+(9, 74, 44, 'INSERT', '2024-12-15 19:05:38', NULL, 'Project Beta', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
+(10, 75, 44, 'INSERT', '2024-12-15 19:06:06', NULL, 'Project Build-er', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
+(11, 76, 44, 'INSERT', '2024-12-15 19:06:30', NULL, 'Sc Project', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
+(12, 77, 44, 'INSERT', '2024-12-19 03:14:09', NULL, 'Dasd', NULL, 11, NULL, 'sad', NULL, 'asd', NULL, 10, NULL, 10),
+(13, 78, 44, 'INSERT', '2024-12-19 03:14:18', NULL, 'Asdas', NULL, 15, NULL, 'dasdas', NULL, 'dasdasdas', NULL, 10, NULL, 10),
+(14, 78, 44, 'UPDATE', '2024-12-19 03:14:24', 'Asdas', 'Asdas', 15, 15, 'dasdas', 'dasdas', 'dasdasdas', 'dasdasdas', 10, 10, 10, 10),
+(15, 79, 44, 'INSERT', '2024-12-19 03:18:06', NULL, 'Banana Bread', NULL, 29, NULL, 'asdsa', NULL, 'asda', NULL, 10, NULL, 10),
+(16, 79, 44, 'UPDATE', '2024-12-19 03:18:57', 'Banana Bread', 'Banana Bread', 29, 29, 'asdsa', 'asdsa', 'asda', 'asda', 10, 10, 10, 10),
+(17, 71, 44, 'UPDATE', '2024-12-19 04:16:06', 'Project Alpha', 'Project Alpha', 29, 29, 'Test Description', 'Test Description', 'Test Objective', 'Test Objective', 10, 10, 10, 10),
+(18, 73, 44, 'UPDATE', '2024-12-19 04:19:11', 'Cs Data ', 'Cs Data ', 14, 14, 'Test', 'Test', 'Test', 'Test', 10, 10, 10, 10),
+(19, 73, 44, 'UPDATE', '2024-12-19 04:21:56', 'Cs Data ', 'Cs Data ', 14, 14, 'Test', 'Test', 'Test', 'Test', 10, 10, 10, 10),
+(20, 69, 44, 'UPDATE', '2024-12-19 04:24:22', 'Networking Sample Project', 'Networking Sample Project', 19, 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 10, 10, 10, 10),
+(21, 79, 44, 'DELETE', '2024-12-19 04:29:55', 'Banana Bread', NULL, 29, NULL, 'asdsa', NULL, 'asda', NULL, 10, NULL, 10, NULL),
+(22, 78, 44, 'DELETE', '2024-12-19 04:29:56', 'Asdas', NULL, 15, NULL, 'dasdas', NULL, 'dasdasdas', NULL, 10, NULL, 10, NULL),
+(23, 77, 44, 'DELETE', '2024-12-19 04:29:58', 'Dasd', NULL, 11, NULL, 'sad', NULL, 'asd', NULL, 10, NULL, 10, NULL),
+(24, 76, 44, 'DELETE', '2024-12-19 04:30:00', 'Sc Project', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
+(25, 75, 44, 'DELETE', '2024-12-19 04:30:01', 'Project Build-er', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
+(26, 74, 44, 'DELETE', '2024-12-19 04:30:03', 'Project Beta', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
+(27, 73, 44, 'DELETE', '2024-12-19 04:30:05', 'Cs Data ', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
+(28, 72, 44, 'DELETE', '2024-12-19 04:30:07', 'Project Arki', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
+(29, 71, 44, 'DELETE', '2024-12-19 04:30:08', 'Project Alpha', NULL, 29, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10, NULL),
+(30, 69, 44, 'DELETE', '2024-12-19 04:30:12', 'Networking Sample Project', NULL, 19, NULL, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', NULL, 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', NULL, 10, NULL, 10, NULL),
+(31, 80, 44, 'INSERT', '2024-12-19 04:30:41', NULL, 'Testing Project', NULL, 21, NULL, 'Testing', NULL, 'Testing', NULL, 10, NULL, 10),
+(32, 80, 44, 'UPDATE', '2024-12-19 04:31:20', 'Testing Project', 'Testing Project', 21, 21, 'Testing', 'Testing', 'Testing', 'Testing', 10, 10, 10, 10),
+(33, 81, 44, 'INSERT', '2024-12-19 04:36:48', NULL, 'Testing Project 2', NULL, 3, NULL, 'Testing 2', NULL, 'Testing 2', NULL, 10, NULL, 10),
+(34, 81, 44, 'UPDATE', '2024-12-19 04:37:10', 'Testing Project 2', 'Testing Project 2', 3, 3, 'Testing 2', 'Testing 2', 'Testing 2', 'Testing 2', 10, 10, 10, 10);
 
 -- --------------------------------------------------------
 
@@ -467,7 +498,8 @@ CREATE TABLE `freelancer_applications` (
 --
 
 INSERT INTO `freelancer_applications` (`id`, `project_id`, `user_id`, `application_details`, `portfolio_url`, `application_status_id`, `application_date`, `created_at`, `updated_at`) VALUES
-(99, 69, 45, 'I want to apply for this job', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 2, '2024-12-15 22:57:30', '2024-12-15 14:57:30', '2024-12-15 14:59:32');
+(104, 80, 45, 'Testing Application', '', 2, '2024-12-19 12:31:11', '2024-12-19 04:31:11', '2024-12-19 04:31:20'),
+(105, 81, 45, 'Testing 2', '', 2, '2024-12-19 12:37:03', '2024-12-19 04:37:03', '2024-12-19 04:37:10');
 
 --
 -- Triggers `freelancer_applications`
@@ -536,8 +568,8 @@ CREATE TRIGGER `tr_after_freelancer_application_insert_notification` AFTER INSER
     DECLARE notification_message VARCHAR(255);
     DECLARE project_owner_id INT;
 
-    SELECT project_title, user_id INTO project_name, project_owner_id
-    FROM client_projects
+    SELECT project_title, project_owner INTO project_name, project_owner_id
+    FROM v_project_details
     WHERE id = NEW.project_id;
 
     SET notification_message = CONCAT('A new application has been submitted for your project: ', project_name);
@@ -680,7 +712,17 @@ CREATE TABLE `freelancer_applications_audit` (
 
 INSERT INTO `freelancer_applications_audit` (`id`, `application_id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_application_details`, `new_application_details`, `old_portfolio_url`, `new_portfolio_url`, `old_application_status_id`, `new_application_status_id`, `old_application_date`, `new_application_date`) VALUES
 (1, 99, 69, 45, 'INSERT', '2024-12-15 14:57:30', NULL, 'I want to apply for this job', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', NULL, 1, NULL, '2024-12-15 22:57:30'),
-(2, 99, 69, 45, 'UPDATE', '2024-12-15 14:59:32', 'I want to apply for this job', 'I want to apply for this job', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 1, 2, '2024-12-15 22:57:30', '2024-12-15 22:57:30');
+(2, 99, 69, 45, 'UPDATE', '2024-12-15 14:59:32', 'I want to apply for this job', 'I want to apply for this job', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 1, 2, '2024-12-15 22:57:30', '2024-12-15 22:57:30'),
+(3, 100, 71, 45, 'INSERT', '2024-12-15 16:00:44', NULL, 'Test Proposal', NULL, 'https://www.google.com/', NULL, 1, NULL, '2024-12-16 00:00:44'),
+(4, 100, 71, 45, 'UPDATE', '2024-12-15 16:01:05', 'Test Proposal', 'Test Proposal', 'https://www.google.com/', 'https://www.google.com/', 1, 2, '2024-12-16 00:00:44', '2024-12-16 00:00:44'),
+(5, 101, 77, 45, 'INSERT', '2024-12-19 03:23:41', NULL, 'asda', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=77', NULL, 1, NULL, '2024-12-19 11:23:41'),
+(6, 102, 76, 45, 'INSERT', '2024-12-19 04:17:05', NULL, 'asdas', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=40', NULL, 1, NULL, '2024-12-19 12:17:05'),
+(7, 103, 73, 45, 'INSERT', '2024-12-19 04:18:35', NULL, 'dasdas', NULL, '', NULL, 1, NULL, '2024-12-19 12:18:35'),
+(8, 103, 73, 45, 'UPDATE', '2024-12-19 04:19:11', 'dasdas', 'dasdas', '', '', 1, 2, '2024-12-19 12:18:35', '2024-12-19 12:18:35'),
+(9, 104, 80, 45, 'INSERT', '2024-12-19 04:31:11', NULL, 'Testing Application', NULL, '', NULL, 1, NULL, '2024-12-19 12:31:11'),
+(10, 104, 80, 45, 'UPDATE', '2024-12-19 04:31:20', 'Testing Application', 'Testing Application', '', '', 1, 2, '2024-12-19 12:31:11', '2024-12-19 12:31:11'),
+(11, 105, 81, 45, 'INSERT', '2024-12-19 04:37:03', NULL, 'Testing 2', NULL, '', NULL, 1, NULL, '2024-12-19 12:37:03'),
+(12, 105, 81, 45, 'UPDATE', '2024-12-19 04:37:10', 'Testing 2', 'Testing 2', '', '', 1, 2, '2024-12-19 12:37:03', '2024-12-19 12:37:03');
 
 -- --------------------------------------------------------
 
@@ -723,7 +765,8 @@ CREATE TABLE `freelancer_connects` (
 --
 
 INSERT INTO `freelancer_connects` (`id`, `user_id`, `connects`, `created_at`, `updated_at`) VALUES
-(10, 45, 90, '2024-12-15 14:54:46', '2024-12-15 14:57:30');
+(10, 45, 30, '2024-12-15 14:54:46', '2024-12-19 04:37:03'),
+(11, 46, 100, '2024-12-15 21:23:38', '2024-12-15 21:23:38');
 
 -- --------------------------------------------------------
 
@@ -767,7 +810,8 @@ CREATE TABLE `freelancer_merits` (
 --
 
 INSERT INTO `freelancer_merits` (`id`, `user_id`, `merits`, `created_at`, `updated_at`) VALUES
-(9, 45, 0, '2024-12-15 14:54:46', '2024-12-15 14:54:46');
+(9, 45, 30, '2024-12-15 14:54:46', '2024-12-19 04:24:22'),
+(10, 46, 0, '2024-12-15 21:23:38', '2024-12-15 21:23:38');
 
 -- --------------------------------------------------------
 
@@ -790,7 +834,8 @@ CREATE TABLE `freelancer_project_submissions` (
 --
 
 INSERT INTO `freelancer_project_submissions` (`id`, `project_id`, `user_id`, `submission_url`, `submission_status_id`, `created_at`, `updated_at`) VALUES
-(35, 69, 45, NULL, 1, '2024-12-15 14:59:32', '2024-12-15 14:59:32');
+(38, 80, 45, '../../dist/php/uploads/project_files/6763a261736bb_screen1.PNG', 2, '2024-12-19 04:31:20', '2024-12-19 04:34:41'),
+(39, 81, 45, '../../dist/php/uploads/project_files/6763a30b939f0_Capture1.PNG', 2, '2024-12-19 04:37:10', '2024-12-19 04:37:31');
 
 --
 -- Triggers `freelancer_project_submissions`
@@ -836,16 +881,6 @@ END
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `tr_after_status_update_project_status` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
-    IF NEW.submission_status_id = 3 AND OLD.submission_status_id != 3 THEN
-        UPDATE `client_projects`
-        SET `project_status_id` = 3
-        WHERE `id` = NEW.project_id;
-    END IF;
-END
-$$
-DELIMITER ;
-DELIMITER $$
 CREATE TRIGGER `tr_after_submission_status_update_notification` AFTER UPDATE ON `freelancer_project_submissions` FOR EACH ROW BEGIN
     DECLARE project_name VARCHAR(255);
     DECLARE notification_message VARCHAR(255);
@@ -874,15 +909,14 @@ CREATE TRIGGER `tr_after_submission_url_update_notification` AFTER UPDATE ON `fr
     DECLARE project_owner_id INT(11);
     DECLARE notification_message VARCHAR(255);
 
-    IF OLD.submission_url <> NEW.submission_url THEN
+    IF (OLD.submission_url IS NULL OR OLD.submission_url = '') 
+       OR OLD.submission_url <> NEW.submission_url THEN
 
         SELECT project_owner, project_title INTO project_owner_id, project_name
         FROM v_project_details
         WHERE id = NEW.project_id;
 
-
         SET notification_message = CONCAT('New submission for your project "', project_name, '" has been submitted.');
-
 
         INSERT INTO notifications (project_id, user_id, type, message, is_read, created_at, updated_at)
         VALUES (NEW.project_id, project_owner_id, 2, notification_message, 0, NOW(), NOW());
@@ -938,7 +972,27 @@ CREATE TABLE `freelancer_project_submissions_audit` (
 --
 
 INSERT INTO `freelancer_project_submissions_audit` (`id`, `application_id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_submission_url`, `new_submission_url`, `old_submission_status_id`, `new_submission_status_id`, `old_created_at`, `new_created_at`, `old_updated_at`, `new_updated_at`) VALUES
-(1, 35, 69, 45, 'INSERT', '2024-12-15 14:59:32', NULL, NULL, NULL, 1, NULL, '2024-12-15 14:59:32', NULL, '2024-12-15 14:59:32');
+(1, 35, 69, 45, 'INSERT', '2024-12-15 14:59:32', NULL, NULL, NULL, 1, NULL, '2024-12-15 14:59:32', NULL, '2024-12-15 14:59:32'),
+(2, 35, 69, 45, 'UPDATE', '2024-12-15 15:17:25', NULL, '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', 1, 2, NULL, NULL, '2024-12-15 14:59:32', '2024-12-15 15:17:25'),
+(3, 36, 71, 45, 'INSERT', '2024-12-15 16:01:05', NULL, NULL, NULL, 1, NULL, '2024-12-15 16:01:05', NULL, '2024-12-15 16:01:05'),
+(4, 36, 71, 45, 'UPDATE', '2024-12-15 16:01:29', NULL, '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', 1, 2, NULL, NULL, '2024-12-15 16:01:05', '2024-12-15 16:01:29'),
+(5, 36, 71, 45, 'UPDATE', '2024-12-15 16:01:55', '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', 2, 4, NULL, NULL, '2024-12-15 16:01:29', '2024-12-15 16:01:55'),
+(6, 36, 71, 45, 'UPDATE', '2024-12-19 04:13:43', '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/67639d77b6675_152-Article Text-793-1-10-20231220.pdf', 4, 2, NULL, NULL, '2024-12-15 16:01:55', '2024-12-19 04:13:43'),
+(7, 36, 71, 45, 'UPDATE', '2024-12-19 04:16:06', '../../dist/php/uploads/project_files/67639d77b6675_152-Article Text-793-1-10-20231220.pdf', '../../dist/php/uploads/project_files/67639d77b6675_152-Article Text-793-1-10-20231220.pdf', 2, 3, NULL, NULL, '2024-12-19 04:13:43', '2024-12-19 04:16:06'),
+(8, 37, 73, 45, 'INSERT', '2024-12-19 04:19:11', NULL, NULL, NULL, 1, NULL, '2024-12-19 04:19:11', NULL, '2024-12-19 04:19:11'),
+(9, 37, 73, 45, 'UPDATE', '2024-12-19 04:19:57', NULL, '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', 1, 2, NULL, NULL, '2024-12-19 04:19:11', '2024-12-19 04:19:57'),
+(10, 37, 73, 45, 'UPDATE', '2024-12-19 04:20:35', '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', 2, 4, NULL, NULL, '2024-12-19 04:19:57', '2024-12-19 04:20:35'),
+(11, 37, 73, 45, 'UPDATE', '2024-12-19 04:21:27', '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', '../../dist/php/uploads/project_files/67639f472a424_Capture1.PNG', 4, 2, NULL, NULL, '2024-12-19 04:20:35', '2024-12-19 04:21:27'),
+(12, 37, 73, 45, 'UPDATE', '2024-12-19 04:21:56', '../../dist/php/uploads/project_files/67639f472a424_Capture1.PNG', '../../dist/php/uploads/project_files/67639f472a424_Capture1.PNG', 2, 3, NULL, NULL, '2024-12-19 04:21:27', '2024-12-19 04:21:56'),
+(13, 35, 69, 45, 'UPDATE', '2024-12-19 04:24:02', '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', 2, 4, NULL, NULL, '2024-12-15 15:17:25', '2024-12-19 04:24:02'),
+(14, 35, 69, 45, 'UPDATE', '2024-12-19 04:24:15', '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/67639fef01544_vlcsnap-2024-03-24-13h58m13s661.png', 4, 2, NULL, NULL, '2024-12-19 04:24:02', '2024-12-19 04:24:15'),
+(15, 35, 69, 45, 'UPDATE', '2024-12-19 04:24:22', '../../dist/php/uploads/project_files/67639fef01544_vlcsnap-2024-03-24-13h58m13s661.png', '../../dist/php/uploads/project_files/67639fef01544_vlcsnap-2024-03-24-13h58m13s661.png', 2, 3, NULL, NULL, '2024-12-19 04:24:15', '2024-12-19 04:24:22'),
+(16, 38, 80, 45, 'INSERT', '2024-12-19 04:31:20', NULL, NULL, NULL, 1, NULL, '2024-12-19 04:31:20', NULL, '2024-12-19 04:31:20'),
+(17, 38, 80, 45, 'UPDATE', '2024-12-19 04:32:03', NULL, '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', 1, 2, NULL, NULL, '2024-12-19 04:31:20', '2024-12-19 04:32:03'),
+(18, 38, 80, 45, 'UPDATE', '2024-12-19 04:34:32', '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', 2, 4, NULL, NULL, '2024-12-19 04:32:03', '2024-12-19 04:34:32'),
+(19, 38, 80, 45, 'UPDATE', '2024-12-19 04:34:41', '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', '../../dist/php/uploads/project_files/6763a261736bb_screen1.PNG', 4, 2, NULL, NULL, '2024-12-19 04:34:32', '2024-12-19 04:34:41'),
+(20, 39, 81, 45, 'INSERT', '2024-12-19 04:37:10', NULL, NULL, NULL, 1, NULL, '2024-12-19 04:37:10', NULL, '2024-12-19 04:37:10'),
+(21, 39, 81, 45, 'UPDATE', '2024-12-19 04:37:31', NULL, '../../dist/php/uploads/project_files/6763a30b939f0_Capture1.PNG', 1, 2, NULL, NULL, '2024-12-19 04:37:10', '2024-12-19 04:37:31');
 
 -- --------------------------------------------------------
 
@@ -982,9 +1036,13 @@ CREATE TABLE `freelancer_skills` (
 --
 
 INSERT INTO `freelancer_skills` (`id`, `user_id`, `skill_id`, `created_at`, `updated_at`) VALUES
-(255, 45, 71, '2024-12-15 14:55:33', '2024-12-15 14:55:33'),
-(256, 45, 75, '2024-12-15 14:55:33', '2024-12-15 14:55:33'),
-(257, 45, 73, '2024-12-15 14:55:33', '2024-12-15 14:55:33');
+(258, 46, 132, '2024-12-15 21:25:31', '2024-12-15 21:25:31'),
+(259, 46, 131, '2024-12-15 21:25:31', '2024-12-15 21:25:31'),
+(277, 45, 132, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
+(278, 45, 131, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
+(279, 45, 71, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
+(280, 45, 75, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
+(281, 45, 73, '2024-12-19 04:45:26', '2024-12-19 04:45:26');
 
 -- --------------------------------------------------------
 
@@ -1009,8 +1067,7 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `application_id`, `project_id`, `user_id`, `type`, `message`, `is_read`, `created_at`, `updated_at`) VALUES
-(49, 99, 69, 44, 1, 'A new application has been submitted for your project: Networking Sample Project', 1, '2024-12-15 14:57:30', '2024-12-15 14:59:26'),
-(50, NULL, 69, 45, 1, 'Your application for Networking Sample Project has been accepted.', 0, '2024-12-15 14:59:32', '2024-12-15 14:59:32');
+(71, NULL, 81, 45, 1, 'Your application for Testing Project 2 has been accepted.', 0, '2024-12-19 04:37:10', '2024-12-19 04:37:10');
 
 -- --------------------------------------------------------
 
@@ -1026,6 +1083,15 @@ CREATE TABLE `project_comments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `project_comments`
+--
+
+INSERT INTO `project_comments` (`id`, `project_id`, `user_id`, `comment`, `created_at`, `updated_at`) VALUES
+(2, 73, 44, 'dsa', '2024-12-19 04:20:35', '2024-12-19 04:20:35'),
+(3, 69, 44, 'dasd', '2024-12-19 04:24:02', '2024-12-19 04:24:02'),
+(4, 80, 44, 'sd', '2024-12-19 04:34:32', '2024-12-19 04:34:32');
 
 -- --------------------------------------------------------
 
@@ -1265,13 +1331,14 @@ CREATE TABLE `users` (
   `mobile_number` varchar(13) NOT NULL,
   `nationality` varchar(255) NOT NULL,
   `language` varchar(255) NOT NULL,
+  `language_2nd` varchar(255) DEFAULT NULL,
   `role_id` int(11) NOT NULL,
   `profile_picture_url` varchar(255) NOT NULL,
   `job_title_id` int(10) DEFAULT NULL,
   `password_hash` varchar(255) NOT NULL,
-  `reset_token_hash` varchar(255) DEFAULT NULL,
+  `reset_token` int(6) DEFAULT NULL,
   `reset_token_expiry` datetime DEFAULT NULL,
-  `activation_token_hash` varchar(255) DEFAULT NULL,
+  `activation_token` int(6) DEFAULT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `deactivation_duration` datetime DEFAULT NULL,
   `status_id` int(11) DEFAULT 1,
@@ -1283,9 +1350,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token_hash`, `reset_token_expiry`, `activation_token_hash`, `last_login_date`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
-(44, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910701', 'Filipino', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/675eef1b9bf16_nTGMV1Eo_400x400.jpg', 1, '$2y$10$VICcznSY.2YbbFpYtOk8GOa7uXD3iwt92qDf300dZHcNAw70hDwjy', NULL, NULL, NULL, '2024-12-15 22:51:26', NULL, 1, '2024-12-15 14:50:44', '2024-12-15 15:00:43'),
-(45, 'Freelancer Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 2, '../../dist/php/uploads/profile_pictures/675eee2120b97_IMG_20230104_162006.png', 1, '$2y$10$8Gy0CYySzXp9yzRYKjCRw.oTEO3FT4qJzDUcaqtuxzFybJSs.IEk6', NULL, NULL, NULL, '2024-12-15 22:55:05', NULL, 1, '2024-12-15 14:54:46', '2024-12-15 14:56:33');
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `language_2nd`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token`, `reset_token_expiry`, `activation_token`, `last_login_date`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
+(44, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910701', 'Filipino', 'English', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/675eef1b9bf16_nTGMV1Eo_400x400.jpg', 1, '$2y$10$VICcznSY.2YbbFpYtOk8GOa7uXD3iwt92qDf300dZHcNAw70hDwjy', 153988, '2024-12-19 14:42:54', NULL, '2024-12-19 14:14:56', NULL, 1, '2024-12-15 14:50:44', '2024-12-19 06:14:56'),
+(45, 'Freelancer Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/675eee2120b97_IMG_20230104_162006.png', 1, '$2y$10$8Gy0CYySzXp9yzRYKjCRw.oTEO3FT4qJzDUcaqtuxzFybJSs.IEk6', NULL, NULL, NULL, '2024-12-19 12:45:20', NULL, 1, '2024-12-15 14:54:46', '2024-12-19 04:45:33'),
+(46, 'Jireh', 'Sodsod', '2003-09-07', 1, 'Caloocan, Metro Manila, Philippines', 'sodsodwalter@gmail.com', '', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675f493d32b76_675ef3058cffd_unnamed (1) (1).png', NULL, '$2y$10$gCnpb4UUW1FyGepKrYUeP.6J7G2cGya.X/CNOS74OxhloUMEJZYcO', 4551, '2024-12-16 07:13:23', NULL, '2024-12-16 05:24:27', NULL, 1, '2024-12-15 21:23:38', '2024-12-15 22:43:23');
 
 --
 -- Triggers `users`
@@ -1633,6 +1701,28 @@ CREATE TABLE `v_freelancer_submissions` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `v_indemand_categories`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_indemand_categories` (
+`project_category` varchar(255)
+,`category_count` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_most_populated_job_title`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_most_populated_job_title` (
+`job_title` varchar(255)
+,`job_title_count` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `v_notifications`
 -- (See below for the actual view)
 --
@@ -1656,7 +1746,7 @@ CREATE TABLE `v_notifications` (
 --
 CREATE TABLE `v_not_verified_emails` (
 `email` varchar(255)
-,`activation_token_hash` varchar(255)
+,`activation_token` int(6)
 );
 
 -- --------------------------------------------------------
@@ -1725,13 +1815,13 @@ CREATE TABLE `v_skills_with_category` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `v_users_with_reset_tokens`
+-- Stand-in structure for view `v_users_with_reset_token`
 -- (See below for the actual view)
 --
-CREATE TABLE `v_users_with_reset_tokens` (
+CREATE TABLE `v_users_with_reset_token` (
 `id` int(11)
 ,`full_name` varchar(101)
-,`reset_token_hash` varchar(255)
+,`reset_token` int(6)
 ,`reset_token_expiry` datetime
 );
 
@@ -1746,6 +1836,7 @@ CREATE TABLE `v_user_credentials` (
 ,`email` varchar(255)
 ,`role` varchar(50)
 ,`password_hash` varchar(255)
+,`activation_token` int(6)
 );
 
 -- --------------------------------------------------------
@@ -1763,8 +1854,8 @@ CREATE TABLE `v_user_profile` (
 ,`city` varchar(255)
 ,`email` varchar(255)
 ,`mobile_number` varchar(13)
-,`nationality` varchar(255)
 ,`language` varchar(255)
+,`language_2nd` varchar(255)
 ,`job_title` varchar(255)
 ,`profile_picture_url` varchar(255)
 );
@@ -1884,6 +1975,24 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Structure for view `v_indemand_categories`
+--
+DROP TABLE IF EXISTS `v_indemand_categories`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_indemand_categories`  AS SELECT `v_project_details`.`project_category` AS `project_category`, count(`v_project_details`.`project_category`) AS `category_count` FROM `v_project_details` GROUP BY `v_project_details`.`project_category` ORDER BY count(`v_project_details`.`project_category`) DESC LIMIT 0, 3 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_most_populated_job_title`
+--
+DROP TABLE IF EXISTS `v_most_populated_job_title`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_most_populated_job_title`  AS SELECT `v_freelancers`.`job_title` AS `job_title`, count(`v_freelancers`.`job_title`) AS `job_title_count` FROM `v_freelancers` GROUP BY `v_freelancers`.`job_title` ORDER BY count(`v_freelancers`.`job_title`) DESC LIMIT 0, 3 ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `v_notifications`
 --
 DROP TABLE IF EXISTS `v_notifications`;
@@ -1897,7 +2006,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_not_verified_emails`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_not_verified_emails`  AS SELECT `users`.`email` AS `email`, `users`.`activation_token_hash` AS `activation_token_hash` FROM `users` WHERE `users`.`activation_token_hash` is not null ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_not_verified_emails`  AS SELECT `users`.`email` AS `email`, `users`.`activation_token` AS `activation_token` FROM `users` WHERE `users`.`activation_token` is not null ;
 
 -- --------------------------------------------------------
 
@@ -1938,11 +2047,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `v_users_with_reset_tokens`
+-- Structure for view `v_users_with_reset_token`
 --
-DROP TABLE IF EXISTS `v_users_with_reset_tokens`;
+DROP TABLE IF EXISTS `v_users_with_reset_token`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_users_with_reset_tokens`  AS SELECT `users`.`id` AS `id`, concat(`users`.`first_name`,' ',`users`.`last_name`) AS `full_name`, `users`.`reset_token_hash` AS `reset_token_hash`, `users`.`reset_token_expiry` AS `reset_token_expiry` FROM `users` WHERE `users`.`reset_token_hash` is not null ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_users_with_reset_token`  AS SELECT `users`.`id` AS `id`, concat(`users`.`first_name`,' ',`users`.`last_name`) AS `full_name`, `users`.`reset_token` AS `reset_token`, `users`.`reset_token_expiry` AS `reset_token_expiry` FROM `users` WHERE `users`.`reset_token` is not null ;
 
 -- --------------------------------------------------------
 
@@ -1951,7 +2060,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_user_credentials`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_credentials`  AS SELECT `users`.`id` AS `id`, `users`.`email` AS `email`, `users_roles`.`role` AS `role`, `users`.`password_hash` AS `password_hash` FROM (`users` join `users_roles` on(`users`.`role_id` = `users_roles`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_credentials`  AS SELECT `users`.`id` AS `id`, `users`.`email` AS `email`, `users_roles`.`role` AS `role`, `users`.`password_hash` AS `password_hash`, `users`.`activation_token` AS `activation_token` FROM (`users` join `users_roles` on(`users`.`role_id` = `users_roles`.`id`)) ;
 
 -- --------------------------------------------------------
 
@@ -1960,7 +2069,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_user_profile`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_profile`  AS SELECT `users`.`id` AS `id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users_gender`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`nationality` AS `nationality`, `users`.`language` AS `language`, `users_job_titles`.`job_title` AS `job_title`, `users`.`profile_picture_url` AS `profile_picture_url` FROM ((`users` join `users_gender` on(`users`.`gender_id` = `users_gender`.`id`)) left join `users_job_titles` on(`users`.`job_title_id` = `users_job_titles`.`id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_profile`  AS SELECT `users`.`id` AS `id`, `users`.`first_name` AS `first_name`, `users`.`last_name` AS `last_name`, `users`.`birthdate` AS `birthdate`, `users_gender`.`gender` AS `gender`, `users`.`city` AS `city`, `users`.`email` AS `email`, `users`.`mobile_number` AS `mobile_number`, `users`.`language` AS `language`, `users`.`language_2nd` AS `language_2nd`, `users_job_titles`.`job_title` AS `job_title`, `users`.`profile_picture_url` AS `profile_picture_url` FROM ((`users` join `users_gender` on(`users`.`gender_id` = `users_gender`.`id`)) left join `users_job_titles` on(`users`.`job_title_id` = `users_job_titles`.`id`)) ;
 
 -- --------------------------------------------------------
 
@@ -2109,8 +2218,8 @@ ALTER TABLE `top_categories_audit`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ResetToken` (`reset_token_hash`),
-  ADD UNIQUE KEY `activation_token_hash` (`activation_token_hash`),
+  ADD UNIQUE KEY `ResetToken` (`reset_token`),
+  ADD UNIQUE KEY `activation_token_hash` (`activation_token`),
   ADD KEY `job_title_id` (`job_title_id`),
   ADD KEY `gender_id` (`gender_id`),
   ADD KEY `role_id` (`role_id`),
@@ -2148,13 +2257,13 @@ ALTER TABLE `users_status`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `client_project_audit`
 --
 ALTER TABLE `client_project_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `client_project_status`
@@ -2172,13 +2281,13 @@ ALTER TABLE `completed_projects_audit`
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `freelancer_applications_audit`
 --
 ALTER TABLE `freelancer_applications_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `freelancer_application_status`
@@ -2190,7 +2299,7 @@ ALTER TABLE `freelancer_application_status`
 -- AUTO_INCREMENT for table `freelancer_connects`
 --
 ALTER TABLE `freelancer_connects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `freelancer_experiences`
@@ -2202,19 +2311,19 @@ ALTER TABLE `freelancer_experiences`
 -- AUTO_INCREMENT for table `freelancer_merits`
 --
 ALTER TABLE `freelancer_merits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions`
 --
 ALTER TABLE `freelancer_project_submissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions_audit`
 --
 ALTER TABLE `freelancer_project_submissions_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions_status`
@@ -2226,19 +2335,19 @@ ALTER TABLE `freelancer_project_submissions_status`
 -- AUTO_INCREMENT for table `freelancer_skills`
 --
 ALTER TABLE `freelancer_skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `project_comments`
 --
 ALTER TABLE `project_comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `skills`
@@ -2262,7 +2371,7 @@ ALTER TABLE `top_categories_audit`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `users_gender`

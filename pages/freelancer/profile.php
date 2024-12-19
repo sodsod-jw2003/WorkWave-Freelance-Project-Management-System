@@ -190,12 +190,6 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                         <div id="personalInformationCollapse" class="collapse-section collapse show">
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
-                                    <span class="text-muted fw-semibold text-green-60">Gender</span>
-                                    <div class="text-muted small"><?php echo $user['gender'] ?></div>
-                                </div>
-                                <hr class="divider">
-                                <div class="mb-3">
                                     <span class="fas fa-phone me-1 text-green-60"></span>
                                     <span class="text-muted fw-semibold text-green-60">Mobile Number</span>
                                     <div class="text-muted small"><?php echo $user['first_name'] ?></div>
@@ -208,21 +202,22 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                 </div>
                                 <hr class="divider">
                                 <div class="mb-3">
-                                    <span class="fas fa-location-dot me-1 text-green-60"></span>
-                                    <span class="text-muted fw-semibold text-green-60">Location</span>
-                                    <div class="text-muted small"><?php echo $user['city'] ?></div>
+                                    <span class="fas fa-mars-and-venus me-1 text-green-60"></span>
+                                    <span class="text-muted fw-semibold text-green-60">Gender</span>
+                                    <div class="text-muted small"><?php echo $user['gender'] ?></div>
                                 </div>
                                 <hr class="divider">
                                 <div class="mb-3">
-                                    <span class="fas fa-flag me-1 text-green-60"></span>
-                                    <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                    <div class="text-muted small"><?php echo $user['nationality'] ?></div>
+                                    <span class="fas fa-location-dot me-1 text-green-60"></span>
+                                    <span class="text-muted fw-semibold text-green-60">Location</span>
+                                    <div class="text-muted small"><?php echo $user['city'] ?></div>
                                 </div>
                                 <hr class="divider">
                                 <div class="">
                                     <span class="fas fa-language me-1 text-green-60"></span>
                                     <span class="text-muted fw-semibold text-green-60">Language</span>
                                     <div class="text-muted small"><?php echo $user['language'] ?></div>
+                                    <div class="text-muted small"><?php echo $user['language_2nd'] ?></div>
                                 </div>
                             </div>
                         </div>
@@ -394,9 +389,11 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                     <div class="col-md-4 mb-1">
                                                         <label for="mobile_number" class="text-muted small mb-2 ms-1">Mobile Number</label>
                                                         <div class="input-group">
-                                                        <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
-                                                        <input type="text" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
-                                                        <div class="invalid-feedback">Enter your mobile number.</div>
+                                                            <span class="input-group-text bg-white-100 no-outline-green-focus border-1">+63</span>
+                                                            <input type="password" name="mobile_number" id="mobile_number" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['mobile_number']); ?>">
+                                                            <button type="button" id="toggleMobile" class="btn btn-white border rounded">
+                                                                <span class="fas fa-eye text-green-50"></span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
@@ -410,23 +407,9 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                     <div class="col-md-4 mb-1">
                                                         <label for="city" class="text-muted small mb-2 ms-1">Location</label>
                                                         <input type="text" name="city" id="city" class="form-control bg-white-100 no-outline-green-focus border-1" value="<?php echo htmlspecialchars($user['city']); ?>">
-                                                        <div class="invalid-feedback">Enter your location.</div>
                                                     </div>
                                                     <div class="col-md-4 mb-1">
-                                                        <label for="nationality" class="text-muted small mb-2 ms-1">Nationality</label>
-                                                        <input 
-                                                            id="nationality" 
-                                                            type="text"
-                                                            name="nationality"
-                                                            class="form-control bg-white-100 no-outline-green-focus border-1 w-100"
-                                                            placeholder="Enter your Nationality"
-                                                            value="<?php echo $user['nationality'] ?>"
-                                                            list="nationalities">
-                                                        <div class="invalid-feedback">Enter your nationality.</div>
-                                                        <datalist id="nationalities"></datalist>
-                                                    </div>
-                                                    <div class="col-md-4 mb-1">
-                                                        <label for="language" class="text-muted small mb-2 ms-1">Language</label>
+                                                        <label for="language" class="text-muted small mb-2 ms-1">Primary Language</label>
                                                         <input 
                                                             id="language" 
                                                             type="text" 
@@ -435,7 +418,18 @@ while ($row = mysqli_fetch_assoc($skills_result)) {
                                                             placeholder="Enter your Primary Language"
                                                             value="<?php echo $user['language'] ?>"
                                                             list="languages">
-                                                        <div class="invalid-feedback">Enter your language.</div>
+                                                        <datalist id="languages"></datalist>
+                                                    </div>
+                                                    <div class="col-md-4 mb-1">
+                                                        <label for="language" class="text-muted small mb-2 ms-1">Secondary Language</label>
+                                                        <input 
+                                                            id="secondlanguage" 
+                                                            type="text" 
+                                                            name="secondlanguage" 
+                                                            class="form-control bg-white-100 no-outline-green-focus border-1 w-100" 
+                                                            placeholder="Enter your Secondary Language"
+                                                            value="<?php echo $user['language_2nd'] ?>"
+                                                            list="languages">
                                                         <datalist id="languages"></datalist>
                                                     </div>
                                                 </div>
