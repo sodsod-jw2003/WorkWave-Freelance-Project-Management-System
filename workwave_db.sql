@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2024 at 07:17 AM
+-- Generation Time: Dec 22, 2024 at 11:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1077,21 +1077,12 @@ INSERT INTO `notifications` (`id`, `application_id`, `project_id`, `user_id`, `t
 
 CREATE TABLE `project_comments` (
   `id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `comment` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `project_comments`
---
-
-INSERT INTO `project_comments` (`id`, `project_id`, `user_id`, `comment`, `created_at`, `updated_at`) VALUES
-(2, 73, 44, 'dsa', '2024-12-19 04:20:35', '2024-12-19 04:20:35'),
-(3, 69, 44, 'dasd', '2024-12-19 04:24:02', '2024-12-19 04:24:02'),
-(4, 80, 44, 'sd', '2024-12-19 04:34:32', '2024-12-19 04:34:32');
 
 -- --------------------------------------------------------
 
@@ -1352,7 +1343,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `language_2nd`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token`, `reset_token_expiry`, `activation_token`, `last_login_date`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
 (44, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910701', 'Filipino', 'English', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/675eef1b9bf16_nTGMV1Eo_400x400.jpg', 1, '$2y$10$VICcznSY.2YbbFpYtOk8GOa7uXD3iwt92qDf300dZHcNAw70hDwjy', 153988, '2024-12-19 14:42:54', NULL, '2024-12-19 14:14:56', NULL, 1, '2024-12-15 14:50:44', '2024-12-19 06:14:56'),
-(45, 'Freelancer Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/675eee2120b97_IMG_20230104_162006.png', 1, '$2y$10$8Gy0CYySzXp9yzRYKjCRw.oTEO3FT4qJzDUcaqtuxzFybJSs.IEk6', NULL, NULL, NULL, '2024-12-19 12:45:20', NULL, 1, '2024-12-15 14:54:46', '2024-12-19 04:45:33'),
+(45, 'Freelancer Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/675eee2120b97_IMG_20230104_162006.png', 1, '$2y$10$8Gy0CYySzXp9yzRYKjCRw.oTEO3FT4qJzDUcaqtuxzFybJSs.IEk6', NULL, NULL, NULL, '2024-12-19 14:32:34', NULL, 1, '2024-12-15 14:54:46', '2024-12-19 06:32:34'),
 (46, 'Jireh', 'Sodsod', '2003-09-07', 1, 'Caloocan, Metro Manila, Philippines', 'sodsodwalter@gmail.com', '', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675f493d32b76_675ef3058cffd_unnamed (1) (1).png', NULL, '$2y$10$gCnpb4UUW1FyGepKrYUeP.6J7G2cGya.X/CNOS74OxhloUMEJZYcO', 4551, '2024-12-16 07:13:23', NULL, '2024-12-16 05:24:27', NULL, 1, '2024-12-15 21:23:38', '2024-12-15 22:43:23');
 
 --
@@ -2159,7 +2150,8 @@ ALTER TABLE `freelancer_merits`
 ALTER TABLE `freelancer_project_submissions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `project_id` (`project_id`),
-  ADD KEY `submission_id` (`submission_status_id`);
+  ADD KEY `submission_id` (`submission_status_id`),
+  ADD KEY `submissiontouser` (`user_id`);
 
 --
 -- Indexes for table `freelancer_project_submissions_audit`
@@ -2185,13 +2177,17 @@ ALTER TABLE `freelancer_skills`
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `applicationtonotification` (`application_id`),
+  ADD KEY `projecttonotification` (`project_id`);
 
 --
 -- Indexes for table `project_comments`
 --
 ALTER TABLE `project_comments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `projecttouser` (`project_id`),
+  ADD KEY `commenttouser` (`user_id`);
 
 --
 -- Indexes for table `skills`
@@ -2424,6 +2420,12 @@ ALTER TABLE `freelancer_connects`
   ADD CONSTRAINT `freelancer_connects_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `freelancer_experiences`
+--
+ALTER TABLE `freelancer_experiences`
+  ADD CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `freelancer_merits`
 --
 ALTER TABLE `freelancer_merits`
@@ -2434,7 +2436,8 @@ ALTER TABLE `freelancer_merits`
 --
 ALTER TABLE `freelancer_project_submissions`
   ADD CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `submission_id` FOREIGN KEY (`submission_status_id`) REFERENCES `freelancer_project_submissions_status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `submission_id` FOREIGN KEY (`submission_status_id`) REFERENCES `freelancer_project_submissions_status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `submissiontouser` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `freelancer_skills`
@@ -2444,21 +2447,30 @@ ALTER TABLE `freelancer_skills`
   ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `applicationtonotification` FOREIGN KEY (`application_id`) REFERENCES `freelancer_applications` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `projecttonotification` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `project_comments`
+--
+ALTER TABLE `project_comments`
+  ADD CONSTRAINT `commenttouser` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `projecttouser` FOREIGN KEY (`project_id`) REFERENCES `client_projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `skills`
 --
 ALTER TABLE `skills`
   ADD CONSTRAINT `category_id` FOREIGN KEY (`skill_category_id`) REFERENCES `skills_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `top_categories_audit`
---
-ALTER TABLE `top_categories_audit`
-  ADD CONSTRAINT `top_categories_audit_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `skills_category` (`id`);
-
---
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
+  ADD CONSTRAINT `gender` FOREIGN KEY (`gender_id`) REFERENCES `users_gender` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `job_title_id` FOREIGN KEY (`job_title_id`) REFERENCES `users_job_titles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `users_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `statis_id` FOREIGN KEY (`status_id`) REFERENCES `users_status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
