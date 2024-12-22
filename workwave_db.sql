@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2024 at 11:10 AM
+-- Generation Time: Dec 22, 2024 at 02:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -271,8 +271,30 @@ CREATE TABLE `client_projects` (
 --
 
 INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_category_id`, `project_description`, `project_objective`, `project_status_id`, `project_connect_cost`, `project_merit_worth`, `created_at`, `updated_at`) VALUES
-(80, 44, 'Testing Project', 21, 'Testing', 'Testing', 2, 10, 10, '2024-12-19 04:30:41', '2024-12-19 04:31:20'),
-(81, 44, 'Testing Project 2', 3, 'Testing 2', 'Testing 2', 2, 10, 10, '2024-12-19 04:36:48', '2024-12-19 04:37:10');
+(123, 60, 'Fisch Project', 8, 'Make a Fish Model', 'Fish Model', 2, 10, 10, '2024-12-22 11:59:41', '2024-12-22 13:12:19'),
+(124, 60, 'Ocean Cleanup', 8, 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 2, 15, 15, '2024-12-22 12:05:00', '2024-12-22 13:14:17'),
+(125, 60, 'Smart Garden', 5, 'Create a smart garden system', 'Automated Garden System', 1, 20, 20, '2024-12-22 12:10:00', '2024-12-22 13:08:10'),
+(126, 60, 'Solar Panel Installation', 3, 'Design and install solar panels', 'Solar Panel System', 1, 25, 25, '2024-12-22 12:15:00', '2024-12-22 13:08:10'),
+(127, 61, 'Ai Development', 4, 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 2, 30, 30, '2024-12-22 12:20:00', '2024-12-22 13:12:21'),
+(128, 61, 'Mobile App Design', 6, 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 1, 25, 25, '2024-12-22 12:25:00', '2024-12-22 13:08:10'),
+(129, 61, 'Website Redesign', 2, 'Redesign a corporate website', 'Corporate Website Redesign', 1, 20, 20, '2024-12-22 12:30:00', '2024-12-22 13:08:10'),
+(130, 61, 'Data Analysis', 14, 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 1, 35, 35, '2024-12-22 12:35:00', '2024-12-22 13:08:10'),
+(131, 61, 'Cloud Storage Solution', 3, 'Develop a cloud storage platform', 'Cloud Storage System Development', 2, 40, 40, '2024-12-22 12:40:00', '2024-12-22 13:16:12'),
+(132, 62, 'E-commerce Website', 2, 'Build a fully functional e-commerce website', 'E-commerce Website Development', 1, 30, 30, '2024-12-22 12:45:00', '2024-12-22 13:08:10'),
+(133, 62, 'Ai Chatbot Development', 4, 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 2, 40, 40, '2024-12-22 13:00:00', '2024-12-22 13:14:09'),
+(134, 62, 'Ai Development', 4, 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 1, 30, 30, '2024-12-22 13:05:00', '2024-12-22 13:08:10'),
+(135, 62, 'Mobile App Design', 6, 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 1, 25, 25, '2024-12-22 13:10:00', '2024-12-22 13:08:10'),
+(136, 62, 'Website Redesign', 2, 'Redesign a corporate website', 'Corporate Website Redesign', 2, 20, 20, '2024-12-22 13:15:00', '2024-12-22 13:10:21'),
+(137, 63, 'Blockchain Development', 4, 'Develop a blockchain-based solution', 'Blockchain System Development', 1, 50, 50, '2024-12-22 12:50:00', '2024-12-22 13:08:10'),
+(138, 63, 'Virtual Reality Simulation', 5, 'Develop a virtual reality simulation for training', 'Virtual Reality System Development', 1, 60, 60, '2024-12-22 13:20:00', '2024-12-22 13:07:32'),
+(139, 63, 'Data Analysis', 7, 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 1, 35, 35, '2024-12-22 13:25:00', '2024-12-22 13:07:28'),
+(140, 63, 'Mobile App Development', 6, 'Create a mobile app for social media', 'Social Media Mobile App', 2, 30, 30, '2024-12-22 13:30:00', '2024-12-22 13:16:16'),
+(141, 63, 'Cloud Storage Solution', 3, 'Develop a cloud storage platform', 'Cloud Storage System Development', 2, 40, 40, '2024-12-22 13:35:00', '2024-12-22 13:09:33'),
+(142, 64, 'Mobile Game Development', 6, 'Create a mobile game app', 'Mobile Game Development', 1, 25, 25, '2024-12-22 12:55:00', '2024-12-22 12:55:00'),
+(143, 64, 'Web Application Development', 2, 'Develop a web-based application for education', 'Education Web Application', 1, 30, 30, '2024-12-22 13:40:00', '2024-12-22 13:40:00'),
+(144, 64, 'Seo Optimization', 3, 'Optimize a website for search engines', 'SEO Services for Website', 1, 20, 20, '2024-12-22 13:45:00', '2024-12-22 13:45:00'),
+(145, 64, 'Social Media Marketing', 7, 'Create a social media marketing campaign', 'Social Media Marketing for Brand', 2, 25, 25, '2024-12-22 13:50:00', '2024-12-22 13:09:30'),
+(146, 64, 'Video Production', 5, 'Create a promotional video for a product', 'Product Promotional Video', 2, 35, 35, '2024-12-22 13:55:00', '2024-12-22 13:10:17');
 
 --
 -- Triggers `client_projects`
@@ -396,40 +418,89 @@ CREATE TABLE `client_project_audit` (
 --
 
 INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_project_title`, `new_project_title`, `old_project_category_id`, `new_project_category_id`, `old_project_description`, `new_project_description`, `old_project_objective`, `new_project_objective`, `old_project_connect_cost`, `new_project_connect_cost`, `old_project_merit_worth`, `new_project_merit_worth`) VALUES
-(1, 69, 44, 'INSERT', '2024-12-15 14:53:57', NULL, 'Networking Sample Project', NULL, 19, NULL, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', NULL, 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', NULL, 10, NULL, 10),
-(2, 69, 44, 'UPDATE', '2024-12-15 14:59:32', 'Networking Sample Project', 'Networking Sample Project', 19, 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 10, 10, 10, 10),
-(3, 70, 44, 'INSERT', '2024-12-15 15:54:03', NULL, 'Project Alpha', NULL, 15, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10),
-(4, 70, 44, 'DELETE', '2024-12-15 15:56:10', 'Project Alpha', NULL, 15, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10, NULL),
-(5, 71, 44, 'INSERT', '2024-12-15 16:00:23', NULL, 'Project Alpha', NULL, 29, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10),
-(6, 71, 44, 'UPDATE', '2024-12-15 16:01:05', 'Project Alpha', 'Project Alpha', 29, 29, 'Test Description', 'Test Description', 'Test Objective', 'Test Objective', 10, 10, 10, 10),
-(7, 72, 44, 'INSERT', '2024-12-15 19:05:02', NULL, 'Project Arki', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
-(8, 73, 44, 'INSERT', '2024-12-15 19:05:20', NULL, 'Cs Data ', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
-(9, 74, 44, 'INSERT', '2024-12-15 19:05:38', NULL, 'Project Beta', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
-(10, 75, 44, 'INSERT', '2024-12-15 19:06:06', NULL, 'Project Build-er', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
-(11, 76, 44, 'INSERT', '2024-12-15 19:06:30', NULL, 'Sc Project', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10),
-(12, 77, 44, 'INSERT', '2024-12-19 03:14:09', NULL, 'Dasd', NULL, 11, NULL, 'sad', NULL, 'asd', NULL, 10, NULL, 10),
-(13, 78, 44, 'INSERT', '2024-12-19 03:14:18', NULL, 'Asdas', NULL, 15, NULL, 'dasdas', NULL, 'dasdasdas', NULL, 10, NULL, 10),
-(14, 78, 44, 'UPDATE', '2024-12-19 03:14:24', 'Asdas', 'Asdas', 15, 15, 'dasdas', 'dasdas', 'dasdasdas', 'dasdasdas', 10, 10, 10, 10),
-(15, 79, 44, 'INSERT', '2024-12-19 03:18:06', NULL, 'Banana Bread', NULL, 29, NULL, 'asdsa', NULL, 'asda', NULL, 10, NULL, 10),
-(16, 79, 44, 'UPDATE', '2024-12-19 03:18:57', 'Banana Bread', 'Banana Bread', 29, 29, 'asdsa', 'asdsa', 'asda', 'asda', 10, 10, 10, 10),
-(17, 71, 44, 'UPDATE', '2024-12-19 04:16:06', 'Project Alpha', 'Project Alpha', 29, 29, 'Test Description', 'Test Description', 'Test Objective', 'Test Objective', 10, 10, 10, 10),
-(18, 73, 44, 'UPDATE', '2024-12-19 04:19:11', 'Cs Data ', 'Cs Data ', 14, 14, 'Test', 'Test', 'Test', 'Test', 10, 10, 10, 10),
-(19, 73, 44, 'UPDATE', '2024-12-19 04:21:56', 'Cs Data ', 'Cs Data ', 14, 14, 'Test', 'Test', 'Test', 'Test', 10, 10, 10, 10),
-(20, 69, 44, 'UPDATE', '2024-12-19 04:24:22', 'Networking Sample Project', 'Networking Sample Project', 19, 19, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', 10, 10, 10, 10),
-(21, 79, 44, 'DELETE', '2024-12-19 04:29:55', 'Banana Bread', NULL, 29, NULL, 'asdsa', NULL, 'asda', NULL, 10, NULL, 10, NULL),
-(22, 78, 44, 'DELETE', '2024-12-19 04:29:56', 'Asdas', NULL, 15, NULL, 'dasdas', NULL, 'dasdasdas', NULL, 10, NULL, 10, NULL),
-(23, 77, 44, 'DELETE', '2024-12-19 04:29:58', 'Dasd', NULL, 11, NULL, 'sad', NULL, 'asd', NULL, 10, NULL, 10, NULL),
-(24, 76, 44, 'DELETE', '2024-12-19 04:30:00', 'Sc Project', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
-(25, 75, 44, 'DELETE', '2024-12-19 04:30:01', 'Project Build-er', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
-(26, 74, 44, 'DELETE', '2024-12-19 04:30:03', 'Project Beta', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
-(27, 73, 44, 'DELETE', '2024-12-19 04:30:05', 'Cs Data ', NULL, 14, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
-(28, 72, 44, 'DELETE', '2024-12-19 04:30:07', 'Project Arki', NULL, 22, NULL, 'Test', NULL, 'Test', NULL, 10, NULL, 10, NULL),
-(29, 71, 44, 'DELETE', '2024-12-19 04:30:08', 'Project Alpha', NULL, 29, NULL, 'Test Description', NULL, 'Test Objective', NULL, 10, NULL, 10, NULL),
-(30, 69, 44, 'DELETE', '2024-12-19 04:30:12', 'Networking Sample Project', NULL, 19, NULL, 'This project focuses on designing and implementing a robust and scalable networking solution for a growing organization. The goal is to develop a network infrastructure that ensures seamless communication between different departments, secure data transmission, and high availability. The project will involve configuring routers, switches, and firewalls, as well as establishing a reliable wireless network. Security protocols, network monitoring, and troubleshooting mechanisms will also be key components. The ultimate aim is to optimize the network performance while reducing downtime and ensuring data security.', NULL, 'Network Performance Metrics: A report on bandwidth usage, latency, and other performance indicators.', NULL, 10, NULL, 10, NULL),
-(31, 80, 44, 'INSERT', '2024-12-19 04:30:41', NULL, 'Testing Project', NULL, 21, NULL, 'Testing', NULL, 'Testing', NULL, 10, NULL, 10),
-(32, 80, 44, 'UPDATE', '2024-12-19 04:31:20', 'Testing Project', 'Testing Project', 21, 21, 'Testing', 'Testing', 'Testing', 'Testing', 10, 10, 10, 10),
-(33, 81, 44, 'INSERT', '2024-12-19 04:36:48', NULL, 'Testing Project 2', NULL, 3, NULL, 'Testing 2', NULL, 'Testing 2', NULL, 10, NULL, 10),
-(34, 81, 44, 'UPDATE', '2024-12-19 04:37:10', 'Testing Project 2', 'Testing Project 2', 3, 3, 'Testing 2', 'Testing 2', 'Testing 2', 'Testing 2', 10, 10, 10, 10);
+(62, 141, 63, 'INSERT', '2024-12-22 12:08:37', NULL, 'Cloud Storage Solution', NULL, 3, NULL, 'Develop a cloud storage platform', NULL, 'Cloud Storage System Development', NULL, 40, NULL, 40),
+(63, 142, 64, 'INSERT', '2024-12-22 12:08:37', NULL, 'Mobile Game Development', NULL, 6, NULL, 'Create a mobile game app', NULL, 'Mobile Game Development', NULL, 25, NULL, 25),
+(64, 143, 64, 'INSERT', '2024-12-22 12:08:37', NULL, 'Web Application Development', NULL, 2, NULL, 'Develop a web-based application for education', NULL, 'Education Web Application', NULL, 30, NULL, 30),
+(65, 144, 64, 'INSERT', '2024-12-22 12:08:37', NULL, 'Seo Optimization', NULL, 3, NULL, 'Optimize a website for search engines', NULL, 'SEO Services for Website', NULL, 20, NULL, 20),
+(66, 145, 64, 'INSERT', '2024-12-22 12:08:37', NULL, 'Social Media Marketing', NULL, 7, NULL, 'Create a social media marketing campaign', NULL, 'Social Media Marketing for Brand', NULL, 25, NULL, 25),
+(67, 146, 64, 'INSERT', '2024-12-22 12:08:37', NULL, 'Video Production', NULL, 5, NULL, 'Create a promotional video for a product', NULL, 'Product Promotional Video', NULL, 35, NULL, 35),
+(68, 146, 64, 'UPDATE', '2024-12-22 12:22:35', 'Video Production', 'Video Production', 5, 5, 'Create a promotional video for a product', 'Create a promotional video for a product', 'Product Promotional Video', 'Product Promotional Video', 35, 35, 35, 35),
+(69, 123, 60, 'UPDATE', '2024-12-22 12:30:16', 'Fisch Project', 'Fisch Project', 8, 8, 'Make a Fish Model', 'Make a Fish Model', 'Fish Model', 'Fish Model', 10, 10, 10, 10),
+(70, 123, 60, 'UPDATE', '2024-12-22 12:37:23', 'Fisch Project', 'Fisch Project', 8, 8, 'Make a Fish Model', 'Make a Fish Model', 'Fish Model', 'Fish Model', 10, 10, 10, 10),
+(71, 124, 60, 'UPDATE', '2024-12-22 12:37:27', 'Ocean Cleanup', 'Ocean Cleanup', 8, 8, 'Design a solution for cleaning oceans', 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 'Ocean Cleanup Model', 15, 15, 15, 15),
+(72, 125, 60, 'UPDATE', '2024-12-22 12:38:18', 'Smart Garden', 'Smart Garden', 5, 5, 'Create a smart garden system', 'Create a smart garden system', 'Automated Garden System', 'Automated Garden System', 20, 20, 20, 20),
+(73, 126, 60, 'UPDATE', '2024-12-22 12:38:18', 'Solar Panel Installation', 'Solar Panel Installation', 3, 3, 'Design and install solar panels', 'Design and install solar panels', 'Solar Panel System', 'Solar Panel System', 25, 25, 25, 25),
+(74, 127, 61, 'UPDATE', '2024-12-22 12:38:18', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(75, 128, 61, 'UPDATE', '2024-12-22 12:38:18', 'Mobile App Design', 'Mobile App Design', 6, 6, 'Design a mobile app for e-commerce', 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 'E-commerce Mobile Application', 25, 25, 25, 25),
+(76, 129, 61, 'UPDATE', '2024-12-22 12:38:18', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(77, 130, 61, 'UPDATE', '2024-12-22 12:38:18', 'Data Analysis', 'Data Analysis', 14, 14, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(78, 131, 61, 'UPDATE', '2024-12-22 12:38:18', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(79, 132, 62, 'UPDATE', '2024-12-22 12:38:18', 'E-commerce Website', 'E-commerce Website', 2, 2, 'Build a fully functional e-commerce website', 'Build a fully functional e-commerce website', 'E-commerce Website Development', 'E-commerce Website Development', 30, 30, 30, 30),
+(80, 133, 62, 'UPDATE', '2024-12-22 12:38:18', 'Ai Chatbot Development', 'Ai Chatbot Development', 4, 4, 'Develop an AI-powered chatbot for customer service', 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 'AI Chatbot Development', 40, 40, 40, 40),
+(81, 134, 62, 'UPDATE', '2024-12-22 12:38:18', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(82, 135, 62, 'UPDATE', '2024-12-22 12:38:18', 'Mobile App Design', 'Mobile App Design', 6, 6, 'Design a mobile app for e-commerce', 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 'E-commerce Mobile Application', 25, 25, 25, 25),
+(83, 136, 62, 'UPDATE', '2024-12-22 12:38:18', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(84, 137, 63, 'UPDATE', '2024-12-22 12:38:18', 'Blockchain Development', 'Blockchain Development', 4, 4, 'Develop a blockchain-based solution', 'Develop a blockchain-based solution', 'Blockchain System Development', 'Blockchain System Development', 50, 50, 50, 50),
+(85, 138, 63, 'UPDATE', '2024-12-22 12:38:18', 'Virtual Reality Simulation', 'Virtual Reality Simulation', 5, 5, 'Develop a virtual reality simulation for training', 'Develop a virtual reality simulation for training', 'Virtual Reality System Development', 'Virtual Reality System Development', 60, 60, 60, 60),
+(86, 139, 63, 'UPDATE', '2024-12-22 12:38:18', 'Data Analysis', 'Data Analysis', 7, 7, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(87, 140, 63, 'UPDATE', '2024-12-22 12:38:18', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30),
+(88, 124, 60, 'UPDATE', '2024-12-22 12:53:01', 'Ocean Cleanup', 'Ocean Cleanup', 8, 8, 'Design a solution for cleaning oceans', 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 'Ocean Cleanup Model', 15, 15, 15, 15),
+(89, 125, 60, 'UPDATE', '2024-12-22 12:53:04', 'Smart Garden', 'Smart Garden', 5, 5, 'Create a smart garden system', 'Create a smart garden system', 'Automated Garden System', 'Automated Garden System', 20, 20, 20, 20),
+(90, 126, 60, 'UPDATE', '2024-12-22 12:53:07', 'Solar Panel Installation', 'Solar Panel Installation', 3, 3, 'Design and install solar panels', 'Design and install solar panels', 'Solar Panel System', 'Solar Panel System', 25, 25, 25, 25),
+(91, 127, 61, 'UPDATE', '2024-12-22 12:53:10', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(92, 128, 61, 'UPDATE', '2024-12-22 12:53:13', 'Mobile App Design', 'Mobile App Design', 6, 6, 'Design a mobile app for e-commerce', 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 'E-commerce Mobile Application', 25, 25, 25, 25),
+(93, 129, 61, 'UPDATE', '2024-12-22 12:53:16', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(94, 130, 61, 'UPDATE', '2024-12-22 12:53:19', 'Data Analysis', 'Data Analysis', 14, 14, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(95, 131, 61, 'UPDATE', '2024-12-22 12:53:28', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(96, 132, 62, 'UPDATE', '2024-12-22 12:53:31', 'E-commerce Website', 'E-commerce Website', 2, 2, 'Build a fully functional e-commerce website', 'Build a fully functional e-commerce website', 'E-commerce Website Development', 'E-commerce Website Development', 30, 30, 30, 30),
+(97, 133, 62, 'UPDATE', '2024-12-22 12:53:37', 'Ai Chatbot Development', 'Ai Chatbot Development', 4, 4, 'Develop an AI-powered chatbot for customer service', 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 'AI Chatbot Development', 40, 40, 40, 40),
+(98, 134, 62, 'UPDATE', '2024-12-22 12:53:39', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(99, 135, 62, 'UPDATE', '2024-12-22 12:53:43', 'Mobile App Design', 'Mobile App Design', 6, 6, 'Design a mobile app for e-commerce', 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 'E-commerce Mobile Application', 25, 25, 25, 25),
+(100, 136, 62, 'UPDATE', '2024-12-22 12:53:45', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(101, 137, 63, 'UPDATE', '2024-12-22 12:53:48', 'Blockchain Development', 'Blockchain Development', 4, 4, 'Develop a blockchain-based solution', 'Develop a blockchain-based solution', 'Blockchain System Development', 'Blockchain System Development', 50, 50, 50, 50),
+(102, 138, 63, 'UPDATE', '2024-12-22 12:53:50', 'Virtual Reality Simulation', 'Virtual Reality Simulation', 5, 5, 'Develop a virtual reality simulation for training', 'Develop a virtual reality simulation for training', 'Virtual Reality System Development', 'Virtual Reality System Development', 60, 60, 60, 60),
+(103, 139, 63, 'UPDATE', '2024-12-22 12:53:52', 'Data Analysis', 'Data Analysis', 7, 7, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(104, 140, 63, 'UPDATE', '2024-12-22 12:53:55', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30),
+(105, 141, 63, 'UPDATE', '2024-12-22 12:53:58', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(106, 146, 64, 'UPDATE', '2024-12-22 13:07:15', 'Video Production', 'Video Production', 5, 5, 'Create a promotional video for a product', 'Create a promotional video for a product', 'Product Promotional Video', 'Product Promotional Video', 35, 35, 35, 35),
+(107, 141, 63, 'UPDATE', '2024-12-22 13:07:20', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(108, 140, 63, 'UPDATE', '2024-12-22 13:07:25', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30),
+(109, 139, 63, 'UPDATE', '2024-12-22 13:07:28', 'Data Analysis', 'Data Analysis', 7, 7, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(110, 138, 63, 'UPDATE', '2024-12-22 13:07:32', 'Virtual Reality Simulation', 'Virtual Reality Simulation', 5, 5, 'Develop a virtual reality simulation for training', 'Develop a virtual reality simulation for training', 'Virtual Reality System Development', 'Virtual Reality System Development', 60, 60, 60, 60),
+(111, 123, 60, 'UPDATE', '2024-12-22 13:08:10', 'Fisch Project', 'Fisch Project', 8, 8, 'Make a Fish Model', 'Make a Fish Model', 'Fish Model', 'Fish Model', 10, 10, 10, 10),
+(112, 124, 60, 'UPDATE', '2024-12-22 13:08:10', 'Ocean Cleanup', 'Ocean Cleanup', 8, 8, 'Design a solution for cleaning oceans', 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 'Ocean Cleanup Model', 15, 15, 15, 15),
+(113, 125, 60, 'UPDATE', '2024-12-22 13:08:10', 'Smart Garden', 'Smart Garden', 5, 5, 'Create a smart garden system', 'Create a smart garden system', 'Automated Garden System', 'Automated Garden System', 20, 20, 20, 20),
+(114, 126, 60, 'UPDATE', '2024-12-22 13:08:10', 'Solar Panel Installation', 'Solar Panel Installation', 3, 3, 'Design and install solar panels', 'Design and install solar panels', 'Solar Panel System', 'Solar Panel System', 25, 25, 25, 25),
+(115, 127, 61, 'UPDATE', '2024-12-22 13:08:10', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(116, 128, 61, 'UPDATE', '2024-12-22 13:08:10', 'Mobile App Design', 'Mobile App Design', 6, 6, 'Design a mobile app for e-commerce', 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 'E-commerce Mobile Application', 25, 25, 25, 25),
+(117, 129, 61, 'UPDATE', '2024-12-22 13:08:10', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(118, 130, 61, 'UPDATE', '2024-12-22 13:08:10', 'Data Analysis', 'Data Analysis', 14, 14, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(119, 131, 61, 'UPDATE', '2024-12-22 13:08:10', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(120, 132, 62, 'UPDATE', '2024-12-22 13:08:10', 'E-commerce Website', 'E-commerce Website', 2, 2, 'Build a fully functional e-commerce website', 'Build a fully functional e-commerce website', 'E-commerce Website Development', 'E-commerce Website Development', 30, 30, 30, 30),
+(121, 133, 62, 'UPDATE', '2024-12-22 13:08:10', 'Ai Chatbot Development', 'Ai Chatbot Development', 4, 4, 'Develop an AI-powered chatbot for customer service', 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 'AI Chatbot Development', 40, 40, 40, 40),
+(122, 134, 62, 'UPDATE', '2024-12-22 13:08:10', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(123, 135, 62, 'UPDATE', '2024-12-22 13:08:10', 'Mobile App Design', 'Mobile App Design', 6, 6, 'Design a mobile app for e-commerce', 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 'E-commerce Mobile Application', 25, 25, 25, 25),
+(124, 136, 62, 'UPDATE', '2024-12-22 13:08:10', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(125, 137, 63, 'UPDATE', '2024-12-22 13:08:10', 'Blockchain Development', 'Blockchain Development', 4, 4, 'Develop a blockchain-based solution', 'Develop a blockchain-based solution', 'Blockchain System Development', 'Blockchain System Development', 50, 50, 50, 50),
+(126, 138, 63, 'UPDATE', '2024-12-22 13:08:10', 'Virtual Reality Simulation', 'Virtual Reality Simulation', 5, 5, 'Develop a virtual reality simulation for training', 'Develop a virtual reality simulation for training', 'Virtual Reality System Development', 'Virtual Reality System Development', 60, 60, 60, 60),
+(127, 139, 63, 'UPDATE', '2024-12-22 13:08:10', 'Data Analysis', 'Data Analysis', 7, 7, 'Analyze sales data and create reports', 'Analyze sales data and create reports', 'Sales Data Analysis and Reporting', 'Sales Data Analysis and Reporting', 35, 35, 35, 35),
+(128, 140, 63, 'UPDATE', '2024-12-22 13:08:10', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30),
+(129, 141, 63, 'UPDATE', '2024-12-22 13:08:10', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(130, 142, 64, 'UPDATE', '2024-12-22 13:08:10', 'Mobile Game Development', 'Mobile Game Development', 6, 6, 'Create a mobile game app', 'Create a mobile game app', 'Mobile Game Development', 'Mobile Game Development', 25, 25, 25, 25),
+(131, 143, 64, 'UPDATE', '2024-12-22 13:08:10', 'Web Application Development', 'Web Application Development', 2, 2, 'Develop a web-based application for education', 'Develop a web-based application for education', 'Education Web Application', 'Education Web Application', 30, 30, 30, 30),
+(132, 144, 64, 'UPDATE', '2024-12-22 13:08:10', 'Seo Optimization', 'Seo Optimization', 3, 3, 'Optimize a website for search engines', 'Optimize a website for search engines', 'SEO Services for Website', 'SEO Services for Website', 20, 20, 20, 20),
+(133, 145, 64, 'UPDATE', '2024-12-22 13:08:10', 'Social Media Marketing', 'Social Media Marketing', 7, 7, 'Create a social media marketing campaign', 'Create a social media marketing campaign', 'Social Media Marketing for Brand', 'Social Media Marketing for Brand', 25, 25, 25, 25),
+(134, 146, 64, 'UPDATE', '2024-12-22 13:08:10', 'Video Production', 'Video Production', 5, 5, 'Create a promotional video for a product', 'Create a promotional video for a product', 'Product Promotional Video', 'Product Promotional Video', 35, 35, 35, 35),
+(135, 145, 64, 'UPDATE', '2024-12-22 13:09:30', 'Social Media Marketing', 'Social Media Marketing', 7, 7, 'Create a social media marketing campaign', 'Create a social media marketing campaign', 'Social Media Marketing for Brand', 'Social Media Marketing for Brand', 25, 25, 25, 25),
+(136, 141, 63, 'UPDATE', '2024-12-22 13:09:33', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(137, 146, 64, 'UPDATE', '2024-12-22 13:10:17', 'Video Production', 'Video Production', 5, 5, 'Create a promotional video for a product', 'Create a promotional video for a product', 'Product Promotional Video', 'Product Promotional Video', 35, 35, 35, 35),
+(138, 136, 62, 'UPDATE', '2024-12-22 13:10:21', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(139, 123, 60, 'UPDATE', '2024-12-22 13:12:19', 'Fisch Project', 'Fisch Project', 8, 8, 'Make a Fish Model', 'Make a Fish Model', 'Fish Model', 'Fish Model', 10, 10, 10, 10),
+(140, 127, 61, 'UPDATE', '2024-12-22 13:12:21', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(141, 133, 62, 'UPDATE', '2024-12-22 13:14:09', 'Ai Chatbot Development', 'Ai Chatbot Development', 4, 4, 'Develop an AI-powered chatbot for customer service', 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 'AI Chatbot Development', 40, 40, 40, 40),
+(142, 124, 60, 'UPDATE', '2024-12-22 13:14:17', 'Ocean Cleanup', 'Ocean Cleanup', 8, 8, 'Design a solution for cleaning oceans', 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 'Ocean Cleanup Model', 15, 15, 15, 15),
+(143, 131, 61, 'UPDATE', '2024-12-22 13:16:12', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(144, 140, 63, 'UPDATE', '2024-12-22 13:16:16', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30);
 
 -- --------------------------------------------------------
 
@@ -449,9 +520,9 @@ CREATE TABLE `client_project_status` (
 --
 
 INSERT INTO `client_project_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Hiring', '2024-12-15 14:45:07', '2024-12-15 14:45:25'),
-(2, 'In Progress', '2024-12-15 14:45:07', '2024-12-15 14:45:25'),
-(3, 'Completed', '2024-12-15 14:45:07', '2024-12-15 14:45:25');
+(1, 'Hiring', '2024-12-22 11:59:07', '2024-12-22 11:59:07'),
+(2, 'In Progress', '2024-12-22 11:59:07', '2024-12-22 11:59:07'),
+(3, 'Completed', '2024-12-22 11:59:07', '2024-12-22 11:59:07');
 
 -- --------------------------------------------------------
 
@@ -498,8 +569,16 @@ CREATE TABLE `freelancer_applications` (
 --
 
 INSERT INTO `freelancer_applications` (`id`, `project_id`, `user_id`, `application_details`, `portfolio_url`, `application_status_id`, `application_date`, `created_at`, `updated_at`) VALUES
-(104, 80, 45, 'Testing Application', '', 2, '2024-12-19 12:31:11', '2024-12-19 04:31:11', '2024-12-19 04:31:20'),
-(105, 81, 45, 'Testing 2', '', 2, '2024-12-19 12:37:03', '2024-12-19 04:37:03', '2024-12-19 04:37:10');
+(131, 145, 50, 'apply', 'https://www.google.com', 2, '2024-12-22 21:04:43', '2024-12-22 13:04:43', '2024-12-22 13:09:30'),
+(132, 141, 50, 'apply', '', 2, '2024-12-22 21:08:59', '2024-12-22 13:08:59', '2024-12-22 13:09:33'),
+(133, 146, 51, 'apply', '', 2, '2024-12-22 21:09:43', '2024-12-22 13:09:43', '2024-12-22 13:10:17'),
+(134, 136, 51, 'apply', '', 2, '2024-12-22 21:10:09', '2024-12-22 13:10:09', '2024-12-22 13:10:21'),
+(135, 123, 52, 'apply', '', 2, '2024-12-22 21:11:59', '2024-12-22 13:11:59', '2024-12-22 13:12:19'),
+(136, 127, 52, 'apply', '', 2, '2024-12-22 21:12:13', '2024-12-22 13:12:13', '2024-12-22 13:12:21'),
+(137, 133, 53, 'apply', '', 2, '2024-12-22 21:13:33', '2024-12-22 13:13:33', '2024-12-22 13:14:09'),
+(138, 124, 53, 'apply', '', 2, '2024-12-22 21:14:01', '2024-12-22 13:14:01', '2024-12-22 13:14:17'),
+(139, 131, 54, 'apply', '', 2, '2024-12-22 21:15:47', '2024-12-22 13:15:47', '2024-12-22 13:16:12'),
+(140, 140, 54, 'apply', '', 2, '2024-12-22 21:16:02', '2024-12-22 13:16:02', '2024-12-22 13:16:16');
 
 --
 -- Triggers `freelancer_applications`
@@ -711,18 +790,79 @@ CREATE TABLE `freelancer_applications_audit` (
 --
 
 INSERT INTO `freelancer_applications_audit` (`id`, `application_id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_application_details`, `new_application_details`, `old_portfolio_url`, `new_portfolio_url`, `old_application_status_id`, `new_application_status_id`, `old_application_date`, `new_application_date`) VALUES
-(1, 99, 69, 45, 'INSERT', '2024-12-15 14:57:30', NULL, 'I want to apply for this job', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', NULL, 1, NULL, '2024-12-15 22:57:30'),
-(2, 99, 69, 45, 'UPDATE', '2024-12-15 14:59:32', 'I want to apply for this job', 'I want to apply for this job', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=69', 1, 2, '2024-12-15 22:57:30', '2024-12-15 22:57:30'),
-(3, 100, 71, 45, 'INSERT', '2024-12-15 16:00:44', NULL, 'Test Proposal', NULL, 'https://www.google.com/', NULL, 1, NULL, '2024-12-16 00:00:44'),
-(4, 100, 71, 45, 'UPDATE', '2024-12-15 16:01:05', 'Test Proposal', 'Test Proposal', 'https://www.google.com/', 'https://www.google.com/', 1, 2, '2024-12-16 00:00:44', '2024-12-16 00:00:44'),
-(5, 101, 77, 45, 'INSERT', '2024-12-19 03:23:41', NULL, 'asda', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=77', NULL, 1, NULL, '2024-12-19 11:23:41'),
-(6, 102, 76, 45, 'INSERT', '2024-12-19 04:17:05', NULL, 'asdas', NULL, 'http://localhost/WorkWave/pages/freelancer/project_application.php?id=40', NULL, 1, NULL, '2024-12-19 12:17:05'),
-(7, 103, 73, 45, 'INSERT', '2024-12-19 04:18:35', NULL, 'dasdas', NULL, '', NULL, 1, NULL, '2024-12-19 12:18:35'),
-(8, 103, 73, 45, 'UPDATE', '2024-12-19 04:19:11', 'dasdas', 'dasdas', '', '', 1, 2, '2024-12-19 12:18:35', '2024-12-19 12:18:35'),
-(9, 104, 80, 45, 'INSERT', '2024-12-19 04:31:11', NULL, 'Testing Application', NULL, '', NULL, 1, NULL, '2024-12-19 12:31:11'),
-(10, 104, 80, 45, 'UPDATE', '2024-12-19 04:31:20', 'Testing Application', 'Testing Application', '', '', 1, 2, '2024-12-19 12:31:11', '2024-12-19 12:31:11'),
-(11, 105, 81, 45, 'INSERT', '2024-12-19 04:37:03', NULL, 'Testing 2', NULL, '', NULL, 1, NULL, '2024-12-19 12:37:03'),
-(12, 105, 81, 45, 'UPDATE', '2024-12-19 04:37:10', 'Testing 2', 'Testing 2', '', '', 1, 2, '2024-12-19 12:37:03', '2024-12-19 12:37:03');
+(38, 116, 126, 57, 'UPDATE', '2024-12-22 12:38:18', 'Expert in solar technology. I can design and install solar panels for your project.', 'Expert in solar technology. I can design and install solar panels for your project.', 'http://myportfolio.com/57', 'http://myportfolio.com/57', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(39, 117, 127, 56, 'UPDATE', '2024-12-22 12:38:18', 'Passionate about AI development. Let’s work together on the AI recommendation system.', 'Passionate about AI development. Let’s work together on the AI recommendation system.', 'http://myportfolio.com/56', 'http://myportfolio.com/56', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(40, 118, 128, 56, 'UPDATE', '2024-12-22 12:38:18', 'Skilled in designing mobile apps. Ready to create the e-commerce app for you.', 'Skilled in designing mobile apps. Ready to create the e-commerce app for you.', 'http://myportfolio.com/56', 'http://myportfolio.com/56', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(41, 119, 129, 55, 'UPDATE', '2024-12-22 12:38:18', 'Experienced in website redesigns. I look forward to working on your corporate website project.', 'Experienced in website redesigns. I look forward to working on your corporate website project.', 'http://myportfolio.com/55', 'http://myportfolio.com/55', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(42, 120, 130, 55, 'UPDATE', '2024-12-22 12:38:18', 'Data analysis is my specialty. I can help with sales data analysis and reporting.', 'Data analysis is my specialty. I can help with sales data analysis and reporting.', 'http://myportfolio.com/55', 'http://myportfolio.com/55', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(43, 121, 131, 54, 'UPDATE', '2024-12-22 12:38:18', 'Expert in cloud storage solutions. Ready to develop the cloud platform for your needs.', 'Expert in cloud storage solutions. Ready to develop the cloud platform for your needs.', 'http://myportfolio.com/54', 'http://myportfolio.com/54', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(44, 122, 132, 54, 'UPDATE', '2024-12-22 12:38:18', 'I can develop a fully functional e-commerce website, making it easy for you to sell your products.', 'I can develop a fully functional e-commerce website, making it easy for you to sell your products.', 'http://myportfolio.com/54', 'http://myportfolio.com/54', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(45, 123, 133, 53, 'UPDATE', '2024-12-22 12:38:18', 'Experienced in AI-based systems, I can develop an AI-powered chatbot for customer service.', 'Experienced in AI-based systems, I can develop an AI-powered chatbot for customer service.', 'http://myportfolio.com/53', 'http://myportfolio.com/53', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(46, 124, 134, 53, 'UPDATE', '2024-12-22 12:38:18', 'Proficient in AI development, I am interested in helping with the AI-based recommendation system.', 'Proficient in AI development, I am interested in helping with the AI-based recommendation system.', 'http://myportfolio.com/53', 'http://myportfolio.com/53', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(47, 125, 135, 52, 'UPDATE', '2024-12-22 12:38:18', 'Skilled in mobile app development. Let’s design your mobile e-commerce app for better business.', 'Skilled in mobile app development. Let’s design your mobile e-commerce app for better business.', 'http://myportfolio.com/52', 'http://myportfolio.com/52', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(48, 126, 136, 52, 'UPDATE', '2024-12-22 12:38:18', 'Experienced in redesigning websites. I would love to help with your corporate website project.', 'Experienced in redesigning websites. I would love to help with your corporate website project.', 'http://myportfolio.com/52', 'http://myportfolio.com/52', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(49, 127, 137, 51, 'UPDATE', '2024-12-22 12:38:18', 'Proficient in blockchain development. Let’s create a secure blockchain solution for your project.', 'Proficient in blockchain development. Let’s create a secure blockchain solution for your project.', 'http://myportfolio.com/51', 'http://myportfolio.com/51', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(50, 128, 138, 51, 'UPDATE', '2024-12-22 12:38:18', 'Experienced in virtual reality systems. Ready to develop a VR simulation for your training program.', 'Experienced in virtual reality systems. Ready to develop a VR simulation for your training program.', 'http://myportfolio.com/51', 'http://myportfolio.com/51', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(51, 129, 139, 50, 'UPDATE', '2024-12-22 12:38:18', 'I specialize in data analysis and can help analyze sales data and create reports.', 'I specialize in data analysis and can help analyze sales data and create reports.', 'http://myportfolio.com/50', 'http://myportfolio.com/50', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(52, 130, 140, 50, 'UPDATE', '2024-12-22 12:38:18', 'Proficient in mobile app development, I can help create your social media mobile app.', 'Proficient in mobile app development, I can help create your social media mobile app.', 'http://myportfolio.com/50', 'http://myportfolio.com/50', 1, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(53, 113, 124, 58, 'UPDATE', '2024-12-22 12:53:01', 'I am skilled in creating 3D models and can help you with the fish model design.', 'I am skilled in creating 3D models and can help you with the fish model design.', 'http://myportfolio.com/58', 'http://myportfolio.com/58', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(54, 114, 125, 58, 'UPDATE', '2024-12-22 12:53:04', 'Experienced in environmental solutions. I can contribute to ocean cleanup projects effectively.', 'Experienced in environmental solutions. I can contribute to ocean cleanup projects effectively.', 'http://myportfolio.com/58', 'http://myportfolio.com/58', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(55, 115, 126, 57, 'UPDATE', '2024-12-22 12:53:07', 'Proficient in creating automated garden systems. I am excited about the smart garden project.', 'Proficient in creating automated garden systems. I am excited about the smart garden project.', 'http://myportfolio.com/57', 'http://myportfolio.com/57', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(56, 116, 127, 57, 'UPDATE', '2024-12-22 12:53:10', 'Expert in solar technology. I can design and install solar panels for your project.', 'Expert in solar technology. I can design and install solar panels for your project.', 'http://myportfolio.com/57', 'http://myportfolio.com/57', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(57, 117, 128, 56, 'UPDATE', '2024-12-22 12:53:13', 'Passionate about AI development. Let’s work together on the AI recommendation system.', 'Passionate about AI development. Let’s work together on the AI recommendation system.', 'http://myportfolio.com/56', 'http://myportfolio.com/56', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(58, 118, 129, 56, 'UPDATE', '2024-12-22 12:53:16', 'Skilled in designing mobile apps. Ready to create the e-commerce app for you.', 'Skilled in designing mobile apps. Ready to create the e-commerce app for you.', 'http://myportfolio.com/56', 'http://myportfolio.com/56', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(59, 119, 130, 55, 'UPDATE', '2024-12-22 12:53:19', 'Experienced in website redesigns. I look forward to working on your corporate website project.', 'Experienced in website redesigns. I look forward to working on your corporate website project.', 'http://myportfolio.com/55', 'http://myportfolio.com/55', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(60, 120, 131, 55, 'UPDATE', '2024-12-22 12:53:28', 'Data analysis is my specialty. I can help with sales data analysis and reporting.', 'Data analysis is my specialty. I can help with sales data analysis and reporting.', 'http://myportfolio.com/55', 'http://myportfolio.com/55', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(61, 121, 132, 54, 'UPDATE', '2024-12-22 12:53:31', 'Expert in cloud storage solutions. Ready to develop the cloud platform for your needs.', 'Expert in cloud storage solutions. Ready to develop the cloud platform for your needs.', 'http://myportfolio.com/54', 'http://myportfolio.com/54', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(62, 122, 133, 54, 'UPDATE', '2024-12-22 12:53:37', 'I can develop a fully functional e-commerce website, making it easy for you to sell your products.', 'I can develop a fully functional e-commerce website, making it easy for you to sell your products.', 'http://myportfolio.com/54', 'http://myportfolio.com/54', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(63, 123, 134, 53, 'UPDATE', '2024-12-22 12:53:39', 'Experienced in AI-based systems, I can develop an AI-powered chatbot for customer service.', 'Experienced in AI-based systems, I can develop an AI-powered chatbot for customer service.', 'http://myportfolio.com/53', 'http://myportfolio.com/53', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(64, 124, 135, 53, 'UPDATE', '2024-12-22 12:53:43', 'Proficient in AI development, I am interested in helping with the AI-based recommendation system.', 'Proficient in AI development, I am interested in helping with the AI-based recommendation system.', 'http://myportfolio.com/53', 'http://myportfolio.com/53', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(65, 125, 136, 52, 'UPDATE', '2024-12-22 12:53:45', 'Skilled in mobile app development. Let’s design your mobile e-commerce app for better business.', 'Skilled in mobile app development. Let’s design your mobile e-commerce app for better business.', 'http://myportfolio.com/52', 'http://myportfolio.com/52', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(66, 126, 137, 52, 'UPDATE', '2024-12-22 12:53:48', 'Experienced in redesigning websites. I would love to help with your corporate website project.', 'Experienced in redesigning websites. I would love to help with your corporate website project.', 'http://myportfolio.com/52', 'http://myportfolio.com/52', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(67, 127, 138, 51, 'UPDATE', '2024-12-22 12:53:50', 'Proficient in blockchain development. Let’s create a secure blockchain solution for your project.', 'Proficient in blockchain development. Let’s create a secure blockchain solution for your project.', 'http://myportfolio.com/51', 'http://myportfolio.com/51', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(68, 128, 139, 51, 'UPDATE', '2024-12-22 12:53:52', 'Experienced in virtual reality systems. Ready to develop a VR simulation for your training program.', 'Experienced in virtual reality systems. Ready to develop a VR simulation for your training program.', 'http://myportfolio.com/51', 'http://myportfolio.com/51', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(69, 129, 140, 50, 'UPDATE', '2024-12-22 12:53:55', 'I specialize in data analysis and can help analyze sales data and create reports.', 'I specialize in data analysis and can help analyze sales data and create reports.', 'http://myportfolio.com/50', 'http://myportfolio.com/50', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(70, 130, 141, 50, 'UPDATE', '2024-12-22 12:53:58', 'Proficient in mobile app development, I can help create your social media mobile app.', 'Proficient in mobile app development, I can help create your social media mobile app.', 'http://myportfolio.com/50', 'http://myportfolio.com/50', 2, 2, '2024-12-22 20:32:18', '2024-12-22 20:32:18'),
+(71, 108, 146, 59, 'DELETE', '2024-12-22 12:59:49', 'I am experienced in View Production .', NULL, 'http://portfolio.com/VideoProduction', NULL, 2, NULL, '2024-12-22 20:22:15', NULL),
+(72, 112, 123, 59, 'DELETE', '2024-12-22 12:59:50', 'I have experience in web development and am eager to contribute to this project.', NULL, 'http://myportfolio.com', NULL, 2, NULL, '2024-12-22 20:29:51', NULL),
+(73, 113, 124, 58, 'DELETE', '2024-12-22 12:59:50', 'I am skilled in creating 3D models and can help you with the fish model design.', NULL, 'http://myportfolio.com/58', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(74, 114, 125, 58, 'DELETE', '2024-12-22 12:59:50', 'Experienced in environmental solutions. I can contribute to ocean cleanup projects effectively.', NULL, 'http://myportfolio.com/58', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(75, 115, 126, 57, 'DELETE', '2024-12-22 12:59:50', 'Proficient in creating automated garden systems. I am excited about the smart garden project.', NULL, 'http://myportfolio.com/57', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(76, 116, 127, 57, 'DELETE', '2024-12-22 12:59:50', 'Expert in solar technology. I can design and install solar panels for your project.', NULL, 'http://myportfolio.com/57', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(77, 117, 128, 56, 'DELETE', '2024-12-22 12:59:50', 'Passionate about AI development. Let’s work together on the AI recommendation system.', NULL, 'http://myportfolio.com/56', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(78, 118, 129, 56, 'DELETE', '2024-12-22 12:59:50', 'Skilled in designing mobile apps. Ready to create the e-commerce app for you.', NULL, 'http://myportfolio.com/56', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(79, 119, 130, 55, 'DELETE', '2024-12-22 12:59:50', 'Experienced in website redesigns. I look forward to working on your corporate website project.', NULL, 'http://myportfolio.com/55', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(80, 120, 131, 55, 'DELETE', '2024-12-22 12:59:50', 'Data analysis is my specialty. I can help with sales data analysis and reporting.', NULL, 'http://myportfolio.com/55', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(81, 121, 132, 54, 'DELETE', '2024-12-22 12:59:50', 'Expert in cloud storage solutions. Ready to develop the cloud platform for your needs.', NULL, 'http://myportfolio.com/54', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(82, 122, 133, 54, 'DELETE', '2024-12-22 12:59:50', 'I can develop a fully functional e-commerce website, making it easy for you to sell your products.', NULL, 'http://myportfolio.com/54', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(83, 123, 134, 53, 'DELETE', '2024-12-22 12:59:50', 'Experienced in AI-based systems, I can develop an AI-powered chatbot for customer service.', NULL, 'http://myportfolio.com/53', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(84, 124, 135, 53, 'DELETE', '2024-12-22 12:59:50', 'Proficient in AI development, I am interested in helping with the AI-based recommendation system.', NULL, 'http://myportfolio.com/53', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(85, 125, 136, 52, 'DELETE', '2024-12-22 12:59:50', 'Skilled in mobile app development. Let’s design your mobile e-commerce app for better business.', NULL, 'http://myportfolio.com/52', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(86, 126, 137, 52, 'DELETE', '2024-12-22 12:59:50', 'Experienced in redesigning websites. I would love to help with your corporate website project.', NULL, 'http://myportfolio.com/52', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(87, 127, 138, 51, 'DELETE', '2024-12-22 12:59:50', 'Proficient in blockchain development. Let’s create a secure blockchain solution for your project.', NULL, 'http://myportfolio.com/51', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(88, 128, 139, 51, 'DELETE', '2024-12-22 12:59:50', 'Experienced in virtual reality systems. Ready to develop a VR simulation for your training program.', NULL, 'http://myportfolio.com/51', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(89, 129, 140, 50, 'DELETE', '2024-12-22 12:59:50', 'I specialize in data analysis and can help analyze sales data and create reports.', NULL, 'http://myportfolio.com/50', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(90, 130, 141, 50, 'DELETE', '2024-12-22 12:59:50', 'Proficient in mobile app development, I can help create your social media mobile app.', NULL, 'http://myportfolio.com/50', NULL, 2, NULL, '2024-12-22 20:32:18', NULL),
+(91, 131, 145, 50, 'INSERT', '2024-12-22 13:04:43', NULL, 'apply', NULL, 'https://www.google.com', NULL, 1, NULL, '2024-12-22 21:04:43'),
+(92, 132, 141, 50, 'INSERT', '2024-12-22 13:08:59', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:08:59'),
+(93, 131, 145, 50, 'UPDATE', '2024-12-22 13:09:30', 'apply', 'apply', 'https://www.google.com', 'https://www.google.com', 1, 2, '2024-12-22 21:04:43', '2024-12-22 21:04:43'),
+(94, 132, 141, 50, 'UPDATE', '2024-12-22 13:09:33', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:08:59', '2024-12-22 21:08:59'),
+(95, 133, 146, 51, 'INSERT', '2024-12-22 13:09:43', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:09:43'),
+(96, 134, 136, 51, 'INSERT', '2024-12-22 13:10:09', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:10:09'),
+(97, 133, 146, 51, 'UPDATE', '2024-12-22 13:10:17', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:09:43', '2024-12-22 21:09:43'),
+(98, 134, 136, 51, 'UPDATE', '2024-12-22 13:10:21', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:10:09', '2024-12-22 21:10:09'),
+(99, 135, 123, 52, 'INSERT', '2024-12-22 13:11:59', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:11:59'),
+(100, 136, 127, 52, 'INSERT', '2024-12-22 13:12:13', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:12:13'),
+(101, 135, 123, 52, 'UPDATE', '2024-12-22 13:12:19', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:11:59', '2024-12-22 21:11:59'),
+(102, 136, 127, 52, 'UPDATE', '2024-12-22 13:12:21', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:12:13', '2024-12-22 21:12:13'),
+(103, 137, 133, 53, 'INSERT', '2024-12-22 13:13:33', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:13:33'),
+(104, 138, 124, 53, 'INSERT', '2024-12-22 13:14:01', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:14:01'),
+(105, 137, 133, 53, 'UPDATE', '2024-12-22 13:14:09', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:13:33', '2024-12-22 21:13:33'),
+(106, 138, 124, 53, 'UPDATE', '2024-12-22 13:14:17', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:14:01', '2024-12-22 21:14:01'),
+(107, 139, 131, 54, 'INSERT', '2024-12-22 13:15:47', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:15:47'),
+(108, 140, 140, 54, 'INSERT', '2024-12-22 13:16:02', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:16:02'),
+(109, 139, 131, 54, 'UPDATE', '2024-12-22 13:16:12', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:15:47', '2024-12-22 21:15:47'),
+(110, 140, 140, 54, 'UPDATE', '2024-12-22 13:16:16', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:16:02', '2024-12-22 21:16:02');
 
 -- --------------------------------------------------------
 
@@ -742,9 +882,9 @@ CREATE TABLE `freelancer_application_status` (
 --
 
 INSERT INTO `freelancer_application_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'pending', '2024-12-09 13:41:39', '2024-12-09 13:41:39'),
-(2, 'accepted', '2024-12-09 13:41:39', '2024-12-11 10:46:43'),
-(3, 'rejected', '2024-12-09 13:41:39', '2024-12-09 13:41:39');
+(1, 'Pending', '2024-12-22 12:17:17', '2024-12-22 12:17:17'),
+(2, 'Accepted', '2024-12-22 12:17:17', '2024-12-22 12:17:17'),
+(3, 'Rejected', '2024-12-22 12:17:17', '2024-12-22 12:17:17');
 
 -- --------------------------------------------------------
 
@@ -765,8 +905,16 @@ CREATE TABLE `freelancer_connects` (
 --
 
 INSERT INTO `freelancer_connects` (`id`, `user_id`, `connects`, `created_at`, `updated_at`) VALUES
-(10, 45, 30, '2024-12-15 14:54:46', '2024-12-19 04:37:03'),
-(11, 46, 100, '2024-12-15 21:23:38', '2024-12-15 21:23:38');
+(12, 50, 35, '2024-12-22 11:17:59', '2024-12-22 13:08:59'),
+(13, 51, 45, '2024-12-22 11:18:51', '2024-12-22 13:10:09'),
+(14, 52, 60, '2024-12-22 11:19:36', '2024-12-22 13:12:13'),
+(15, 53, 45, '2024-12-22 11:22:45', '2024-12-22 13:14:01'),
+(16, 54, 30, '2024-12-22 11:23:26', '2024-12-22 13:16:02'),
+(17, 55, 100, '2024-12-22 11:24:33', '2024-12-22 11:24:33'),
+(18, 56, 100, '2024-12-22 11:25:28', '2024-12-22 11:25:28'),
+(19, 57, 100, '2024-12-22 11:26:23', '2024-12-22 11:26:23'),
+(20, 58, 100, '2024-12-22 11:27:47', '2024-12-22 11:27:47'),
+(21, 59, 65, '2024-12-22 11:28:41', '2024-12-22 12:22:15');
 
 -- --------------------------------------------------------
 
@@ -789,7 +937,36 @@ CREATE TABLE `freelancer_experiences` (
 --
 
 INSERT INTO `freelancer_experiences` (`id`, `user_id`, `job_title`, `company_name`, `duration`, `created_at`, `updated_at`) VALUES
-(1, 45, 'Software Developer', 'Apple Inc.', '2019-2024', '2024-12-15 14:56:49', '2024-12-15 14:56:49');
+(13, 50, 'Web Developer', 'Tech Solutions', '2015-2018', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(14, 50, 'Front-End Developer', 'Design Pros', '2018-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(15, 50, 'Project Manager', 'Innovative Tech', '2020-2023', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(16, 51, 'AI Developer', 'AI Innovations', '2018-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(17, 51, 'Machine Learning Engineer', 'Future AI', '2020-2022', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(18, 51, 'Data Scientist', 'DataX', '2022-2024', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(19, 52, 'Mobile App Developer', 'App Creators', '2016-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(20, 52, 'Software Engineer', 'Tech Innovators', '2020-2022', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(21, 52, 'UI/UX Designer', 'Creative Minds', '2022-2024', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(22, 53, 'Blockchain Developer', 'Blockchain Enterprises', '2019-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(23, 53, 'Smart Contract Developer', 'Crypto Solutions', '2020-2021', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(24, 53, 'Blockchain Consultant', 'Tech Consultancy', '2021-2023', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(25, 54, 'Cloud Engineer', 'Cloud Systems', '2015-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(26, 54, 'DevOps Engineer', 'Cloud Operations', '2020-2022', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(27, 54, 'Cloud Architect', 'Tech Architects', '2022-2024', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(28, 55, 'Data Analyst', 'Data Insights', '2018-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(29, 55, 'Business Intelligence Analyst', 'BI Solutions', '2020-2022', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(30, 55, 'Data Engineer', 'Data Technologies', '2022-2024', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(31, 56, 'Solar Panel Technician', 'Green Tech', '2016-2019', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(32, 56, 'Renewable Energy Consultant', 'Eco Energy', '2019-2021', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(33, 56, 'Project Manager', 'Sustainable Tech', '2021-2023', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(34, 57, 'Smart Garden Engineer', 'Eco Systems', '2019-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(35, 57, 'IoT Engineer', 'Green Innovators', '2020-2022', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(36, 57, 'Sustainability Consultant', 'Eco Solutions', '2022-2024', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(37, 58, '3D Modeler', 'Creative Studios', '2015-2019', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(38, 58, 'Animation Artist', 'Digital Arts', '2019-2021', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(39, 58, 'Visual Designer', 'Studio Visions', '2021-2023', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(40, 59, 'Project Manager', 'Innovation Co.', '2014-2020', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(41, 59, 'Operations Manager', 'Tech Ventures', '2020-2022', '2024-12-22 12:35:44', '2024-12-22 12:35:44'),
+(42, 59, 'Business Development Manager', 'Growth Enterprises', '2022-2024', '2024-12-22 12:35:44', '2024-12-22 12:35:44');
 
 -- --------------------------------------------------------
 
@@ -810,8 +987,16 @@ CREATE TABLE `freelancer_merits` (
 --
 
 INSERT INTO `freelancer_merits` (`id`, `user_id`, `merits`, `created_at`, `updated_at`) VALUES
-(9, 45, 30, '2024-12-15 14:54:46', '2024-12-19 04:24:22'),
-(10, 46, 0, '2024-12-15 21:23:38', '2024-12-15 21:23:38');
+(11, 50, 0, '2024-12-22 11:17:59', '2024-12-22 11:17:59'),
+(12, 51, 0, '2024-12-22 11:18:51', '2024-12-22 11:18:51'),
+(13, 52, 0, '2024-12-22 11:19:36', '2024-12-22 11:19:36'),
+(14, 53, 0, '2024-12-22 11:22:45', '2024-12-22 11:22:45'),
+(15, 54, 0, '2024-12-22 11:23:26', '2024-12-22 11:23:26'),
+(16, 55, 0, '2024-12-22 11:24:33', '2024-12-22 11:24:33'),
+(17, 56, 0, '2024-12-22 11:25:28', '2024-12-22 11:25:28'),
+(18, 57, 0, '2024-12-22 11:26:23', '2024-12-22 11:26:23'),
+(19, 58, 0, '2024-12-22 11:27:47', '2024-12-22 11:27:47'),
+(20, 59, 0, '2024-12-22 11:28:41', '2024-12-22 11:28:41');
 
 -- --------------------------------------------------------
 
@@ -834,8 +1019,16 @@ CREATE TABLE `freelancer_project_submissions` (
 --
 
 INSERT INTO `freelancer_project_submissions` (`id`, `project_id`, `user_id`, `submission_url`, `submission_status_id`, `created_at`, `updated_at`) VALUES
-(38, 80, 45, '../../dist/php/uploads/project_files/6763a261736bb_screen1.PNG', 2, '2024-12-19 04:31:20', '2024-12-19 04:34:41'),
-(39, 81, 45, '../../dist/php/uploads/project_files/6763a30b939f0_Capture1.PNG', 2, '2024-12-19 04:37:10', '2024-12-19 04:37:31');
+(60, 145, 50, NULL, 1, '2024-12-22 13:09:30', '2024-12-22 13:09:30'),
+(61, 141, 50, NULL, 1, '2024-12-22 13:09:33', '2024-12-22 13:09:33'),
+(62, 146, 51, NULL, 1, '2024-12-22 13:10:17', '2024-12-22 13:10:17'),
+(63, 136, 51, NULL, 1, '2024-12-22 13:10:21', '2024-12-22 13:10:21'),
+(64, 123, 52, NULL, 1, '2024-12-22 13:12:19', '2024-12-22 13:12:19'),
+(65, 127, 52, NULL, 1, '2024-12-22 13:12:21', '2024-12-22 13:12:21'),
+(66, 133, 53, NULL, 1, '2024-12-22 13:14:09', '2024-12-22 13:14:09'),
+(67, 124, 53, NULL, 1, '2024-12-22 13:14:17', '2024-12-22 13:14:17'),
+(68, 131, 54, NULL, 1, '2024-12-22 13:16:12', '2024-12-22 13:16:12'),
+(69, 140, 54, NULL, 1, '2024-12-22 13:16:16', '2024-12-22 13:16:16');
 
 --
 -- Triggers `freelancer_project_submissions`
@@ -972,27 +1165,31 @@ CREATE TABLE `freelancer_project_submissions_audit` (
 --
 
 INSERT INTO `freelancer_project_submissions_audit` (`id`, `application_id`, `project_id`, `user_id`, `action_type`, `action_timestamp`, `old_submission_url`, `new_submission_url`, `old_submission_status_id`, `new_submission_status_id`, `old_created_at`, `new_created_at`, `old_updated_at`, `new_updated_at`) VALUES
-(1, 35, 69, 45, 'INSERT', '2024-12-15 14:59:32', NULL, NULL, NULL, 1, NULL, '2024-12-15 14:59:32', NULL, '2024-12-15 14:59:32'),
-(2, 35, 69, 45, 'UPDATE', '2024-12-15 15:17:25', NULL, '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', 1, 2, NULL, NULL, '2024-12-15 14:59:32', '2024-12-15 15:17:25'),
-(3, 36, 71, 45, 'INSERT', '2024-12-15 16:01:05', NULL, NULL, NULL, 1, NULL, '2024-12-15 16:01:05', NULL, '2024-12-15 16:01:05'),
-(4, 36, 71, 45, 'UPDATE', '2024-12-15 16:01:29', NULL, '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', 1, 2, NULL, NULL, '2024-12-15 16:01:05', '2024-12-15 16:01:29'),
-(5, 36, 71, 45, 'UPDATE', '2024-12-15 16:01:55', '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', 2, 4, NULL, NULL, '2024-12-15 16:01:29', '2024-12-15 16:01:55'),
-(6, 36, 71, 45, 'UPDATE', '2024-12-19 04:13:43', '../../dist/php/uploads/project_files/675efd5943da7_675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/67639d77b6675_152-Article Text-793-1-10-20231220.pdf', 4, 2, NULL, NULL, '2024-12-15 16:01:55', '2024-12-19 04:13:43'),
-(7, 36, 71, 45, 'UPDATE', '2024-12-19 04:16:06', '../../dist/php/uploads/project_files/67639d77b6675_152-Article Text-793-1-10-20231220.pdf', '../../dist/php/uploads/project_files/67639d77b6675_152-Article Text-793-1-10-20231220.pdf', 2, 3, NULL, NULL, '2024-12-19 04:13:43', '2024-12-19 04:16:06'),
-(8, 37, 73, 45, 'INSERT', '2024-12-19 04:19:11', NULL, NULL, NULL, 1, NULL, '2024-12-19 04:19:11', NULL, '2024-12-19 04:19:11'),
-(9, 37, 73, 45, 'UPDATE', '2024-12-19 04:19:57', NULL, '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', 1, 2, NULL, NULL, '2024-12-19 04:19:11', '2024-12-19 04:19:57'),
-(10, 37, 73, 45, 'UPDATE', '2024-12-19 04:20:35', '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', 2, 4, NULL, NULL, '2024-12-19 04:19:57', '2024-12-19 04:20:35'),
-(11, 37, 73, 45, 'UPDATE', '2024-12-19 04:21:27', '../../dist/php/uploads/project_files/67639eedbd980_675ea5b85f9f6___PG_M.A._Socialogy.pdf', '../../dist/php/uploads/project_files/67639f472a424_Capture1.PNG', 4, 2, NULL, NULL, '2024-12-19 04:20:35', '2024-12-19 04:21:27'),
-(12, 37, 73, 45, 'UPDATE', '2024-12-19 04:21:56', '../../dist/php/uploads/project_files/67639f472a424_Capture1.PNG', '../../dist/php/uploads/project_files/67639f472a424_Capture1.PNG', 2, 3, NULL, NULL, '2024-12-19 04:21:27', '2024-12-19 04:21:56'),
-(13, 35, 69, 45, 'UPDATE', '2024-12-19 04:24:02', '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', 2, 4, NULL, NULL, '2024-12-15 15:17:25', '2024-12-19 04:24:02'),
-(14, 35, 69, 45, 'UPDATE', '2024-12-19 04:24:15', '../../dist/php/uploads/project_files/675ef3058cffd_unnamed (1) (1).png', '../../dist/php/uploads/project_files/67639fef01544_vlcsnap-2024-03-24-13h58m13s661.png', 4, 2, NULL, NULL, '2024-12-19 04:24:02', '2024-12-19 04:24:15'),
-(15, 35, 69, 45, 'UPDATE', '2024-12-19 04:24:22', '../../dist/php/uploads/project_files/67639fef01544_vlcsnap-2024-03-24-13h58m13s661.png', '../../dist/php/uploads/project_files/67639fef01544_vlcsnap-2024-03-24-13h58m13s661.png', 2, 3, NULL, NULL, '2024-12-19 04:24:15', '2024-12-19 04:24:22'),
-(16, 38, 80, 45, 'INSERT', '2024-12-19 04:31:20', NULL, NULL, NULL, 1, NULL, '2024-12-19 04:31:20', NULL, '2024-12-19 04:31:20'),
-(17, 38, 80, 45, 'UPDATE', '2024-12-19 04:32:03', NULL, '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', 1, 2, NULL, NULL, '2024-12-19 04:31:20', '2024-12-19 04:32:03'),
-(18, 38, 80, 45, 'UPDATE', '2024-12-19 04:34:32', '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', 2, 4, NULL, NULL, '2024-12-19 04:32:03', '2024-12-19 04:34:32'),
-(19, 38, 80, 45, 'UPDATE', '2024-12-19 04:34:41', '../../dist/php/uploads/project_files/6763a1c3e684e_Capture1.PNG', '../../dist/php/uploads/project_files/6763a261736bb_screen1.PNG', 4, 2, NULL, NULL, '2024-12-19 04:34:32', '2024-12-19 04:34:41'),
-(20, 39, 81, 45, 'INSERT', '2024-12-19 04:37:10', NULL, NULL, NULL, 1, NULL, '2024-12-19 04:37:10', NULL, '2024-12-19 04:37:10'),
-(21, 39, 81, 45, 'UPDATE', '2024-12-19 04:37:31', NULL, '../../dist/php/uploads/project_files/6763a30b939f0_Capture1.PNG', 1, 2, NULL, NULL, '2024-12-19 04:37:10', '2024-12-19 04:37:31');
+(47, 45, 126, 57, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(48, 46, 127, 56, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(49, 47, 128, 56, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(50, 48, 129, 55, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(51, 49, 130, 55, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(52, 50, 131, 54, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(53, 51, 132, 54, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(54, 52, 133, 53, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(55, 53, 134, 53, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(56, 54, 135, 52, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(57, 55, 136, 52, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(58, 56, 137, 51, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(59, 57, 138, 51, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(60, 58, 139, 50, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(61, 59, 140, 50, 'DELETE', '2024-12-22 13:00:25', NULL, NULL, 1, NULL, '2024-12-22 12:38:18', NULL, '2024-12-22 12:38:18', NULL),
+(62, 60, 145, 50, 'INSERT', '2024-12-22 13:09:30', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:09:30', NULL, '2024-12-22 13:09:30'),
+(63, 61, 141, 50, 'INSERT', '2024-12-22 13:09:33', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:09:33', NULL, '2024-12-22 13:09:33'),
+(64, 62, 146, 51, 'INSERT', '2024-12-22 13:10:17', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:10:17', NULL, '2024-12-22 13:10:17'),
+(65, 63, 136, 51, 'INSERT', '2024-12-22 13:10:21', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:10:21', NULL, '2024-12-22 13:10:21'),
+(66, 64, 123, 52, 'INSERT', '2024-12-22 13:12:19', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:12:19', NULL, '2024-12-22 13:12:19'),
+(67, 65, 127, 52, 'INSERT', '2024-12-22 13:12:21', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:12:21', NULL, '2024-12-22 13:12:21'),
+(68, 66, 133, 53, 'INSERT', '2024-12-22 13:14:09', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:14:09', NULL, '2024-12-22 13:14:09'),
+(69, 67, 124, 53, 'INSERT', '2024-12-22 13:14:17', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:14:17', NULL, '2024-12-22 13:14:17'),
+(70, 68, 131, 54, 'INSERT', '2024-12-22 13:16:12', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:16:12', NULL, '2024-12-22 13:16:12'),
+(71, 69, 140, 54, 'INSERT', '2024-12-22 13:16:16', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:16:16', NULL, '2024-12-22 13:16:16');
 
 -- --------------------------------------------------------
 
@@ -1012,10 +1209,10 @@ CREATE TABLE `freelancer_project_submissions_status` (
 --
 
 INSERT INTO `freelancer_project_submissions_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'pending', '2024-12-14 06:05:20', '2024-12-14 06:05:20'),
-(2, 'for review', '2024-12-14 06:05:20', '2024-12-14 06:05:52'),
-(3, 'accepted', '2024-12-14 06:05:20', '2024-12-14 06:05:20'),
-(4, 'rejected', '2024-12-14 06:05:20', '2024-12-14 06:05:20');
+(1, 'Pending', '2024-12-22 12:18:17', '2024-12-22 12:18:17'),
+(2, 'For Review', '2024-12-22 12:18:17', '2024-12-22 12:18:17'),
+(3, 'Accepted', '2024-12-22 12:18:17', '2024-12-22 12:18:17'),
+(4, 'Rejected', '2024-12-22 12:18:17', '2024-12-22 12:18:17');
 
 -- --------------------------------------------------------
 
@@ -1036,13 +1233,27 @@ CREATE TABLE `freelancer_skills` (
 --
 
 INSERT INTO `freelancer_skills` (`id`, `user_id`, `skill_id`, `created_at`, `updated_at`) VALUES
-(258, 46, 132, '2024-12-15 21:25:31', '2024-12-15 21:25:31'),
-(259, 46, 131, '2024-12-15 21:25:31', '2024-12-15 21:25:31'),
-(277, 45, 132, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
-(278, 45, 131, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
-(279, 45, 71, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
-(280, 45, 75, '2024-12-19 04:45:26', '2024-12-19 04:45:26'),
-(281, 45, 73, '2024-12-19 04:45:26', '2024-12-19 04:45:26');
+(282, 59, 101, '2024-12-22 12:32:43', '2024-12-22 12:32:43'),
+(283, 59, 103, '2024-12-22 12:32:43', '2024-12-22 12:32:43'),
+(284, 58, 76, '2024-12-22 12:38:55', '2024-12-22 12:38:55'),
+(285, 58, 77, '2024-12-22 12:38:55', '2024-12-22 12:38:55'),
+(286, 57, 43, '2024-12-22 12:40:06', '2024-12-22 12:40:06'),
+(287, 57, 41, '2024-12-22 12:40:06', '2024-12-22 12:40:06'),
+(288, 55, 125, '2024-12-22 12:40:55', '2024-12-22 12:40:55'),
+(289, 55, 126, '2024-12-22 12:40:55', '2024-12-22 12:40:55'),
+(290, 56, 129, '2024-12-22 12:41:36', '2024-12-22 12:41:36'),
+(291, 54, 23, '2024-12-22 12:42:16', '2024-12-22 12:42:16'),
+(292, 54, 22, '2024-12-22 12:42:16', '2024-12-22 12:42:16'),
+(293, 53, 56, '2024-12-22 12:42:55', '2024-12-22 12:42:55'),
+(294, 53, 58, '2024-12-22 12:42:55', '2024-12-22 12:42:55'),
+(295, 52, 55, '2024-12-22 12:43:21', '2024-12-22 12:43:21'),
+(296, 52, 53, '2024-12-22 12:43:21', '2024-12-22 12:43:21'),
+(297, 51, 65, '2024-12-22 12:43:56', '2024-12-22 12:43:56'),
+(298, 51, 62, '2024-12-22 12:43:56', '2024-12-22 12:43:56'),
+(301, 50, 77, '2024-12-22 13:04:17', '2024-12-22 13:04:17'),
+(302, 50, 78, '2024-12-22 13:04:17', '2024-12-22 13:04:17'),
+(303, 50, 65, '2024-12-22 13:04:17', '2024-12-22 13:04:17'),
+(304, 50, 62, '2024-12-22 13:04:17', '2024-12-22 13:04:17');
 
 -- --------------------------------------------------------
 
@@ -1067,7 +1278,39 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `application_id`, `project_id`, `user_id`, `type`, `message`, `is_read`, `created_at`, `updated_at`) VALUES
-(71, NULL, 81, 45, 1, 'Your application for Testing Project 2 has been accepted.', 0, '2024-12-19 04:37:10', '2024-12-19 04:37:10');
+(118, NULL, 129, 56, 1, 'Your application for Website Redesign has been accepted.', 0, '2024-12-22 12:53:16', '2024-12-22 12:53:16'),
+(119, NULL, 130, 55, 1, 'Your application for Data Analysis has been accepted.', 0, '2024-12-22 12:53:19', '2024-12-22 12:53:19'),
+(120, NULL, 131, 55, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-22 12:53:28', '2024-12-22 12:53:28'),
+(121, NULL, 132, 54, 1, 'Your application for E-commerce Website has been accepted.', 0, '2024-12-22 12:53:31', '2024-12-22 12:53:31'),
+(122, NULL, 133, 54, 1, 'Your application for Ai Chatbot Development has been accepted.', 0, '2024-12-22 12:53:37', '2024-12-22 12:53:37'),
+(123, NULL, 134, 53, 1, 'Your application for Ai Development has been accepted.', 0, '2024-12-22 12:53:39', '2024-12-22 12:53:39'),
+(124, NULL, 135, 53, 1, 'Your application for Mobile App Design has been accepted.', 0, '2024-12-22 12:53:43', '2024-12-22 12:53:43'),
+(125, NULL, 136, 52, 1, 'Your application for Website Redesign has been accepted.', 0, '2024-12-22 12:53:45', '2024-12-22 12:53:45'),
+(126, NULL, 137, 52, 1, 'Your application for Blockchain Development has been accepted.', 0, '2024-12-22 12:53:48', '2024-12-22 12:53:48'),
+(127, NULL, 138, 51, 1, 'Your application for Virtual Reality Simulation has been accepted.', 0, '2024-12-22 12:53:50', '2024-12-22 12:53:50'),
+(128, NULL, 139, 51, 1, 'Your application for Data Analysis has been accepted.', 0, '2024-12-22 12:53:52', '2024-12-22 12:53:52'),
+(129, NULL, 140, 50, 1, 'Your application for Mobile App Development has been accepted.', 0, '2024-12-22 12:53:55', '2024-12-22 12:53:55'),
+(130, NULL, 141, 50, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-22 12:53:58', '2024-12-22 12:53:58'),
+(131, 131, 145, 64, 1, 'A new application has been submitted for your project: Social Media Marketing', 0, '2024-12-22 13:04:43', '2024-12-22 13:04:43'),
+(132, 132, 141, 63, 1, 'A new application has been submitted for your project: Cloud Storage Solution', 0, '2024-12-22 13:08:59', '2024-12-22 13:08:59'),
+(133, NULL, 145, 50, 1, 'Your application for Social Media Marketing has been accepted.', 0, '2024-12-22 13:09:30', '2024-12-22 13:09:30'),
+(134, NULL, 141, 50, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-22 13:09:33', '2024-12-22 13:09:33'),
+(135, 133, 146, 64, 1, 'A new application has been submitted for your project: Video Production', 0, '2024-12-22 13:09:43', '2024-12-22 13:09:43'),
+(136, 134, 136, 62, 1, 'A new application has been submitted for your project: Website Redesign', 0, '2024-12-22 13:10:09', '2024-12-22 13:10:09'),
+(137, NULL, 146, 51, 1, 'Your application for Video Production has been accepted.', 0, '2024-12-22 13:10:17', '2024-12-22 13:10:17'),
+(138, NULL, 136, 51, 1, 'Your application for Website Redesign has been accepted.', 0, '2024-12-22 13:10:21', '2024-12-22 13:10:21'),
+(139, 135, 123, 60, 1, 'A new application has been submitted for your project: Fisch Project', 0, '2024-12-22 13:11:59', '2024-12-22 13:11:59'),
+(140, 136, 127, 61, 1, 'A new application has been submitted for your project: Ai Development', 0, '2024-12-22 13:12:13', '2024-12-22 13:12:13'),
+(141, NULL, 123, 52, 1, 'Your application for Fisch Project has been accepted.', 0, '2024-12-22 13:12:19', '2024-12-22 13:12:19'),
+(142, NULL, 127, 52, 1, 'Your application for Ai Development has been accepted.', 0, '2024-12-22 13:12:21', '2024-12-22 13:12:21'),
+(143, 137, 133, 62, 1, 'A new application has been submitted for your project: Ai Chatbot Development', 0, '2024-12-22 13:13:33', '2024-12-22 13:13:33'),
+(144, 138, 124, 60, 1, 'A new application has been submitted for your project: Ocean Cleanup', 0, '2024-12-22 13:14:01', '2024-12-22 13:14:01'),
+(145, NULL, 133, 53, 1, 'Your application for Ai Chatbot Development has been accepted.', 0, '2024-12-22 13:14:09', '2024-12-22 13:14:09'),
+(146, NULL, 124, 53, 1, 'Your application for Ocean Cleanup has been accepted.', 0, '2024-12-22 13:14:17', '2024-12-22 13:14:17'),
+(147, 139, 131, 61, 1, 'A new application has been submitted for your project: Cloud Storage Solution', 0, '2024-12-22 13:15:47', '2024-12-22 13:15:47'),
+(148, 140, 140, 63, 1, 'A new application has been submitted for your project: Mobile App Development', 0, '2024-12-22 13:16:02', '2024-12-22 13:16:02'),
+(149, NULL, 131, 54, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-22 13:16:12', '2024-12-22 13:16:12'),
+(150, NULL, 140, 54, 1, 'Your application for Mobile App Development has been accepted.', 0, '2024-12-22 13:16:16', '2024-12-22 13:16:16');
 
 -- --------------------------------------------------------
 
@@ -1342,9 +1585,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `language_2nd`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token`, `reset_token_expiry`, `activation_token`, `last_login_date`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
-(44, 'Client Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano1234@gmail.com', '9515910701', 'Filipino', 'English', 'Filipino', 1, '../../dist/php/uploads/profile_pictures/675eef1b9bf16_nTGMV1Eo_400x400.jpg', 1, '$2y$10$VICcznSY.2YbbFpYtOk8GOa7uXD3iwt92qDf300dZHcNAw70hDwjy', 153988, '2024-12-19 14:42:54', NULL, '2024-12-19 14:14:56', NULL, 1, '2024-12-15 14:50:44', '2024-12-19 06:14:56'),
-(45, 'Freelancer Ronald', 'Sullano', '2003-07-14', 1, 'Caloocan, Metro Manila, Philippines', 'ronaldsullano666@gmail.com', '9515910708', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/675eee2120b97_IMG_20230104_162006.png', 1, '$2y$10$8Gy0CYySzXp9yzRYKjCRw.oTEO3FT4qJzDUcaqtuxzFybJSs.IEk6', NULL, NULL, NULL, '2024-12-19 14:32:34', NULL, 1, '2024-12-15 14:54:46', '2024-12-19 06:32:34'),
-(46, 'Jireh', 'Sodsod', '2003-09-07', 1, 'Caloocan, Metro Manila, Philippines', 'sodsodwalter@gmail.com', '', '', '', '', 2, '../../dist/php/uploads/profile_pictures/675f493d32b76_675ef3058cffd_unnamed (1) (1).png', NULL, '$2y$10$gCnpb4UUW1FyGepKrYUeP.6J7G2cGya.X/CNOS74OxhloUMEJZYcO', 4551, '2024-12-16 07:13:23', NULL, '2024-12-16 05:24:27', NULL, 1, '2024-12-15 21:23:38', '2024-12-15 22:43:23');
+(50, 'John', 'Doe', '1999-11-11', 1, 'Calbayog City, Samar, Philippines', 'Freelancer_1@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676809a983bfe_unnamed (1).jpg', 21, '$2y$10$6a6FHlMPJDGxSAD3VhewQ.U4HkyTaHBFC/ihBzeU7Oj.T77g2kD.y', NULL, NULL, NULL, '2024-12-22 21:21:48', NULL, 1, '2024-12-22 11:17:59', '2024-12-22 13:21:48'),
+(51, 'Jane ', 'Doe', '1999-11-11', 1, 'Caloocan, Metro Manila, Philippines', 'Freelancer_2@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680987e13f0_unnamed (2).png', 1, '$2y$10$CqnjFKzfnUjlx.07mm0oXeUn4/cni1YymbdCPtGE1VITs5irkc28K', NULL, NULL, NULL, '2024-12-22 21:09:11', NULL, 1, '2024-12-22 11:18:51', '2024-12-22 13:20:39'),
+(52, 'Ken', 'Villasquez', '1999-11-11', 1, 'Antipolo, Rizal, Philippines', 'Freelancer_3@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/6768096325e67_unnamed (4).jpg', 2, '$2y$10$zQp21Vef6iArVR4Y9DnWwuCLM7n5CpxzbpuYjFWAMBHqKM4DsP3g.', NULL, NULL, NULL, '2024-12-22 21:11:47', NULL, 1, '2024-12-22 11:19:36', '2024-12-22 13:20:39'),
+(53, 'Jelord', 'Nunezca', '1999-11-11', 1, 'Dumaguete, Negros Oriental, Philippines', 'Freelancer_4@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680947c5afd_unnamed.jpg', 3, '$2y$10$s87HNQktayTuxTQ5Dd0mdejMaug5K2S4Ue2OTnoc2ILS5gVTUS7sm', NULL, NULL, NULL, '2024-12-22 21:24:46', NULL, 1, '2024-12-22 11:22:45', '2024-12-22 13:24:46'),
+(54, 'Joshua ', 'Gonzales', '1999-11-11', 1, 'Calbayog City, Samar, Philippines', 'Freelancer_5@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/6768092082a49_unnamed (7).jpg', 2, '$2y$10$Cns6jbVs6L8hGsf8DbhCh.F0VD26BnlkK6SJJyX8p6ULcX7jdYJpm', NULL, NULL, NULL, '2024-12-22 21:15:32', NULL, 1, '2024-12-22 11:23:26', '2024-12-22 13:20:39'),
+(55, 'Hawkens', 'Queens', '1999-11-11', 2, 'Biri, Northern Samar, Philippines', 'Freelancer_6@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676808d2b7ed6_portrait-young-hispanic-professional-business-260nw-2510293403.webp', NULL, '$2y$10$n474YSatDWn4H1v6o5h3eOW/FAVXOqilxivnJA/5sT5C5MDWaNGqC', NULL, NULL, NULL, '2024-12-22 20:41:45', NULL, 1, '2024-12-22 11:24:33', '2024-12-22 13:20:39'),
+(56, 'Josefina', 'Lahoylahoy', '1999-11-11', 2, 'Quezon City, Metro Manila, Philippines', 'Freelancer_7@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676808f34d357_unnamed (1).png', NULL, '$2y$10$EL7F1F9ljAp.4K9tbZVszemWRN67HSstAV.CvECxKz4RGNDBeBvr2', NULL, NULL, NULL, '2024-12-22 20:41:54', NULL, 1, '2024-12-22 11:25:28', '2024-12-22 13:20:39'),
+(57, 'Richard', 'Salanio', '1999-11-11', 1, 'Quezon City, Metro Manila, Philippines', 'Freelancer_8@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680889132e6_happy-mid-aged-business-man-600nw-2307212331.webp', NULL, '$2y$10$Ix9VLjcRORCFMqydbDTGcOioIXyK/En6zgYt3D1C/VDHsr1Tnj8yK', NULL, NULL, NULL, '2024-12-22 20:39:13', NULL, 1, '2024-12-22 11:26:23', '2024-12-22 13:20:39'),
+(58, 'Alvin', 'Dave', '1999-11-11', 1, 'Bagumbang, Misamis Occidental, Philippines', 'Freelancer_9@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/6768085a0b1a3_elegant-confident-fashionable-aged-business-person-mature-businessman-formal-wear-senior-man-grey-beard-hair-bearded-137982468.webp', NULL, '$2y$10$RcLqYppzV8Cbl/qjyMys0eujbpBwZ3BIUF8EzEZ6bkoBx/9JkonYe', NULL, NULL, NULL, '2024-12-22 20:36:23', NULL, 1, '2024-12-22 11:27:47', '2024-12-22 13:20:39'),
+(59, 'Jireh Walter', 'Sodsod', '1999-11-11', 1, 'New Lucena, Iloilo, Philippines', 'Freelancer_10@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676806e58bf18_unnamed (5).jpg', 1, '$2y$10$qQYBAoo.oQz3gVXrcl7YgeP8HKwtIsK/UFcIrbaTQlShK0VY37I4e', NULL, NULL, NULL, '2024-12-22 21:21:39', NULL, 1, '2024-12-22 11:28:41', '2024-12-22 13:21:39'),
+(60, 'Caleb', 'City', '1999-11-11', 2, 'Davao City, Davao del Sur, Philippines', 'Client_1@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67680a3e787ac_unnamed (6).jpg', 1, '$2y$10$txjiYPCEfTBCt/cdpfggwO/C2Mw7bNrjt8RJ8MAuwVqyrpfTW7qIq', NULL, NULL, NULL, '2024-12-22 21:23:00', NULL, 1, '2024-12-22 11:29:45', '2024-12-22 13:23:00'),
+(61, 'Gion', 'Satoru', '1999-11-11', 2, 'Pasig, Metro Manila, Philippines', 'Client_2@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67681164980c5_images.jpg', 10, '$2y$10$2bs7cne0VBUxGi1pHIhqbO45QyoNkrVmYaFc3lHobWV0c134alsvy', NULL, NULL, NULL, '2024-12-22 21:23:09', NULL, 1, '2024-12-22 11:30:44', '2024-12-22 13:23:09'),
+(62, 'Jhon ', 'Dred', '1999-11-11', 1, 'San Fernando, Pampanga, Philippines', 'Client_3@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67680e0393e40_console&p&bc6272b2d2a540bfb06581f5c2c8c701.webp', 18, '$2y$10$QFNtHYlZ8D4aEnkM7OqgKO9Piri/jeZa1XrrQlEDvcFwkVRX6puhC', NULL, NULL, NULL, '2024-12-22 21:23:16', NULL, 1, '2024-12-22 11:31:39', '2024-12-22 13:23:16'),
+(63, 'Andrei', 'Paras', '1999-11-11', 1, 'Valenzuela, Metro Manila, Philippines', 'Client_4@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/6768021c0640f_Untitled.jpg', 1, '$2y$10$KhxcWERSTUvY6tzWvBvAgObr7SZvHZyaSijHmmuob1k4a74NRDt26', NULL, NULL, NULL, '2024-12-22 21:17:57', NULL, 1, '2024-12-22 11:33:35', '2024-12-22 13:20:39'),
+(64, 'Fisch', 'Nation', '1999-11-11', 2, 'Vigan City, Ilocos Sur, Philippines', 'Client_5@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/676812582e95e_images.jpg', 2, '$2y$10$i6cClbhP3MMns6N/5VTR.e4WUbRMVZNx8HCDKpEKrWKKz2BLefAJK', NULL, NULL, NULL, '2024-12-22 21:23:33', NULL, 1, '2024-12-22 11:34:13', '2024-12-22 13:23:33');
 
 --
 -- Triggers `users`
@@ -1469,7 +1724,27 @@ CREATE TABLE `users_job_titles` (
 INSERT INTO `users_job_titles` (`id`, `job_title`, `created_at`, `updated_at`) VALUES
 (1, 'Software Developer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
 (2, '3D Artist', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
-(3, 'Database Administrator', '2024-12-09 12:07:31', '2024-12-09 12:07:44');
+(3, 'Database Administrator', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(4, 'Web Developer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(5, 'UI/UX Designer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(6, 'Mobile App Developer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(7, 'Project Manager', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(8, 'Graphic Designer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(9, 'System Administrator', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(10, 'Network Engineer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(11, 'Product Manager', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(12, 'DevOps Engineer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(13, 'Business Analyst', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(14, 'Content Writer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(15, 'SEO Specialist', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(16, 'Cloud Solutions Architect', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(17, 'Game Developer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(18, 'Cybersecurity Analyst', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(19, 'Data Scientist', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(20, 'Machine Learning Engineer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(21, 'Artificial Intelligence Specialist', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(22, 'Software Engineer', '2024-12-09 12:07:31', '2024-12-09 12:07:44'),
+(23, 'Marketing Specialist', '2024-12-09 12:07:31', '2024-12-09 12:07:44');
 
 -- --------------------------------------------------------
 
@@ -2253,13 +2528,13 @@ ALTER TABLE `users_status`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
 
 --
 -- AUTO_INCREMENT for table `client_project_audit`
 --
 ALTER TABLE `client_project_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT for table `client_project_status`
@@ -2277,13 +2552,13 @@ ALTER TABLE `completed_projects_audit`
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
 
 --
 -- AUTO_INCREMENT for table `freelancer_applications_audit`
 --
 ALTER TABLE `freelancer_applications_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT for table `freelancer_application_status`
@@ -2295,31 +2570,31 @@ ALTER TABLE `freelancer_application_status`
 -- AUTO_INCREMENT for table `freelancer_connects`
 --
 ALTER TABLE `freelancer_connects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `freelancer_experiences`
 --
 ALTER TABLE `freelancer_experiences`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `freelancer_merits`
 --
 ALTER TABLE `freelancer_merits`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions`
 --
 ALTER TABLE `freelancer_project_submissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions_audit`
 --
 ALTER TABLE `freelancer_project_submissions_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions_status`
@@ -2331,13 +2606,13 @@ ALTER TABLE `freelancer_project_submissions_status`
 -- AUTO_INCREMENT for table `freelancer_skills`
 --
 ALTER TABLE `freelancer_skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=305;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT for table `project_comments`
@@ -2367,7 +2642,7 @@ ALTER TABLE `top_categories_audit`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `users_gender`
@@ -2379,7 +2654,7 @@ ALTER TABLE `users_gender`
 -- AUTO_INCREMENT for table `users_job_titles`
 --
 ALTER TABLE `users_job_titles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `users_roles`
