@@ -31,7 +31,7 @@ $mysqli->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkWave</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="/img/WorkWaveLogo.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="img/WorkWaveLogo.png">
 
     <!-- Bootstrap CSS from CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,9 +41,6 @@ $mysqli->close();
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="dist/css/index.css">
-
-    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
 
 </head>
 <body class="poppins">
@@ -243,5 +240,8 @@ $mysqli->close();
     <footer class="bg-green-100">
         .
     </footer>
+    
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2024/12/12/18/20241212181227-C50YEH0A.js"></script>
 </body>
 </html>

@@ -122,12 +122,6 @@ $projects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                 <div class="text-muted small"><?php echo $client['city'] ?></div>
                             </div>
                             <hr class="divider">
-                            <div class="mb-3">
-                                <span class="fas fa-flag me-1 text-green-60"></span>
-                                <span class="text-muted fw-semibold text-green-60">Nationality</span>
-                                <div class="text-muted small"><?php echo $client['nationality'] ?></div>
-                            </div>
-                            <hr class="divider">
                             <div class="">
                                 <span class="fas fa-language me-1 text-green-60"></span>
                                 <span class="text-muted fw-semibold text-green-60">Language</span>

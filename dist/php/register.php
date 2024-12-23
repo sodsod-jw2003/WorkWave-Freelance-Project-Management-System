@@ -42,7 +42,7 @@
         </div>
 
         <!-- form -->
-        <form action="process/proc_register.php" method="POST" id="registrationForm">
+        <form action="process/proc_register.php" method="POST" id="registrationForm" autocomplete="off">
         
         <!-- phase 1 -->
         <div id="phase1" class="mb-4">

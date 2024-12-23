@@ -23,7 +23,7 @@ $stmt = $mysqli->prepare($submission_query);
 $stmt->bind_param("ii", $project_id, $_SESSION['user_id']);
 $stmt->execute();
 $submission_result = $stmt->get_result();
-$submission = $submission_result->fetch_assoc();
+// $submission = $submission_result->fetch_assoc() ?: ['submission_url' => null, 'status' => null];
 
 // Check if status is not pending
 $isDisabled = isset($submission['submission_url']) && $submission['status'] != "pending" && $submission['status'] != "rejected";
@@ -124,7 +124,7 @@ $comment = $stmt->get_result()->fetch_assoc();
                                 ?>
                                     <div class="timeline-item">
                                         <div class="timeline-dot"></div>
-                                        <div class="card shadow-sm">
+                                        <div class="">
                                             <div class="card-body p-3">
                                                 <h6 class="mb-1 text-green-50"><?php echo htmlspecialchars($history['status']); ?></h6>
                                                 <div class="text-muted small">
@@ -168,7 +168,7 @@ $comment = $stmt->get_result()->fetch_assoc();
                                 <span class="badge bg-success mb-2 extra-class"><?php echo htmlspecialchars($submission['status']); ?></span>
                             </div>
                             <div class="container px-4 pt-2 pb-3">
-                            <form id="submitForm">
+                                <form id="submitForm">
                                     <div class="mb-3">
 
                                         <?php if($isDisabled): ?>

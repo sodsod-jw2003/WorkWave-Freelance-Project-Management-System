@@ -186,18 +186,18 @@ $category_icons = [
             <!-- /creds and cons -->
             <!-- projects, tasks, and clients -->
             <div class="row mx-0 my-3 g-4">
-                <div class="col-12 col-md-4 p-2">
+                <div class="col-12 col-md-6 p-2">
                     <a href="projects.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center text-decoration-none">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
                             <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($project_count); ?></div>
                             <div class="fs-6 ps-2 text-green-50 fw-semibold">Your Projects</div>
                         </div>
-                        <div class="col-5 d-flex justify-content-center align-items-center mt-2">
+                        <div class="col-5 d-flex justify-content-end align-items-center mt-2 pe-1">
                             <i class="fas fa-diagram-project fa-4x text-green-50"></i>
                         </div>
                     </a>
                 </div>
-                <div class="col-12 col-md-4 p-2">
+                <!-- <div class="col-12 col-md-4 p-2">
                     <a href="projects_objectives.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center text-decoration-none">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
                             <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($objective_count); ?></div>
@@ -207,14 +207,14 @@ $category_icons = [
                             <i class="fas fa-list-check fa-4x text-green-50"></i>
                         </div>
                     </a>
-                </div>
-                <div class="col-12 col-md-4 p-2">
+                </div> -->
+                <div class="col-12 col-md-6 p-2">
                     <a href="clients.php" class="px-3 pb-3 pt-2 rounded-2 bg-light shadow d-flex align-items-center text-decoration-none">
                         <div class="col-7 d-flex flex-column align-items-start mt-1">
                             <div class="fw-bold fs-2 ps-2 text-dark"><?php echo htmlspecialchars($client_count); ?></div>
                             <div class="fs-6 ps-2 text-green-50 fw-semibold">Clients</div>
                         </div>
-                        <div class="col-5 d-flex justify-content-center align-items-center mt-2">
+                        <div class="col-5 d-flex justify-content-end align-items-center mt-2 pe-1">
                             <i class="fas fa-user-tie fa-4x text-green-50"></i>
                         </div>
                     </a>
