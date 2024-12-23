@@ -9,10 +9,12 @@ include ('../../misc/modals.php');
 include ('../../dist/php/process/proc_profile.php');
 include ('header.php');
 
-$query = "SELECT * FROM v_freelancer_submissions
-          JOIN v_project_details ON v_freelancer_submissions.project_id = v_project_details.id
-          WHERE v_freelancer_submissions.user_id = ? AND v_freelancer_submissions.status = 'rejected' OR v_freelancer_submissions.status = 'pending'
-          ORDER BY v_project_details.created_at DESC;";
+$query = "SELECT * 
+            FROM v_freelancer_submissions
+            JOIN v_project_details ON v_freelancer_submissions.project_id = v_project_details.id
+            WHERE v_freelancer_submissions.user_id = ?
+            AND (v_freelancer_submissions.status = 'rejected' OR v_freelancer_submissions.status = 'pending')
+            ORDER BY v_project_details.created_at DESC;";
 
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param("i", $_SESSION['user_id']);
