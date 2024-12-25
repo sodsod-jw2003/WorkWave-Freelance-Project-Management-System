@@ -129,7 +129,7 @@ $skills_result = $stmt->get_result();
                             <h5 class="mt-3">Cover Letter</h5>
                             <h6 class="small text-muted text-justify"><?php echo nl2br(htmlspecialchars($application['application_details'])); ?></h6>
                             <h5 class="mt-3">Portfolio Link</h5>
-                            <a href="#" class="small no-deco text-muted"><?php echo htmlspecialchars($application['portfolio_url']); ?></a> 
+                            <a href="<?php echo htmlspecialchars($application['portfolio_url']); ?>" target="_blank" class="small no-deco text-muted"><?php echo htmlspecialchars($application['portfolio_url']); ?></a> 
                             <div class="mt-3">
                                 <button class="btn btn-success hire-btn" 
                                         data-application-id="<?php echo htmlspecialchars($application_id); ?>">

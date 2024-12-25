@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2024 at 02:46 PM
+-- Generation Time: Dec 25, 2024 at 02:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -127,10 +127,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_submit_project_file` (IN `p_subm
   WHERE project_id = p_project_id 
   AND user_id = p_user_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_terminate_freelancer` (IN `p_user_id` INT(11), IN `p_project_id` INT(11))   UPDATE freelancer_applications 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_terminate_freelancer` (IN `p_user_id` INT(11), IN `p_project_id` INT(11))   BEGIN
+UPDATE freelancer_applications 
               SET application_status_id = 3 
               WHERE user_id = p_user_id 
-              AND project_id = p_user_id$$
+              AND project_id = p_project_id;
+DELETE FROM freelancer_project_submissions
+              WHERE project_id = p_project_id 
+              AND user_id = p_user_id;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_activation_token` (IN `p_user_id` INT(11))   BEGIN
 	UPDATE users
@@ -274,7 +279,7 @@ INSERT INTO `client_projects` (`id`, `user_id`, `project_title`, `project_catego
 (123, 60, 'Fisch Project', 8, 'Make a Fish Model', 'Fish Model', 2, 10, 10, '2024-12-22 11:59:41', '2024-12-22 13:12:19'),
 (124, 60, 'Ocean Cleanup', 8, 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 2, 15, 15, '2024-12-22 12:05:00', '2024-12-22 13:14:17'),
 (125, 60, 'Smart Garden', 5, 'Create a smart garden system', 'Automated Garden System', 1, 20, 20, '2024-12-22 12:10:00', '2024-12-22 13:08:10'),
-(126, 60, 'Solar Panel Installation', 3, 'Design and install solar panels', 'Solar Panel System', 1, 25, 25, '2024-12-22 12:15:00', '2024-12-22 13:08:10'),
+(126, 60, 'Solar Panel Installation', 3, 'Design and install solar panels', 'Solar Panel System', 2, 25, 25, '2024-12-22 12:15:00', '2024-12-23 12:41:05'),
 (127, 61, 'Ai Development', 4, 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 2, 30, 30, '2024-12-22 12:20:00', '2024-12-22 13:12:21'),
 (128, 61, 'Mobile App Design', 6, 'Design a mobile app for e-commerce', 'E-commerce Mobile Application', 1, 25, 25, '2024-12-22 12:25:00', '2024-12-22 13:08:10'),
 (129, 61, 'Website Redesign', 2, 'Redesign a corporate website', 'Corporate Website Redesign', 1, 20, 20, '2024-12-22 12:30:00', '2024-12-22 13:08:10'),
@@ -500,7 +505,18 @@ INSERT INTO `client_project_audit` (`id`, `project_id`, `user_id`, `action_type`
 (141, 133, 62, 'UPDATE', '2024-12-22 13:14:09', 'Ai Chatbot Development', 'Ai Chatbot Development', 4, 4, 'Develop an AI-powered chatbot for customer service', 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 'AI Chatbot Development', 40, 40, 40, 40),
 (142, 124, 60, 'UPDATE', '2024-12-22 13:14:17', 'Ocean Cleanup', 'Ocean Cleanup', 8, 8, 'Design a solution for cleaning oceans', 'Design a solution for cleaning oceans', 'Ocean Cleanup Model', 'Ocean Cleanup Model', 15, 15, 15, 15),
 (143, 131, 61, 'UPDATE', '2024-12-22 13:16:12', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
-(144, 140, 63, 'UPDATE', '2024-12-22 13:16:16', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30);
+(144, 140, 63, 'UPDATE', '2024-12-22 13:16:16', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30),
+(145, 147, 60, 'INSERT', '2024-12-23 12:38:40', NULL, 'Test', NULL, 29, NULL, 'test', NULL, 'test', NULL, 10, NULL, 10),
+(146, 147, 60, 'UPDATE', '2024-12-23 12:41:02', 'Test', 'Test', 29, 29, 'test', 'test', 'test', 'test', 10, 10, 10, 10),
+(147, 126, 60, 'UPDATE', '2024-12-23 12:41:05', 'Solar Panel Installation', 'Solar Panel Installation', 3, 3, 'Design and install solar panels', 'Design and install solar panels', 'Solar Panel System', 'Solar Panel System', 25, 25, 25, 25),
+(148, 147, 60, 'DELETE', '2024-12-25 01:32:28', 'Test', NULL, 29, NULL, 'test', NULL, 'test', NULL, 10, NULL, 10, NULL),
+(149, 141, 63, 'UPDATE', '2024-12-25 01:32:56', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(150, 146, 64, 'UPDATE', '2024-12-25 01:33:00', 'Video Production', 'Video Production', 5, 5, 'Create a promotional video for a product', 'Create a promotional video for a product', 'Product Promotional Video', 'Product Promotional Video', 35, 35, 35, 35),
+(151, 136, 62, 'UPDATE', '2024-12-25 01:33:03', 'Website Redesign', 'Website Redesign', 2, 2, 'Redesign a corporate website', 'Redesign a corporate website', 'Corporate Website Redesign', 'Corporate Website Redesign', 20, 20, 20, 20),
+(152, 127, 61, 'UPDATE', '2024-12-25 01:33:09', 'Ai Development', 'Ai Development', 4, 4, 'Develop an AI-based recommendation system', 'Develop an AI-based recommendation system', 'AI-based Recommendation Engine', 'AI-based Recommendation Engine', 30, 30, 30, 30),
+(153, 133, 62, 'UPDATE', '2024-12-25 01:33:12', 'Ai Chatbot Development', 'Ai Chatbot Development', 4, 4, 'Develop an AI-powered chatbot for customer service', 'Develop an AI-powered chatbot for customer service', 'AI Chatbot Development', 'AI Chatbot Development', 40, 40, 40, 40),
+(154, 131, 61, 'UPDATE', '2024-12-25 01:33:18', 'Cloud Storage Solution', 'Cloud Storage Solution', 3, 3, 'Develop a cloud storage platform', 'Develop a cloud storage platform', 'Cloud Storage System Development', 'Cloud Storage System Development', 40, 40, 40, 40),
+(155, 140, 63, 'UPDATE', '2024-12-25 01:33:24', 'Mobile App Development', 'Mobile App Development', 6, 6, 'Create a mobile app for social media', 'Create a mobile app for social media', 'Social Media Mobile App', 'Social Media Mobile App', 30, 30, 30, 30);
 
 -- --------------------------------------------------------
 
@@ -520,9 +536,9 @@ CREATE TABLE `client_project_status` (
 --
 
 INSERT INTO `client_project_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Hiring', '2024-12-22 11:59:07', '2024-12-22 11:59:07'),
-(2, 'In Progress', '2024-12-22 11:59:07', '2024-12-22 11:59:07'),
-(3, 'Completed', '2024-12-22 11:59:07', '2024-12-22 11:59:07');
+(1, 'Hiring', '2024-12-22 11:59:07', '2024-12-23 12:18:41'),
+(2, 'In Progress', '2024-12-22 11:59:07', '2024-12-23 12:18:53'),
+(3, 'Completed', '2024-12-22 11:59:07', '2024-12-23 12:18:57');
 
 -- --------------------------------------------------------
 
@@ -570,15 +586,15 @@ CREATE TABLE `freelancer_applications` (
 
 INSERT INTO `freelancer_applications` (`id`, `project_id`, `user_id`, `application_details`, `portfolio_url`, `application_status_id`, `application_date`, `created_at`, `updated_at`) VALUES
 (131, 145, 50, 'apply', 'https://www.google.com', 2, '2024-12-22 21:04:43', '2024-12-22 13:04:43', '2024-12-22 13:09:30'),
-(132, 141, 50, 'apply', '', 2, '2024-12-22 21:08:59', '2024-12-22 13:08:59', '2024-12-22 13:09:33'),
-(133, 146, 51, 'apply', '', 2, '2024-12-22 21:09:43', '2024-12-22 13:09:43', '2024-12-22 13:10:17'),
-(134, 136, 51, 'apply', '', 2, '2024-12-22 21:10:09', '2024-12-22 13:10:09', '2024-12-22 13:10:21'),
-(135, 123, 52, 'apply', '', 2, '2024-12-22 21:11:59', '2024-12-22 13:11:59', '2024-12-22 13:12:19'),
-(136, 127, 52, 'apply', '', 2, '2024-12-22 21:12:13', '2024-12-22 13:12:13', '2024-12-22 13:12:21'),
-(137, 133, 53, 'apply', '', 2, '2024-12-22 21:13:33', '2024-12-22 13:13:33', '2024-12-22 13:14:09'),
-(138, 124, 53, 'apply', '', 2, '2024-12-22 21:14:01', '2024-12-22 13:14:01', '2024-12-22 13:14:17'),
-(139, 131, 54, 'apply', '', 2, '2024-12-22 21:15:47', '2024-12-22 13:15:47', '2024-12-22 13:16:12'),
-(140, 140, 54, 'apply', '', 2, '2024-12-22 21:16:02', '2024-12-22 13:16:02', '2024-12-22 13:16:16');
+(132, 141, 50, 'apply', 'https://www.google.com', 2, '2024-12-22 21:08:59', '2024-12-22 13:08:59', '2024-12-25 01:32:56'),
+(133, 146, 51, 'apply', 'https://www.google.com', 2, '2024-12-22 21:09:43', '2024-12-22 13:09:43', '2024-12-25 01:33:00'),
+(134, 136, 51, 'apply', 'https://www.google.com', 2, '2024-12-22 21:10:09', '2024-12-22 13:10:09', '2024-12-25 01:33:03'),
+(135, 123, 52, 'apply', 'https://www.google.com', 3, '2024-12-22 21:11:59', '2024-12-22 13:11:59', '2024-12-25 01:33:06'),
+(136, 127, 52, 'apply', 'https://www.google.com', 2, '2024-12-22 21:12:13', '2024-12-22 13:12:13', '2024-12-25 01:33:09'),
+(137, 133, 53, 'apply', 'https://www.google.com', 2, '2024-12-22 21:13:33', '2024-12-22 13:13:33', '2024-12-25 01:33:12'),
+(138, 124, 53, 'apply', 'https://www.google.com', 3, '2024-12-22 21:14:01', '2024-12-22 13:14:01', '2024-12-25 01:33:15'),
+(139, 131, 54, 'apply', 'https://www.google.com', 2, '2024-12-22 21:15:47', '2024-12-22 13:15:47', '2024-12-25 01:33:18'),
+(140, 140, 54, 'apply', 'https://www.google.com', 2, '2024-12-22 21:16:02', '2024-12-22 13:16:02', '2024-12-25 01:33:24');
 
 --
 -- Triggers `freelancer_applications`
@@ -862,7 +878,25 @@ INSERT INTO `freelancer_applications_audit` (`id`, `application_id`, `project_id
 (107, 139, 131, 54, 'INSERT', '2024-12-22 13:15:47', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:15:47'),
 (108, 140, 140, 54, 'INSERT', '2024-12-22 13:16:02', NULL, 'apply', NULL, '', NULL, 1, NULL, '2024-12-22 21:16:02'),
 (109, 139, 131, 54, 'UPDATE', '2024-12-22 13:16:12', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:15:47', '2024-12-22 21:15:47'),
-(110, 140, 140, 54, 'UPDATE', '2024-12-22 13:16:16', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:16:02', '2024-12-22 21:16:02');
+(110, 140, 140, 54, 'UPDATE', '2024-12-22 13:16:16', 'apply', 'apply', '', '', 1, 2, '2024-12-22 21:16:02', '2024-12-22 21:16:02'),
+(111, 141, 126, 53, 'INSERT', '2024-12-23 09:33:30', NULL, 'Sana matanggap', NULL, 'https://www.google.com/', NULL, 1, NULL, '2024-12-23 17:33:30'),
+(112, 142, 147, 51, 'INSERT', '2024-12-23 12:40:39', NULL, 'test', NULL, 'https://getbootstrap.com/docs/5.0/forms/validation/', NULL, 1, NULL, '2024-12-23 20:40:39'),
+(113, 142, 147, 51, 'UPDATE', '2024-12-23 12:41:02', 'test', 'test', 'https://getbootstrap.com/docs/5.0/forms/validation/', 'https://getbootstrap.com/docs/5.0/forms/validation/', 1, 2, '2024-12-23 20:40:39', '2024-12-23 20:40:39'),
+(114, 141, 126, 53, 'UPDATE', '2024-12-23 12:41:05', 'Sana matanggap', 'Sana matanggap', 'https://www.google.com/', 'https://www.google.com/', 1, 2, '2024-12-23 17:33:30', '2024-12-23 17:33:30'),
+(115, 138, 124, 53, 'UPDATE', '2024-12-23 12:58:52', 'apply', 'apply', '', '', 2, 3, '2024-12-22 21:14:01', '2024-12-22 21:14:01'),
+(116, 141, 126, 53, 'UPDATE', '2024-12-23 12:58:58', 'Sana matanggap', 'Sana matanggap', 'https://www.google.com/', 'https://www.google.com/', 2, 3, '2024-12-23 17:33:30', '2024-12-23 17:33:30'),
+(117, 142, 147, 51, 'UPDATE', '2024-12-23 12:59:07', 'test', 'test', 'https://getbootstrap.com/docs/5.0/forms/validation/', 'https://getbootstrap.com/docs/5.0/forms/validation/', 2, 3, '2024-12-23 20:40:39', '2024-12-23 20:40:39'),
+(118, 135, 123, 52, 'UPDATE', '2024-12-23 12:59:25', 'apply', 'apply', '', '', 2, 3, '2024-12-22 21:11:59', '2024-12-22 21:11:59'),
+(119, 141, 126, 53, 'DELETE', '2024-12-25 01:32:46', 'Sana matanggap', NULL, 'https://www.google.com/', NULL, 3, NULL, '2024-12-23 17:33:30', NULL),
+(120, 132, 141, 50, 'UPDATE', '2024-12-25 01:32:56', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:08:59', '2024-12-22 21:08:59'),
+(121, 133, 146, 51, 'UPDATE', '2024-12-25 01:33:00', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:09:43', '2024-12-22 21:09:43'),
+(122, 134, 136, 51, 'UPDATE', '2024-12-25 01:33:03', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:10:09', '2024-12-22 21:10:09'),
+(123, 135, 123, 52, 'UPDATE', '2024-12-25 01:33:06', 'apply', 'apply', '', 'https://www.google.com', 3, 3, '2024-12-22 21:11:59', '2024-12-22 21:11:59'),
+(124, 136, 127, 52, 'UPDATE', '2024-12-25 01:33:09', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:12:13', '2024-12-22 21:12:13'),
+(125, 137, 133, 53, 'UPDATE', '2024-12-25 01:33:12', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:13:33', '2024-12-22 21:13:33'),
+(126, 138, 124, 53, 'UPDATE', '2024-12-25 01:33:15', 'apply', 'apply', '', 'https://www.google.com', 3, 3, '2024-12-22 21:14:01', '2024-12-22 21:14:01'),
+(127, 139, 131, 54, 'UPDATE', '2024-12-25 01:33:18', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:15:47', '2024-12-22 21:15:47'),
+(128, 140, 140, 54, 'UPDATE', '2024-12-25 01:33:24', 'apply', 'apply', '', 'https://www.google.com', 2, 2, '2024-12-22 21:16:02', '2024-12-22 21:16:02');
 
 -- --------------------------------------------------------
 
@@ -882,9 +916,9 @@ CREATE TABLE `freelancer_application_status` (
 --
 
 INSERT INTO `freelancer_application_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Pending', '2024-12-22 12:17:17', '2024-12-22 12:17:17'),
-(2, 'Accepted', '2024-12-22 12:17:17', '2024-12-22 12:17:17'),
-(3, 'Rejected', '2024-12-22 12:17:17', '2024-12-22 12:17:17');
+(1, 'Pending', '2024-12-22 12:17:17', '2024-12-23 12:19:36'),
+(2, 'Accepted', '2024-12-22 12:17:17', '2024-12-23 12:19:41'),
+(3, 'Rejected', '2024-12-22 12:17:17', '2024-12-23 12:19:45');
 
 -- --------------------------------------------------------
 
@@ -906,9 +940,9 @@ CREATE TABLE `freelancer_connects` (
 
 INSERT INTO `freelancer_connects` (`id`, `user_id`, `connects`, `created_at`, `updated_at`) VALUES
 (12, 50, 35, '2024-12-22 11:17:59', '2024-12-22 13:08:59'),
-(13, 51, 45, '2024-12-22 11:18:51', '2024-12-22 13:10:09'),
+(13, 51, 35, '2024-12-22 11:18:51', '2024-12-23 12:40:39'),
 (14, 52, 60, '2024-12-22 11:19:36', '2024-12-22 13:12:13'),
-(15, 53, 45, '2024-12-22 11:22:45', '2024-12-22 13:14:01'),
+(15, 53, 20, '2024-12-22 11:22:45', '2024-12-23 09:33:30'),
 (16, 54, 30, '2024-12-22 11:23:26', '2024-12-22 13:16:02'),
 (17, 55, 100, '2024-12-22 11:24:33', '2024-12-22 11:24:33'),
 (18, 56, 100, '2024-12-22 11:25:28', '2024-12-22 11:25:28'),
@@ -990,7 +1024,7 @@ INSERT INTO `freelancer_merits` (`id`, `user_id`, `merits`, `created_at`, `updat
 (11, 50, 0, '2024-12-22 11:17:59', '2024-12-22 11:17:59'),
 (12, 51, 0, '2024-12-22 11:18:51', '2024-12-22 11:18:51'),
 (13, 52, 0, '2024-12-22 11:19:36', '2024-12-22 11:19:36'),
-(14, 53, 0, '2024-12-22 11:22:45', '2024-12-22 11:22:45'),
+(14, 53, 20, '2024-12-22 11:22:45', '2024-12-23 09:30:06'),
 (15, 54, 0, '2024-12-22 11:23:26', '2024-12-22 11:23:26'),
 (16, 55, 0, '2024-12-22 11:24:33', '2024-12-22 11:24:33'),
 (17, 56, 0, '2024-12-22 11:25:28', '2024-12-22 11:25:28'),
@@ -1021,12 +1055,10 @@ CREATE TABLE `freelancer_project_submissions` (
 INSERT INTO `freelancer_project_submissions` (`id`, `project_id`, `user_id`, `submission_url`, `submission_status_id`, `created_at`, `updated_at`) VALUES
 (60, 145, 50, NULL, 1, '2024-12-22 13:09:30', '2024-12-22 13:09:30'),
 (61, 141, 50, NULL, 1, '2024-12-22 13:09:33', '2024-12-22 13:09:33'),
-(62, 146, 51, NULL, 1, '2024-12-22 13:10:17', '2024-12-22 13:10:17'),
-(63, 136, 51, NULL, 1, '2024-12-22 13:10:21', '2024-12-22 13:10:21'),
-(64, 123, 52, NULL, 1, '2024-12-22 13:12:19', '2024-12-22 13:12:19'),
+(62, 146, 51, '../../dist/php/uploads/project_files/676951f167be0_Tables - Database Diagram.png', 2, '2024-12-22 13:10:17', '2024-12-23 12:05:05'),
+(63, 136, 51, '../../dist/php/uploads/project_files/67695547efdea_WorkWave_Screenshot_VideoPresentation.png', 2, '2024-12-22 13:10:21', '2024-12-23 12:19:19'),
 (65, 127, 52, NULL, 1, '2024-12-22 13:12:21', '2024-12-22 13:12:21'),
-(66, 133, 53, NULL, 1, '2024-12-22 13:14:09', '2024-12-22 13:14:09'),
-(67, 124, 53, NULL, 1, '2024-12-22 13:14:17', '2024-12-22 13:14:17'),
+(66, 133, 53, '../../dist/php/uploads/project_files/67692d11f0b1b_67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', 3, '2024-12-22 13:14:09', '2024-12-23 09:30:06'),
 (68, 131, 54, NULL, 1, '2024-12-22 13:16:12', '2024-12-22 13:16:12'),
 (69, 140, 54, NULL, 1, '2024-12-22 13:16:16', '2024-12-22 13:16:16');
 
@@ -1189,7 +1221,19 @@ INSERT INTO `freelancer_project_submissions_audit` (`id`, `application_id`, `pro
 (68, 66, 133, 53, 'INSERT', '2024-12-22 13:14:09', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:14:09', NULL, '2024-12-22 13:14:09'),
 (69, 67, 124, 53, 'INSERT', '2024-12-22 13:14:17', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:14:17', NULL, '2024-12-22 13:14:17'),
 (70, 68, 131, 54, 'INSERT', '2024-12-22 13:16:12', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:16:12', NULL, '2024-12-22 13:16:12'),
-(71, 69, 140, 54, 'INSERT', '2024-12-22 13:16:16', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:16:16', NULL, '2024-12-22 13:16:16');
+(71, 69, 140, 54, 'INSERT', '2024-12-22 13:16:16', NULL, NULL, NULL, 1, NULL, '2024-12-22 13:16:16', NULL, '2024-12-22 13:16:16'),
+(72, 67, 124, 53, 'UPDATE', '2024-12-23 09:24:19', NULL, '../../dist/php/uploads/project_files/67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', 1, 2, NULL, NULL, '2024-12-22 13:14:17', '2024-12-23 09:24:19'),
+(73, 67, 124, 53, 'UPDATE', '2024-12-23 09:24:45', '../../dist/php/uploads/project_files/67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', '../../dist/php/uploads/project_files/67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', 2, 3, NULL, NULL, '2024-12-23 09:24:19', '2024-12-23 09:24:45'),
+(74, 66, 133, 53, 'UPDATE', '2024-12-23 09:27:45', NULL, '../../dist/php/uploads/project_files/67692d11f0b1b_67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', 1, 2, NULL, NULL, '2024-12-22 13:14:09', '2024-12-23 09:27:45'),
+(75, 66, 133, 53, 'UPDATE', '2024-12-23 09:30:06', '../../dist/php/uploads/project_files/67692d11f0b1b_67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', '../../dist/php/uploads/project_files/67692d11f0b1b_67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', 2, 3, NULL, NULL, '2024-12-23 09:27:45', '2024-12-23 09:30:06'),
+(76, 62, 146, 51, 'UPDATE', '2024-12-23 12:05:05', NULL, '../../dist/php/uploads/project_files/676951f167be0_Tables - Database Diagram.png', 1, 2, NULL, NULL, '2024-12-22 13:10:17', '2024-12-23 12:05:05'),
+(77, 63, 136, 51, 'UPDATE', '2024-12-23 12:19:19', NULL, '../../dist/php/uploads/project_files/67695547efdea_WorkWave_Screenshot_VideoPresentation.png', 1, 2, NULL, NULL, '2024-12-22 13:10:21', '2024-12-23 12:19:19'),
+(78, 70, 147, 51, 'INSERT', '2024-12-23 12:41:02', NULL, NULL, NULL, 1, NULL, '2024-12-23 12:41:02', NULL, '2024-12-23 12:41:02'),
+(79, 71, 126, 53, 'INSERT', '2024-12-23 12:41:05', NULL, NULL, NULL, 1, NULL, '2024-12-23 12:41:05', NULL, '2024-12-23 12:41:05'),
+(80, 67, 124, 53, 'DELETE', '2024-12-23 12:58:52', '../../dist/php/uploads/project_files/67692c43efa35_WorkWave_Screenshot_VideoPresentation.png', NULL, 3, NULL, '2024-12-22 13:14:17', NULL, '2024-12-23 09:24:45', NULL),
+(81, 71, 126, 53, 'DELETE', '2024-12-23 12:58:58', NULL, NULL, 1, NULL, '2024-12-23 12:41:05', NULL, '2024-12-23 12:41:05', NULL),
+(82, 70, 147, 51, 'DELETE', '2024-12-23 12:59:07', NULL, NULL, 1, NULL, '2024-12-23 12:41:02', NULL, '2024-12-23 12:41:02', NULL),
+(83, 64, 123, 52, 'DELETE', '2024-12-23 12:59:25', NULL, NULL, 1, NULL, '2024-12-22 13:12:19', NULL, '2024-12-22 13:12:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -1209,10 +1253,10 @@ CREATE TABLE `freelancer_project_submissions_status` (
 --
 
 INSERT INTO `freelancer_project_submissions_status` (`id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Pending', '2024-12-22 12:18:17', '2024-12-22 12:18:17'),
-(2, 'For Review', '2024-12-22 12:18:17', '2024-12-22 12:18:17'),
-(3, 'Accepted', '2024-12-22 12:18:17', '2024-12-22 12:18:17'),
-(4, 'Rejected', '2024-12-22 12:18:17', '2024-12-22 12:18:17');
+(1, 'pending', '2024-12-22 12:18:17', '2024-12-23 12:35:51'),
+(2, 'for review', '2024-12-22 12:18:17', '2024-12-23 12:35:54'),
+(3, 'accepted', '2024-12-22 12:18:17', '2024-12-23 12:35:38'),
+(4, 'rejected', '2024-12-22 12:18:17', '2024-12-23 12:35:58');
 
 -- --------------------------------------------------------
 
@@ -1297,7 +1341,7 @@ INSERT INTO `notifications` (`id`, `application_id`, `project_id`, `user_id`, `t
 (134, NULL, 141, 50, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-22 13:09:33', '2024-12-22 13:09:33'),
 (135, 133, 146, 64, 1, 'A new application has been submitted for your project: Video Production', 0, '2024-12-22 13:09:43', '2024-12-22 13:09:43'),
 (136, 134, 136, 62, 1, 'A new application has been submitted for your project: Website Redesign', 0, '2024-12-22 13:10:09', '2024-12-22 13:10:09'),
-(137, NULL, 146, 51, 1, 'Your application for Video Production has been accepted.', 0, '2024-12-22 13:10:17', '2024-12-22 13:10:17'),
+(137, NULL, 146, 51, 1, 'Your application for Video Production has been accepted.', 1, '2024-12-22 13:10:17', '2024-12-23 12:49:54'),
 (138, NULL, 136, 51, 1, 'Your application for Website Redesign has been accepted.', 0, '2024-12-22 13:10:21', '2024-12-22 13:10:21'),
 (139, 135, 123, 60, 1, 'A new application has been submitted for your project: Fisch Project', 0, '2024-12-22 13:11:59', '2024-12-22 13:11:59'),
 (140, 136, 127, 61, 1, 'A new application has been submitted for your project: Ai Development', 0, '2024-12-22 13:12:13', '2024-12-22 13:12:13'),
@@ -1310,7 +1354,26 @@ INSERT INTO `notifications` (`id`, `application_id`, `project_id`, `user_id`, `t
 (147, 139, 131, 61, 1, 'A new application has been submitted for your project: Cloud Storage Solution', 0, '2024-12-22 13:15:47', '2024-12-22 13:15:47'),
 (148, 140, 140, 63, 1, 'A new application has been submitted for your project: Mobile App Development', 0, '2024-12-22 13:16:02', '2024-12-22 13:16:02'),
 (149, NULL, 131, 54, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-22 13:16:12', '2024-12-22 13:16:12'),
-(150, NULL, 140, 54, 1, 'Your application for Mobile App Development has been accepted.', 0, '2024-12-22 13:16:16', '2024-12-22 13:16:16');
+(150, NULL, 140, 54, 1, 'Your application for Mobile App Development has been accepted.', 0, '2024-12-22 13:16:16', '2024-12-22 13:16:16'),
+(151, NULL, 124, 60, 2, 'New submission for your project \"Ocean Cleanup\" has been submitted.', 0, '2024-12-23 09:24:19', '2024-12-23 09:24:19'),
+(152, NULL, 124, 53, 2, 'Submission Accepted', 0, '2024-12-23 09:24:45', '2024-12-23 09:24:45'),
+(153, NULL, 133, 62, 2, 'New submission for your project \"Ai Chatbot Development\" has been submitted.', 0, '2024-12-23 09:27:45', '2024-12-23 09:27:45'),
+(154, NULL, 133, 53, 2, 'Submission Accepted', 0, '2024-12-23 09:30:06', '2024-12-23 09:30:06'),
+(156, NULL, 146, 64, 2, 'New submission for your project \"Video Production\" has been submitted.', 0, '2024-12-23 12:05:05', '2024-12-23 12:05:05'),
+(157, NULL, 136, 62, 2, 'New submission for your project \"Website Redesign\" has been submitted.', 0, '2024-12-23 12:19:19', '2024-12-23 12:19:19'),
+(160, NULL, 126, 53, 1, 'Your application for Solar Panel Installation has been accepted.', 0, '2024-12-23 12:41:05', '2024-12-23 12:41:05'),
+(161, NULL, 124, 53, 1, 'Your application for Ocean Cleanup has been rejected.', 0, '2024-12-23 12:58:52', '2024-12-23 12:58:52'),
+(162, NULL, 126, 53, 1, 'Your application for Solar Panel Installation has been rejected.', 0, '2024-12-23 12:58:58', '2024-12-23 12:58:58'),
+(164, NULL, 123, 52, 1, 'Your application for Fisch Project has been rejected.', 0, '2024-12-23 12:59:25', '2024-12-23 12:59:25'),
+(165, NULL, 141, 50, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-25 01:32:56', '2024-12-25 01:32:56'),
+(166, NULL, 146, 51, 1, 'Your application for Video Production has been accepted.', 0, '2024-12-25 01:33:00', '2024-12-25 01:33:00'),
+(167, NULL, 136, 51, 1, 'Your application for Website Redesign has been accepted.', 0, '2024-12-25 01:33:03', '2024-12-25 01:33:03'),
+(168, NULL, 123, 52, 1, 'Your application for Fisch Project has been rejected.', 0, '2024-12-25 01:33:06', '2024-12-25 01:33:06'),
+(169, NULL, 127, 52, 1, 'Your application for Ai Development has been accepted.', 0, '2024-12-25 01:33:09', '2024-12-25 01:33:09'),
+(170, NULL, 133, 53, 1, 'Your application for Ai Chatbot Development has been accepted.', 0, '2024-12-25 01:33:12', '2024-12-25 01:33:12'),
+(171, NULL, 124, 53, 1, 'Your application for Ocean Cleanup has been rejected.', 0, '2024-12-25 01:33:15', '2024-12-25 01:33:15'),
+(172, NULL, 131, 54, 1, 'Your application for Cloud Storage Solution has been accepted.', 0, '2024-12-25 01:33:18', '2024-12-25 01:33:18'),
+(173, NULL, 140, 54, 1, 'Your application for Mobile App Development has been accepted.', 0, '2024-12-25 01:33:24', '2024-12-25 01:33:24');
 
 -- --------------------------------------------------------
 
@@ -1585,21 +1648,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `birthdate`, `gender_id`, `city`, `email`, `mobile_number`, `nationality`, `language`, `language_2nd`, `role_id`, `profile_picture_url`, `job_title_id`, `password_hash`, `reset_token`, `reset_token_expiry`, `activation_token`, `last_login_date`, `deactivation_duration`, `status_id`, `created_at`, `updated_at`) VALUES
-(50, 'John', 'Doe', '1999-11-11', 1, 'Calbayog City, Samar, Philippines', 'Freelancer_1@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676809a983bfe_unnamed (1).jpg', 21, '$2y$10$6a6FHlMPJDGxSAD3VhewQ.U4HkyTaHBFC/ihBzeU7Oj.T77g2kD.y', NULL, NULL, NULL, '2024-12-22 21:21:48', NULL, 1, '2024-12-22 11:17:59', '2024-12-22 13:21:48'),
-(51, 'Jane ', 'Doe', '1999-11-11', 1, 'Caloocan, Metro Manila, Philippines', 'Freelancer_2@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680987e13f0_unnamed (2).png', 1, '$2y$10$CqnjFKzfnUjlx.07mm0oXeUn4/cni1YymbdCPtGE1VITs5irkc28K', NULL, NULL, NULL, '2024-12-22 21:09:11', NULL, 1, '2024-12-22 11:18:51', '2024-12-22 13:20:39'),
+(50, 'John', 'Doe', '1999-11-11', 1, 'Calbayog City, Samar, Philippines', 'Freelancer_1@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676809a983bfe_unnamed (1).jpg', 21, '$2y$10$6a6FHlMPJDGxSAD3VhewQ.U4HkyTaHBFC/ihBzeU7Oj.T77g2kD.y', NULL, NULL, NULL, '2024-12-23 19:54:51', NULL, 1, '2024-12-22 11:17:59', '2024-12-23 11:54:51'),
+(51, 'Jane ', 'Doe', '1999-11-11', 1, 'Caloocan, Metro Manila, Philippines', 'Freelancer_2@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680987e13f0_unnamed (2).png', 1, '$2y$10$CqnjFKzfnUjlx.07mm0oXeUn4/cni1YymbdCPtGE1VITs5irkc28K', NULL, NULL, NULL, '2024-12-23 20:04:00', NULL, 1, '2024-12-22 11:18:51', '2024-12-23 12:04:00'),
 (52, 'Ken', 'Villasquez', '1999-11-11', 1, 'Antipolo, Rizal, Philippines', 'Freelancer_3@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/6768096325e67_unnamed (4).jpg', 2, '$2y$10$zQp21Vef6iArVR4Y9DnWwuCLM7n5CpxzbpuYjFWAMBHqKM4DsP3g.', NULL, NULL, NULL, '2024-12-22 21:11:47', NULL, 1, '2024-12-22 11:19:36', '2024-12-22 13:20:39'),
-(53, 'Jelord', 'Nunezca', '1999-11-11', 1, 'Dumaguete, Negros Oriental, Philippines', 'Freelancer_4@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680947c5afd_unnamed.jpg', 3, '$2y$10$s87HNQktayTuxTQ5Dd0mdejMaug5K2S4Ue2OTnoc2ILS5gVTUS7sm', NULL, NULL, NULL, '2024-12-22 21:24:46', NULL, 1, '2024-12-22 11:22:45', '2024-12-22 13:24:46'),
+(53, 'Jelord', 'Nunezca', '1999-11-11', 1, 'Dumaguete, Negros Oriental, Philippines', 'Freelancer_4@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680947c5afd_unnamed.jpg', 3, '$2y$10$s87HNQktayTuxTQ5Dd0mdejMaug5K2S4Ue2OTnoc2ILS5gVTUS7sm', NULL, NULL, NULL, '2024-12-23 19:58:10', NULL, 1, '2024-12-22 11:22:45', '2024-12-23 11:58:10'),
 (54, 'Joshua ', 'Gonzales', '1999-11-11', 1, 'Calbayog City, Samar, Philippines', 'Freelancer_5@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/6768092082a49_unnamed (7).jpg', 2, '$2y$10$Cns6jbVs6L8hGsf8DbhCh.F0VD26BnlkK6SJJyX8p6ULcX7jdYJpm', NULL, NULL, NULL, '2024-12-22 21:15:32', NULL, 1, '2024-12-22 11:23:26', '2024-12-22 13:20:39'),
 (55, 'Hawkens', 'Queens', '1999-11-11', 2, 'Biri, Northern Samar, Philippines', 'Freelancer_6@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676808d2b7ed6_portrait-young-hispanic-professional-business-260nw-2510293403.webp', NULL, '$2y$10$n474YSatDWn4H1v6o5h3eOW/FAVXOqilxivnJA/5sT5C5MDWaNGqC', NULL, NULL, NULL, '2024-12-22 20:41:45', NULL, 1, '2024-12-22 11:24:33', '2024-12-22 13:20:39'),
 (56, 'Josefina', 'Lahoylahoy', '1999-11-11', 2, 'Quezon City, Metro Manila, Philippines', 'Freelancer_7@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676808f34d357_unnamed (1).png', NULL, '$2y$10$EL7F1F9ljAp.4K9tbZVszemWRN67HSstAV.CvECxKz4RGNDBeBvr2', NULL, NULL, NULL, '2024-12-22 20:41:54', NULL, 1, '2024-12-22 11:25:28', '2024-12-22 13:20:39'),
 (57, 'Richard', 'Salanio', '1999-11-11', 1, 'Quezon City, Metro Manila, Philippines', 'Freelancer_8@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/67680889132e6_happy-mid-aged-business-man-600nw-2307212331.webp', NULL, '$2y$10$Ix9VLjcRORCFMqydbDTGcOioIXyK/En6zgYt3D1C/VDHsr1Tnj8yK', NULL, NULL, NULL, '2024-12-22 20:39:13', NULL, 1, '2024-12-22 11:26:23', '2024-12-22 13:20:39'),
 (58, 'Alvin', 'Dave', '1999-11-11', 1, 'Bagumbang, Misamis Occidental, Philippines', 'Freelancer_9@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/6768085a0b1a3_elegant-confident-fashionable-aged-business-person-mature-businessman-formal-wear-senior-man-grey-beard-hair-bearded-137982468.webp', NULL, '$2y$10$RcLqYppzV8Cbl/qjyMys0eujbpBwZ3BIUF8EzEZ6bkoBx/9JkonYe', NULL, NULL, NULL, '2024-12-22 20:36:23', NULL, 1, '2024-12-22 11:27:47', '2024-12-22 13:20:39'),
 (59, 'Jireh Walter', 'Sodsod', '1999-11-11', 1, 'New Lucena, Iloilo, Philippines', 'Freelancer_10@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 2, '../../dist/php/uploads/profile_pictures/676806e58bf18_unnamed (5).jpg', 1, '$2y$10$qQYBAoo.oQz3gVXrcl7YgeP8HKwtIsK/UFcIrbaTQlShK0VY37I4e', NULL, NULL, NULL, '2024-12-22 21:21:39', NULL, 1, '2024-12-22 11:28:41', '2024-12-22 13:21:39'),
-(60, 'Caleb', 'City', '1999-11-11', 2, 'Davao City, Davao del Sur, Philippines', 'Client_1@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67680a3e787ac_unnamed (6).jpg', 1, '$2y$10$txjiYPCEfTBCt/cdpfggwO/C2Mw7bNrjt8RJ8MAuwVqyrpfTW7qIq', NULL, NULL, NULL, '2024-12-22 21:23:00', NULL, 1, '2024-12-22 11:29:45', '2024-12-22 13:23:00'),
+(60, 'Caleb', 'City', '1999-11-11', 2, 'Davao City, Davao del Sur, Philippines', 'Client_1@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67680a3e787ac_unnamed (6).jpg', 1, '$2y$10$txjiYPCEfTBCt/cdpfggwO/C2Mw7bNrjt8RJ8MAuwVqyrpfTW7qIq', NULL, NULL, NULL, '2024-12-23 20:38:13', NULL, 1, '2024-12-22 11:29:45', '2024-12-23 12:38:13'),
 (61, 'Gion', 'Satoru', '1999-11-11', 2, 'Pasig, Metro Manila, Philippines', 'Client_2@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67681164980c5_images.jpg', 10, '$2y$10$2bs7cne0VBUxGi1pHIhqbO45QyoNkrVmYaFc3lHobWV0c134alsvy', NULL, NULL, NULL, '2024-12-22 21:23:09', NULL, 1, '2024-12-22 11:30:44', '2024-12-22 13:23:09'),
-(62, 'Jhon ', 'Dred', '1999-11-11', 1, 'San Fernando, Pampanga, Philippines', 'Client_3@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67680e0393e40_console&p&bc6272b2d2a540bfb06581f5c2c8c701.webp', 18, '$2y$10$QFNtHYlZ8D4aEnkM7OqgKO9Piri/jeZa1XrrQlEDvcFwkVRX6puhC', NULL, NULL, NULL, '2024-12-22 21:23:16', NULL, 1, '2024-12-22 11:31:39', '2024-12-22 13:23:16'),
+(62, 'Jhon ', 'Dred', '1999-11-11', 1, 'San Fernando, Pampanga, Philippines', 'Client_3@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/67680e0393e40_console&p&bc6272b2d2a540bfb06581f5c2c8c701.webp', 18, '$2y$10$QFNtHYlZ8D4aEnkM7OqgKO9Piri/jeZa1XrrQlEDvcFwkVRX6puhC', NULL, NULL, NULL, '2024-12-23 17:29:48', NULL, 1, '2024-12-22 11:31:39', '2024-12-23 09:29:48'),
 (63, 'Andrei', 'Paras', '1999-11-11', 1, 'Valenzuela, Metro Manila, Philippines', 'Client_4@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/6768021c0640f_Untitled.jpg', 1, '$2y$10$KhxcWERSTUvY6tzWvBvAgObr7SZvHZyaSijHmmuob1k4a74NRDt26', NULL, NULL, NULL, '2024-12-22 21:17:57', NULL, 1, '2024-12-22 11:33:35', '2024-12-22 13:20:39'),
-(64, 'Fisch', 'Nation', '1999-11-11', 2, 'Vigan City, Ilocos Sur, Philippines', 'Client_5@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/676812582e95e_images.jpg', 2, '$2y$10$i6cClbhP3MMns6N/5VTR.e4WUbRMVZNx8HCDKpEKrWKKz2BLefAJK', NULL, NULL, NULL, '2024-12-22 21:23:33', NULL, 1, '2024-12-22 11:34:13', '2024-12-22 13:23:33');
+(64, 'Fisch', 'Nation', '1999-11-11', 2, 'Vigan City, Ilocos Sur, Philippines', 'Client_5@example.com', '09xxxxxxxxx', 'Filipino', 'Filipino', 'English', 1, '../../dist/php/uploads/profile_pictures/676812582e95e_images.jpg', 2, '$2y$10$i6cClbhP3MMns6N/5VTR.e4WUbRMVZNx8HCDKpEKrWKKz2BLefAJK', NULL, NULL, NULL, '2024-12-23 17:20:58', NULL, 1, '2024-12-22 11:34:13', '2024-12-23 09:20:58');
 
 --
 -- Triggers `users`
@@ -2528,13 +2591,13 @@ ALTER TABLE `users_status`
 -- AUTO_INCREMENT for table `client_projects`
 --
 ALTER TABLE `client_projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
 
 --
 -- AUTO_INCREMENT for table `client_project_audit`
 --
 ALTER TABLE `client_project_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `client_project_status`
@@ -2552,13 +2615,13 @@ ALTER TABLE `completed_projects_audit`
 -- AUTO_INCREMENT for table `freelancer_applications`
 --
 ALTER TABLE `freelancer_applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `freelancer_applications_audit`
 --
 ALTER TABLE `freelancer_applications_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `freelancer_application_status`
@@ -2588,13 +2651,13 @@ ALTER TABLE `freelancer_merits`
 -- AUTO_INCREMENT for table `freelancer_project_submissions`
 --
 ALTER TABLE `freelancer_project_submissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions_audit`
 --
 ALTER TABLE `freelancer_project_submissions_audit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `freelancer_project_submissions_status`
@@ -2612,7 +2675,7 @@ ALTER TABLE `freelancer_skills`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- AUTO_INCREMENT for table `project_comments`
@@ -2770,6 +2833,9 @@ CREATE DEFINER=`root`@`localhost` EVENT `e_user_connects_rest` ON SCHEDULE EVERY
     SET connects = 100;
 END$$
 
+CREATE DEFINER=`root`@`localhost` EVENT `e_delete_read_notifications` ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 22:37:44' ENDS '2025-12-01 22:37:44' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM notifications
+    WHERE is_read = 1$$
+
 CREATE DEFINER=`root`@`localhost` EVENT `e_completed_projects` ON SCHEDULE EVERY 1 MONTH STARTS '2024-12-15 17:33:24' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     INSERT INTO completed_projects_audit (
         project_id,
@@ -2815,9 +2881,6 @@ CREATE DEFINER=`root`@`localhost` EVENT `e_top_categories` ON SCHEDULE EVERY 1 M
     ORDER BY frequency DESC
     LIMIT 10;
 END$$
-
-CREATE DEFINER=`root`@`localhost` EVENT `e_delete_read_notifications` ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 22:37:44' ENDS '2025-12-01 22:37:44' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM notifications
-    WHERE is_read = 1$$
 
 DELIMITER ;
 COMMIT;

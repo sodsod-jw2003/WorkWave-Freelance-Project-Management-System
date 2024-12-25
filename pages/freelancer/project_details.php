@@ -23,7 +23,7 @@ $stmt = $mysqli->prepare($submission_query);
 $stmt->bind_param("ii", $project_id, $_SESSION['user_id']);
 $stmt->execute();
 $submission_result = $stmt->get_result();
-// $submission = $submission_result->fetch_assoc() ?: ['submission_url' => null, 'status' => null];
+$submission = $submission_result->fetch_assoc() ?: ['submission_url' => null, 'status' => null];
 
 // Check if status is not pending
 $isDisabled = isset($submission['submission_url']) && $submission['status'] != "pending" && $submission['status'] != "rejected";
